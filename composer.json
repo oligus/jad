@@ -1,0 +1,31 @@
+{
+    "name": "oligus/jad",
+    "description": "Json Api to Doctrine ORM",
+    "keywords": ["json", "api", "doctrine", "orm"],
+    "type": "library",
+    "license": "GPL-2.0",
+    "authors": [
+        {
+            "name": "oligus",
+            "email": "oli.gustafsson@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.0.0"
+    },
+    "require-dev": {
+
+    },
+    "autoload": {
+        "psr-4": {
+            "Jad\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "classmap": [
+            "tests/"
+        ]
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

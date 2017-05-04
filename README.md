@@ -1,2 +1,2 @@
-# jad
-JSON Api to Doctrine
+# JAD
+JSON Api To Doctrine ORM
