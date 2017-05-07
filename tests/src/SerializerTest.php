@@ -1,12 +1,15 @@
 <?php
 
-use Jad\EntitySerializer;
-use Doctrine\ORM\Mapping\ClassMetadata;
+use Jad\Serializer;
 
-class EntitySerializerTest extends TestCase
+class SerializerTest extends TestCase
 {
     public function testGetId()
     {
+        $classMeta = $this->getMockBuilder('Doctrine\ORM\Mapping\ClassMetadata')
+            ->disableOriginalConstructor()
+            ->getMock();
+
         $entity = $this->getMockBuilder('EntityMock')
             ->setMethods(['getId'])
             ->getMock();
@@ -16,7 +19,7 @@ class EntitySerializerTest extends TestCase
             ->method('getId')
             ->willReturn(3);
 
-        $serializer = new EntitySerializer('entity');
+        $serializer = new Serializer('entity', $classMeta);
         $this->assertEquals(3, $serializer->getId($entity));
     }
 
@@ -43,8 +46,7 @@ class EntitySerializerTest extends TestCase
             ->method('getFieldNames')
             ->willReturn(['id', 'roleId', 'name', 'date']);
 
-        $serializer = new EntitySerializer('entity');
-        $serializer->setClassMeta($classMeta);
+        $serializer = new Serializer('entity', $classMeta);
 
         $result = [
             'roleId' => "Master",
@@ -57,7 +59,11 @@ class EntitySerializerTest extends TestCase
 
     public function testGetPropertyValue()
     {
-        $serializer = new EntitySerializer('entity');
+        $classMeta = $this->getMockBuilder('Doctrine\ORM\Mapping\ClassMetadata')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $serializer = new Serializer('entity', $classMeta);
 
         $entity = $this->getMockBuilder('EntityMock')
             ->setMethods(['getId'])
@@ -68,7 +74,7 @@ class EntitySerializerTest extends TestCase
             ->method('getId')
             ->willReturn(345);
 
-        $method = $this->getMethod('Jad\EntitySerializer', 'getPropertyValue');
+        $method = $this->getMethod('Jad\Serializer', 'getPropertyValue');
         $this->assertEquals(345, $method->invokeArgs($serializer, [$entity, 'id']));
 
         $entity = $this->getMockBuilder('EntityMock')
@@ -80,8 +86,12 @@ class EntitySerializerTest extends TestCase
 
     public function testNormalizeValue()
     {
-        $serializer = new EntitySerializer('entity');
-        $method = $this->getMethod('Jad\EntitySerializer', 'normalizeValue');
+        $classMeta = $this->getMockBuilder('Doctrine\ORM\Mapping\ClassMetadata')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $serializer = new Serializer('entity', $classMeta);
+        $method = $this->getMethod('Jad\Serializer', 'normalizeValue');
         $this->assertEquals('moo', $method->invokeArgs($serializer, ['moo']));
         $this->assertEquals('2017-05-05 22:36:42', $method->invokeArgs($serializer, [new \DateTime('2017-05-05 22:36:42')]));
     }

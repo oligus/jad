@@ -39,7 +39,7 @@ class Load
         $entity = $this->em->getRepository($entityName)->find($this->entityId);
         $metadata = $this->em->getClassMetadata($entityName);
 
-        $e = new EntitySerializer('entity');
+        $e = new Serializer('entity');
         $e->setClassMeta($metadata);
 
         $r = new Resource($entity, $e);

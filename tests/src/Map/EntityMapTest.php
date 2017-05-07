@@ -72,4 +72,24 @@ class EntityMapTest extends TestCase
         $map->add('test', 'TestClass');
         $this->assertTrue($method->invokeArgs($map, [$mapItem]));
     }
+
+    public function testGetEntityMapItem()
+    {
+        $map = new EntityMap();
+        $map->add('test', 'TestClass');
+        $map->add('test2', 'Path\To\TestClass');
+        $map->add('test3', [
+            'entityClass' => 'MyTestClass',
+            'idField' => 'myId'
+        ]);
+
+        $this->assertEquals(new EntityMapItem('test', 'TestClass'), $map->getEntityMapItem('test'));
+        $this->assertEquals(new EntityMapItem('test2', 'Path\To\TestClass'), $map->getEntityMapItem('test2'));
+        $this->assertEquals(new EntityMapItem('test3', [
+            'entityClass' => 'MyTestClass',
+            'idField' => 'myId'
+        ]), $map->getEntityMapItem('test3'));
+        $this->assertEquals(new EntityMapItem('mytest', 'Mytest'), $map->getEntityMapItem('mytest'));
+
+    }
 }

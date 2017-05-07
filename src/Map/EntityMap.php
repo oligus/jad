@@ -50,6 +50,21 @@ class EntityMap
     }
 
     /**
+     * @param $type
+     * @return EntityMapItem
+     */
+    public function getEntityMapItem($type): EntityMapItem
+    {
+        foreach ($this->entityMap as $mapItem) {
+            if($mapItem->getType() === $type) {
+                return $mapItem;
+            }
+        }
+
+        return new EntityMapItem($type, ucfirst($type));
+    }
+
+    /**
      * @return array
      */
     public function getMap()

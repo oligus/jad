@@ -2,31 +2,67 @@
 
 namespace Jad;
 
-use Symfony\Component\HttpFoundation\Request;
+use Jad\Map\EntityMap;
+use Jad\RequestHandler;
 use Doctrine\ORM\EntityManager;
-use Tobscure\JsonApi\Parameters;
 
 class Jad
 {
-    /**
-     * @var string
-     */
-    private $pathPrefix;
-
-    /**
-     * @var Request $request;
-     */
-    private $request;
-
     /**
      * @var EntityManager $em
      */
     private $em;
 
+    /**
+     * @var EntityMap $entityMap
+     */
+    private $entityMap;
+
+    /**
+     * @var RequestHandler $requestHandler
+     */
+    private $requestHandler;
+
+    /**
+     * Jad constructor.
+     * @param EntityManager $em
+     */
     public function __construct(EntityManager $em)
     {
         $this->setEntityManager($em);
-        $this->setRequest(Request::createFromGlobals());
+        $this->setRequestHandler(new RequestHandler());
+    }
+
+    /**
+     * @param EntityManager $em
+     */
+    private function setEntityManager(EntityManager $em)
+    {
+        $this->em = $em;
+    }
+
+    /**
+     * @param EntityMap $entityMap
+     */
+    public function setEntityMap(EntityMap $entityMap)
+    {
+        $this->entityMap = $entityMap;
+    }
+
+    /**
+     * @return \Jad\RequestHandler
+     */
+    public function getRequestHandler(): RequestHandler
+    {
+        return $this->requestHandler;
+    }
+
+    /**
+     * @param RequestHandler $requestHandler
+     */
+    private function setRequestHandler(RequestHandler $requestHandler)
+    {
+        $this->requestHandler = $requestHandler;
     }
 
     /**
@@ -34,23 +70,32 @@ class Jad
      */
     public function setPathPrefix($pathPrefix)
     {
-        $this->pathPrefix = $pathPrefix;
+        $this->getRequestHandler()->setPathPrefix($pathPrefix);
     }
 
-    /**
-     * @param Request $request
-     */
-    public function setRequest(Request $request)
+    public function jsonApiResult()
     {
-        $this->request = $request;
+        /*
+         * Pseudo
+         *
+         * Get type
+         * Get id
+         *
+         * If request type is GET and id exists, fetch doctrine entity by find(id)
+         * If request type is GET and id does not exists, fetch doctrine collection by findBy()
+         *
+         * serialize
+         * json encode
+         *
+         */
+        $entityKey = $this->getRequestHandler()->getType();
+
+        //var_dump($entityKey);
     }
 
-    /**
-     * @param EntityManager $em
-     */
-    public function setEntityManager(EntityManager $em)
+    private function process()
     {
-        $this->em = $em;
+
     }
 
 }

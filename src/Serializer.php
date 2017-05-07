@@ -6,7 +6,7 @@ use Jad\Exceptions\JadException;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Tobscure\JsonApi\AbstractSerializer;
 
-class EntitySerializer extends AbstractSerializer
+class Serializer extends AbstractSerializer
 {
     const ID_PROPERTY = 'id';
     const DATE_FORMAT = 'Y-m-d';
@@ -24,49 +24,14 @@ class EntitySerializer extends AbstractSerializer
     protected $classMeta;
 
     /**
-     * EntitySerializer constructor.
+     * Serializer constructor.
      * @param $type
+     * @param ClassMetadata $classMetadata
      */
-    public function __construct($type)
+    public function __construct($type, ClassMetadata $classMetadata)
     {
         $this->type = $type;
-    }
-
-    /**
-     * @param mixed $model
-     * @return string
-     */
-    public function getType($model): string
-    {
-        return $this->type;
-    }
-
-    /**
-     * @param $type
-     * @return EntitySerializer
-     */
-    public function setType($type): EntitySerializer
-    {
-        $this->type = $type;
-        return $this;
-    }
-
-    /**
-     * @return ClassMetadata
-     */
-    public function getClassMeta(): ClassMetadata
-    {
-        return $this->classMeta;
-    }
-
-    /**
-     * @param ClassMetadata $classMeta
-     * @return EntitySerializer
-     */
-    public function setClassMeta(ClassMetadata $classMeta): EntitySerializer
-    {
-        $this->classMeta = $classMeta;
-        return $this;
+        $this->classMeta = $classMetadata;
     }
 
     /**
@@ -98,7 +63,6 @@ class EntitySerializer extends AbstractSerializer
 
         return $attributes;
     }
-
 
     public function getLinks($entity)
     {

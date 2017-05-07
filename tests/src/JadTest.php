@@ -1,12 +1,13 @@
 <?php
 
 use Jad\Jad;
+use Jad\Map\EntityMap;
 
 class JadTest extends TestCase
 {
     public function testConstruct()
     {
-        $_SERVER = $this->getServer();
+        $_SERVER = ['REQUEST_URI' => '/api/jad/posts'];
 
         $em = $this->getMockBuilder('Doctrine\ORM\EntityManager')
             ->disableOriginalConstructor()
@@ -14,7 +15,17 @@ class JadTest extends TestCase
             ->getMock();
 
         $jad = new Jad($em);
-        $jad->setPathPrefix('/api/v1');
+        $jad->setPathPrefix('/api/jad');
+        $jad->setEntityMap(new EntityMap([
+            'awesome' => 'Awesome\Class',
+            'another' => [
+                'entityClass' => 'AnotherClass',
+                'idField' => 'anotherId'
+            ]
+        ]));
+
+
+        $jad->jsonApiResult();
 
         $this->assertTrue(true);
     }
