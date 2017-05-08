@@ -2,7 +2,7 @@
 
 use Jad\RequestHandler;
 
-class RequestHandlerTest extends TestCase
+class RequestHandlerTest extends \TestCase
 {
     public function testParameters()
     {
