@@ -3,8 +3,8 @@
 namespace Jad;
 
 use Jad\Map\EntityMap;
-use Jad\RequestHandler;
 use Doctrine\ORM\EntityManager;
+use Tobscure\JsonApi\Document;
 
 class Jad
 {
@@ -26,27 +26,13 @@ class Jad
     /**
      * Jad constructor.
      * @param EntityManager $em
-     */
-    public function __construct(EntityManager $em)
-    {
-        $this->setEntityManager($em);
-        $this->setRequestHandler(new RequestHandler());
-    }
-
-    /**
-     * @param EntityManager $em
-     */
-    private function setEntityManager(EntityManager $em)
-    {
-        $this->em = $em;
-    }
-
-    /**
      * @param EntityMap $entityMap
      */
-    public function setEntityMap(EntityMap $entityMap)
+    public function __construct(EntityManager $em, EntityMap $entityMap)
     {
+        $this->em = $em;
         $this->entityMap = $entityMap;
+        $this->requestHandler = new RequestHandler();
     }
 
     /**
@@ -55,14 +41,6 @@ class Jad
     public function getRequestHandler(): RequestHandler
     {
         return $this->requestHandler;
-    }
-
-    /**
-     * @param RequestHandler $requestHandler
-     */
-    private function setRequestHandler(RequestHandler $requestHandler)
-    {
-        $this->requestHandler = $requestHandler;
     }
 
     /**
@@ -75,27 +53,14 @@ class Jad
 
     public function jsonApiResult()
     {
-        /*
-         * Pseudo
-         *
-         * Get type
-         * Get id
-         *
-         * If request type is GET and id exists, fetch doctrine entity by find(id)
-         * If request type is GET and id does not exists, fetch doctrine collection by findBy()
-         *
-         * serialize
-         * json encode
-         *
-         */
-        $entityKey = $this->getRequestHandler()->getType();
+        $type = $this->requestHandler->getType();
+        $mapItem = $this->entityMap->getEntityMapItem($type);
 
-        //var_dump($entityKey);
+        $dh = new DoctrineHandler($mapItem, $this->em, $this->requestHandler);
+
+        $resource = $dh->getEntityById($this->requestHandler->getId());
+        $document = new Document($resource);
+
+        return json_encode($document);
     }
-
-    private function process()
-    {
-
-    }
-
 }

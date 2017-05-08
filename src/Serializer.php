@@ -93,14 +93,11 @@ class Serializer extends AbstractSerializer
             return $entity->$methodName();
         }
 
-        if(property_exists($entity, $property)) {
-            return $entity->$property;
-        }
-
         $reflection = new \ReflectionClass($entity);
 
         if($reflection->hasProperty($property)) {
             $reflectionProperty = $reflection->getProperty($property);
+            $reflectionProperty->isPublic();
             $reflectionProperty->setAccessible(true);
             return $reflectionProperty->getValue($entity);
         }

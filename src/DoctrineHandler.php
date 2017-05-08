@@ -2,45 +2,53 @@
 
 namespace Jad;
 
-use Jad\Map\EntityMap;
+use Jad\Map\EntityMapItem;
 use Doctrine\ORM\EntityManagerInterface;
 use Tobscure\JsonApi\Resource;
 
 class DoctrineHandler
 {
     /**
+     * @var EntityMapItem
+     */
+    private $entityMapItem;
+
+    /**
      * @var EntityManagerInterface
      */
     private $em;
 
     /**
-     * @var RequestHandler
+     * @var RequestHandler $requestHandler
      */
     private $requestHandler;
 
-    private $entityMap;
-
     /**
      * DoctrineHandler constructor.
+     * @param EntityMapItem $entityMapItem
      * @param EntityManagerInterface $em
-     * @param \Jad\RequestHandler $requestHandler
-     * @param EntityMap $entityMap
+     * @param RequestHandler $requestHandler
      */
-    public function __construct(
-        EntityManagerInterface $em,
-        RequestHandler $requestHandler,
-        EntityMap $entityMap
-    )
+    public function __construct(EntityMapItem $entityMapItem, EntityManagerInterface $em, RequestHandler $requestHandler)
     {
+        $this->entityMapItem = $entityMapItem;
         $this->em = $em;
         $this->requestHandler = $requestHandler;
-        $this->entityMap = $entityMap;
     }
 
-
-    public function getEntity($entityClass, $entityId): Resource
+    /**
+     * @param $id
+     * @return \Tobscure\JsonApi\Resource
+     */
+    public function getEntityById($id): \Tobscure\JsonApi\Resource
     {
-        $entity = $this->em->getRepository($entityClass)->find($entityId);
+        $entityClass = $this->entityMapItem->getEntityClass();
+        $entity = $this->em->getRepository($entityClass)->find($id);
         $metadata = $this->em->getClassMetadata($entityClass);
+
+        $resource = new Resource($entity, new Serializer($this->entityMapItem->getType(), $metadata));
+        $resource->fields($this->requestHandler->getParameters()->getFields());
+
+        return $resource;
     }
 }

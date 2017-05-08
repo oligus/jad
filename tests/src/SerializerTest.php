@@ -2,6 +2,8 @@
 
 use Jad\Serializer;
 
+require_once 'Mocks.php';
+
 class SerializerTest extends TestCase
 {
     public function testGetId()
@@ -25,7 +27,7 @@ class SerializerTest extends TestCase
 
     public function testGetAttributes()
     {
-        $entity = $this->getMockBuilder('MockEntity')
+        $entity = $this->getMockBuilder('ArticleEntity')
             ->setMethods(['getId', 'getRoleId', 'getName', 'getDate'])
             ->getMock();
 
@@ -65,23 +67,14 @@ class SerializerTest extends TestCase
 
         $serializer = new Serializer('entity', $classMeta);
 
-        $entity = $this->getMockBuilder('EntityMock')
-            ->setMethods(['getId'])
-            ->getMock();
-
-        $entity
-            ->expects($this->at(0))
-            ->method('getId')
-            ->willReturn(345);
+        $articleEntity = Mocks::getInstance()->getArticleEntity();
 
         $method = $this->getMethod('Jad\Serializer', 'getPropertyValue');
-        $this->assertEquals(345, $method->invokeArgs($serializer, [$entity, 'id']));
+        $this->assertEquals(5, $method->invokeArgs($serializer, [$articleEntity, 'id']));
 
-        $entity = $this->getMockBuilder('EntityMock')
-            ->getMock();
+        $articleEntity->setId(654);
 
-        $entity->id = 654;
-        $this->assertEquals(654, $method->invokeArgs($serializer, [$entity, 'id']));
+        $this->assertEquals(654, $method->invokeArgs($serializer, [$articleEntity, 'id']));
     }
 
     public function testNormalizeValue()

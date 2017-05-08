@@ -64,16 +64,16 @@ class RequestHandler
     /**
      * @return array
      */
-    public function getItems()
+    public function getItems(): array
     {
         $path = preg_replace('!/?' . $this->pathPrefix . '/?!', '', $this->request->getPathInfo());
         return explode('/', $path);
     }
 
     /**
-     * @return mixed
+     * @return string
      */
-    public function getType()
+    public function getType(): string
     {
         return $this->getItems()[0];
     }
@@ -113,5 +113,10 @@ class RequestHandler
         }
 
         return null;
+    }
+
+    public function isCollection()
+    {
+        return !is_null($this->getId());
     }
 }

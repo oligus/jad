@@ -3,31 +3,60 @@
 use Jad\Jad;
 use Jad\Map\EntityMap;
 
+require_once 'Mocks.php';
+
 class JadTest extends TestCase
 {
+
+
+    public function testMoo() {
+        $this->assertTrue(true);
+    }
+
     public function testConstruct()
     {
-        $_SERVER = ['REQUEST_URI' => '/api/jad/posts'];
+        $_SERVER = ['REQUEST_URI' => '/api/jad/articles/1'];
+
+        $_GET = [
+            'include' => 'author',
+            'fields' => [
+                'articles' => 'title,body,author'
+            ]
+        ];
+
+        $articleEntity = Mocks::getInstance()->getArticleEntity();
+        $repo = Mocks::getInstance()->getRepo($articleEntity);
+        $classMeta = Mocks::getInstance()->getClassMeta();
 
         $em = $this->getMockBuilder('Doctrine\ORM\EntityManager')
             ->disableOriginalConstructor()
-            ->setMethods(['getFieldNames'])
+            ->setMethods(['getRepository', 'getClassMetadata'])
             ->getMock();
 
-        $jad = new Jad($em);
-        $jad->setPathPrefix('/api/jad');
-        $jad->setEntityMap(new EntityMap([
-            'awesome' => 'Awesome\Class',
-            'another' => [
-                'entityClass' => 'AnotherClass',
-                'idField' => 'anotherId'
+        $em
+            ->expects($this->any())
+            ->method('getRepository')
+            ->with('ArticleEntity')
+            ->willReturn($repo);
+
+        $em
+            ->expects($this->any())
+            ->method('getClassMetadata')
+            ->with('ArticleEntity')
+            ->willReturn($classMeta);
+
+        $entityMap = new EntityMap([
+            'articles' => [
+                'entityClass' => 'ArticleEntity',
+                'id' => 'id'
             ]
-        ]));
+        ]);
 
+        $jad = new Jad($em, $entityMap);
+        $jad->setPathPrefix('/api/jad');
 
-        $jad->jsonApiResult();
-
-        $this->assertTrue(true);
+        $expected = '{"data":{"type":"articles","id":"5","attributes":{"title":"Article Title","body":"Article Body","author":"author Entity"}}}';
+        $this->assertEquals($expected, $jad->jsonApiResult());
     }
 
     private function getServer()
@@ -41,7 +70,7 @@ class JadTest extends TestCase
             'HTTP_HOST' => 'jad.localhost.dev',
             'HTTP_CACHE_CONTROL' => 'no-cache',
             'HTTP_ACCEPT' => '*/*',
-            'SCRIPT_FILENAME' => '/media/sf_share/markviss-api/public/index.php',
+            'SCRIPT_FILENAME' => '/media/sf_share/jad/public/index.php',
             'APPLICATION_ENV' => 'development',
             'REDIRECT_STATUS' => '200',
             'SERVER_NAME' => 'jad.localhost.dev',
@@ -55,12 +84,12 @@ class JadTest extends TestCase
             'SERVER_PROTOCOL' => 'HTTP/1.1',
             'DOCUMENT_ROOT' => '/media/sf_share/markviss-api/public',
             'DOCUMENT_URI' => '/index.php',
-            'REQUEST_URI' => '/api/jad/accounts/1?username=demo&password=goal14',
+            'REQUEST_URI' => '/api/jad/articles/1',
             'SCRIPT_NAME' => '/index.php',
             'CONTENT_LENGTH' => '',
             'CONTENT_TYPE' => '',
             'REQUEST_METHOD' => 'GET',
-            'QUERY_STRING' => 'username=demo&password=goal14',
+            'QUERY_STRING' => '',
             'FCGI_ROLE' => 'RESPONDER',
             'PHP_SELF' => '/index.php',
             'REQUEST_TIME_FLOAT' => 1494043365.8456409,
