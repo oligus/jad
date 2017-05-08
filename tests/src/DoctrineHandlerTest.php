@@ -1,13 +1,16 @@
 <?php
 
+namespace Jad\Tests;
+
 use Jad\DoctrineHandler;
+use Jad\Map\EntityMapItem;
 use Tobscure\JsonApi\Document;
 
 class DoctrineHandlerTest extends TestCase
 {
     public function testGetEntityById()
     {
-        $mapItem = new Jad\Map\EntityMapItem('article', [
+        $mapItem = new EntityMapItem('article', [
             'entityClass' => 'TestClass'
         ]);
 
@@ -61,7 +64,7 @@ class DoctrineHandlerTest extends TestCase
 
     public function testGetEntities()
     {
-        $mapItem = new Jad\Map\EntityMapItem('article', [
+        $mapItem = new EntityMapItem('article', [
             'entityClass' => 'TestClass'
         ]);
 

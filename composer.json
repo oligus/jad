@@ -30,9 +30,10 @@
     }
   },
   "autoload-dev": {
-    "classmap": [
-      "tests/"
-    ]
+    "psr-4": {
+      "Jad\\": "src/",
+      "Jad\\Tests\\": "tests/src"
+    }
   },
   "minimum-stability": "dev",
   "prefer-stable": true

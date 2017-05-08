@@ -1,5 +1,7 @@
 <?php
 
+namespace Jad\Tests;
+
 class ArticleEntity
 {
     private $id = 5;

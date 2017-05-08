@@ -1,5 +1,8 @@
 <?php
 
+namespace Jad\Tests\Map;
+
+use Jad\Tests\TestCase;
 use Jad\Map\EntityMap;
 use Jad\Map\EntityMapItem;
 

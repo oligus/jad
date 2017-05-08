@@ -1,5 +1,7 @@
 <?php
 
+namespace Jad\Tests;
+
 use PHPUnit\Framework\TestCase as PHPUnitTestCase;
 
 class TestCase extends PHPUnitTestCase
@@ -15,7 +17,7 @@ class TestCase extends PHPUnitTestCase
      * @return ReflectionMethod
      */
     protected static function getMethod($className, $methodName) {
-        $class = new ReflectionClass($className);
+        $class = new \ReflectionClass($className);
         $method = $class->getMethod($methodName);
         $method->setAccessible(true);
         return $method;
@@ -48,7 +50,7 @@ class TestCase extends PHPUnitTestCase
      */
     public function setProtectedProperty($className, $property, $value)
     {
-        $reflection = new ReflectionClass($className);
+        $reflection = new \ReflectionClass($className);
         $reflection_property = $reflection->getProperty($property);
         $reflection_property->setAccessible(true);
         $reflection_property->setValue($className, $value);

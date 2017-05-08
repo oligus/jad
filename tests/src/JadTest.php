@@ -1,5 +1,7 @@
 <?php
 
+namespace Jad\Tests;
+
 use Jad\Jad;
 use Jad\Map\EntityMap;
 

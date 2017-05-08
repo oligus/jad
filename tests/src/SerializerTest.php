@@ -1,5 +1,7 @@
 <?php
 
+namespace Jad\Tests;
+
 use Jad\Serializer;
 
 require_once 'Mocks.php';

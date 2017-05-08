@@ -1,6 +1,8 @@
 <?php
 
-require_once realpath(__DIR__) . '/../ArticleEntity.php';
+namespace Jad\Tests;
+
+use Jad\Tests\ArticleEntity;
 
 class Mocks extends TestCase
 {
