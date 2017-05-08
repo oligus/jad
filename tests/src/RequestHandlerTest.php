@@ -30,6 +30,11 @@ class RequestHandlerTest extends TestCase
         $rh = new RequestHandler();
         $rh->setPathPrefix('api/jad');
         $this->assertEquals($rh->getItems(), ['posts', '2', 'moo']);
+
+        $_SERVER = ['REQUEST_URI' => '/api/v1/accounts/1'];
+        $rh = new RequestHandler();
+        $rh->setPathPrefix('/api/v1/jad');
+        $this->assertEquals($rh->getItems(), ['api', 'v1', 'accounts', '1']);
     }
 
     public function testGetType()

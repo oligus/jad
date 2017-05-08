@@ -66,7 +66,12 @@ class RequestHandler
      */
     public function getItems(): array
     {
-        $path = preg_replace('!/?' . $this->pathPrefix . '/?!', '', $this->request->getPathInfo());
+        $currentPath = $this->request->getPathInfo();
+        $currentPath = trim($currentPath, '/');
+        $prefix = trim($this->pathPrefix, '/');
+
+        $path = preg_replace('!/?' . $prefix . '/?!', '', $currentPath);
+
         return explode('/', $path);
     }
 
@@ -90,6 +95,14 @@ class RequestHandler
         }
 
         return null;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasId()
+    {
+        return !is_null($this->getId());
     }
 
     /**

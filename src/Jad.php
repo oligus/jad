@@ -58,8 +58,13 @@ class Jad
 
         $dh = new DoctrineHandler($mapItem, $this->em, $this->requestHandler);
 
-        $resource = $dh->getEntityById($this->requestHandler->getId());
-        $document = new Document($resource);
+        if($this->requestHandler->hasId()) {
+            $resource = $dh->getEntityById($this->requestHandler->getId());
+            $document = new Document($resource);
+        } else {
+            $collection = $dh->getEntities();
+            $document = new Document($collection);
+        }
 
         return json_encode($document);
     }
