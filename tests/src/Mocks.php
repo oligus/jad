@@ -4,7 +4,7 @@ namespace Jad\Tests;
 
 use Jad\Tests\ArticleEntity;
 
-class Mocks extends TestCase
+class Mocks
 {
     /**
      * @var Mocks $instance
@@ -23,26 +23,9 @@ class Mocks extends TestCase
         return self::$instance;
     }
 
-    // 'articles' => 'title,body,author'
     public function getArticleEntity()
     {
         return new ArticleEntity();
-    }
-
-    public function getRepo(ArticleEntity $articleEntity)
-    {
-        $repo = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
-            ->disableOriginalConstructor()
-            ->setMethods(['find'])
-            ->getMock();
-
-        $repo
-            ->expects($this->any())
-            ->method('find')
-            ->with(1)
-            ->willReturn($articleEntity);
-
-        return $repo;
     }
 
     public function getClassMeta()

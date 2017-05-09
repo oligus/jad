@@ -40,10 +40,10 @@ class DoctrineHandler
     public function getEntityById($id): Resource
     {
         $entityClass = $this->entityMapItem->getEntityClass();
-        $metadata = $this->em->getClassMetadata($entityClass);
+        $this->entityMapItem->setClassMeta($this->em->getClassMetadata($entityClass));
         $entity = $this->em->getRepository($entityClass)->find($id);
 
-        $resource = new Resource($entity, new Serializer($this->entityMapItem->getType(), $metadata));
+        $resource = new Resource($entity, new Serializer($this->entityMapItem));
         $resource->fields($this->requestHandler->getParameters()->getFields());
 
         return $resource;
@@ -52,11 +52,12 @@ class DoctrineHandler
     public function getEntities()
     {
         $entityClass = $this->entityMapItem->getEntityClass();
-        $metadata = $this->em->getClassMetadata($entityClass);
+        $this->entityMapItem->setClassMeta($this->em->getClassMetadata($entityClass));
+
         $entities = $this->em->getRepository($entityClass)
             ->findBy($criteria = [], $orderBy = null, $limit = null, $offset = null);
 
-        $collection = new Collection($entities, new Serializer($this->entityMapItem->getType(), $metadata));
+        $collection = new Collection($entities, new Serializer($this->entityMapItem));
         $collection->fields($this->requestHandler->getParameters()->getFields());
 
         return $collection;

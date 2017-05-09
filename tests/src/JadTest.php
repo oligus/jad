@@ -9,12 +9,6 @@ require_once 'Mocks.php';
 
 class JadTest extends TestCase
 {
-
-
-    public function testMoo() {
-        $this->assertTrue(true);
-    }
-
     public function testSingle()
     {
         $_SERVER = [
@@ -32,8 +26,8 @@ class JadTest extends TestCase
         ];
 
         $articleEntity = Mocks::getInstance()->getArticleEntity();
-        $repo = Mocks::getInstance()->getRepo($articleEntity);
-        $classMeta = Mocks::getInstance()->getClassMeta();
+        $repo = $this->getRepo($articleEntity);
+        $classMeta = $this->getClassMeta();
 
         $em = $this->getMockBuilder('Doctrine\ORM\EntityManager')
             ->disableOriginalConstructor()
@@ -78,5 +72,37 @@ class JadTest extends TestCase
         ];
 
         $this->assertTrue(true);
+    }
+
+    public function getRepo(ArticleEntity $articleEntity)
+    {
+
+        $repo = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
+            ->disableOriginalConstructor()
+            ->setMethods(['find'])
+            ->getMock();
+
+        $repo
+            ->expects($this->any())
+            ->method('find')
+            ->with(1)
+            ->willReturn($articleEntity);
+
+        return $repo;
+    }
+
+    public function getClassMeta()
+    {
+        $classMeta = $this->getMockBuilder('Doctrine\ORM\Mapping\ClassMetadata')
+            ->setMethods(['getFieldNames'])
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $classMeta
+            ->expects($this->any())
+            ->method('getFieldNames')
+            ->willReturn(['id', 'name', 'title', 'body', 'author', 'unwanted']);
+
+        return $classMeta;
     }
 }

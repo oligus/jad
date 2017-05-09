@@ -5,7 +5,7 @@ JSON Api To Doctrine ORM
 [![Build Status](https://travis-ci.org/oligus/jad.svg?branch=master)](https://travis-ci.org/oligus/jad)
 
 JAD is a library that marries two other libraries, [tobscure/json-api](https://github.com/tobscure/json-api) and
-[doctrine/doctrine2](https://github.com/doctrine/doctrine2), to make a doctrine entity becomes json api resource.
+[doctrine/doctrine2](https://github.com/doctrine/doctrine2), to transform a doctrine entity to a json api resource.
 
 You preferably use Jad in a middleware or plugin where Jad will capture the request by itself and return a json response
 if it can correctly find the mapping, otherwise response is empty.
@@ -13,6 +13,10 @@ if it can correctly find the mapping, otherwise response is empty.
 ### Requirements
 
 You need to have Doctrine installed and preferably setup before you can use Jad.
+
+### Install
+
+`composer require oligus/jad`
 
 ### Mapping entities
 
@@ -23,7 +27,7 @@ MyProject/Entities/Articles entity:
 
 ```
 $map = new Jad\Map\EntityMap();
-$map->add('Articles', 'MyProject/Entities/Articles');
+$map->add('articles', 'MyProject/Entities/Articles');
 ```
 
 ### Usage
@@ -37,12 +41,24 @@ $jad->setEntityMap($map);
 $jad->jsonApiResult();
 ```
 
-### Examples
+#### Fetch single item
+
+```
+GET /api/v1/jad/articles/45
+```
+
+#### Fetch a collection
+
+```
+GET /api/v1/jad/articles
+```
+
+### Doctrine setup
 
 Doctrine entity
 ```
 /**
- * @ORM\Entity(repositoryClass="Project\Repositories\ArticlesRepository")
+ * @ORM\Entity(repositoryClass="MyProject\Repositories\ArticlesRepository")
  * @ORM\Table(name="articles")
  */
 class Articles

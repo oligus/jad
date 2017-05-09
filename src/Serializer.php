@@ -3,7 +3,7 @@
 namespace Jad;
 
 use Jad\Exceptions\JadException;
-use Doctrine\ORM\Mapping\ClassMetadata;
+use Jad\Map\EntityMapItem;
 use Tobscure\JsonApi\AbstractSerializer;
 
 class Serializer extends AbstractSerializer
@@ -14,24 +14,17 @@ class Serializer extends AbstractSerializer
     const DATE_TIME_FORMAT = self::DATE_FORMAT . ' ' . self::TIME_FORMAT;
 
     /**
-     * @var string
+     * @var EntityMapItem $mapItem;
      */
-    protected $type = 'undefined';
-
-    /**
-     * @var ClassMetadata $classMeta
-     */
-    protected $classMeta;
+    protected $mapItem;
 
     /**
      * Serializer constructor.
-     * @param $type
-     * @param ClassMetadata $classMetadata
+     * @param EntityMapItem $mapItem
      */
-    public function __construct($type, ClassMetadata $classMetadata)
+    public function __construct(EntityMapItem $mapItem)
     {
-        $this->type = $type;
-        $this->classMeta = $classMetadata;
+        $this->mapItem = $mapItem;
     }
 
     /**
@@ -53,7 +46,7 @@ class Serializer extends AbstractSerializer
     {
         $attributes = [];
 
-        foreach($this->classMeta->getFieldNames() as $field) {
+        foreach($this->mapItem->getClassMeta()->getFieldNames() as $field) {
             if($field === self::ID_PROPERTY) {
                 continue;
             }
@@ -62,6 +55,15 @@ class Serializer extends AbstractSerializer
         }
 
         return $attributes;
+    }
+
+    /**
+     * @param mixed $model
+     * @return string
+     */
+    public function getType($model)
+    {
+        return $this->mapItem->getType();
     }
 
     public function getLinks($entity)
@@ -102,7 +104,7 @@ class Serializer extends AbstractSerializer
             return $reflectionProperty->getValue($entity);
         }
 
-        throw new JadException('Unable to get property "' . $property . '" of ' . $this->type);
+        throw new JadException('Unable to get property "' . $property . '" of ' . $this->mapItem->getType());
     }
 
     /**

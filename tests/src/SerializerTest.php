@@ -3,6 +3,7 @@
 namespace Jad\Tests;
 
 use Jad\Serializer;
+use Jad\Map\EntityMapItem;
 
 require_once 'Mocks.php';
 
@@ -14,17 +15,14 @@ class SerializerTest extends TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $entity = $this->getMockBuilder('EntityMock')
-            ->setMethods(['getId'])
-            ->getMock();
+        $mapItem = new EntityMapItem('articles', [
+            'classMeta' => $classMeta
+        ]);
 
-        $entity
-            ->expects($this->at(0))
-            ->method('getId')
-            ->willReturn(3);
+        $serializer = new Serializer($mapItem);
+        $entity = Mocks::getInstance()->getArticleEntity();
 
-        $serializer = new Serializer('entity', $classMeta);
-        $this->assertEquals(3, $serializer->getId($entity));
+        $this->assertEquals(5, $serializer->getId($entity));
     }
 
     public function testGetAttributes()
@@ -50,7 +48,11 @@ class SerializerTest extends TestCase
             ->method('getFieldNames')
             ->willReturn(['id', 'roleId', 'name', 'date']);
 
-        $serializer = new Serializer('entity', $classMeta);
+        $mapItem = new EntityMapItem('articles', [
+            'classMeta' => $classMeta
+        ]);
+
+        $serializer = new Serializer($mapItem);
 
         $result = [
             'roleId' => "Master",
@@ -67,7 +69,11 @@ class SerializerTest extends TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $serializer = new Serializer('entity', $classMeta);
+        $mapItem = new EntityMapItem('articles', [
+            'classMeta' => $classMeta
+        ]);
+
+        $serializer = new Serializer($mapItem);
 
         $articleEntity = Mocks::getInstance()->getArticleEntity();
 
@@ -85,7 +91,11 @@ class SerializerTest extends TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $serializer = new Serializer('entity', $classMeta);
+        $mapItem = new EntityMapItem('articles', [
+            'classMeta' => $classMeta
+        ]);
+
+        $serializer = new Serializer($mapItem);
         $method = $this->getMethod('Jad\Serializer', 'normalizeValue');
         $this->assertEquals('moo', $method->invokeArgs($serializer, ['moo']));
         $this->assertEquals('2017-05-05 22:36:42', $method->invokeArgs($serializer, [new \DateTime('2017-05-05 22:36:42')]));

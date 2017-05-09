@@ -128,8 +128,11 @@ class RequestHandler
         return null;
     }
 
+    /**
+     * @return bool
+     */
     public function isCollection()
     {
-        return !is_null($this->getId());
+        return is_null($this->getId());
     }
 }

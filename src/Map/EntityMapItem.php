@@ -2,6 +2,8 @@
 
 namespace Jad\Map;
 
+use Doctrine\ORM\Mapping\ClassMetadata;
+
 class EntityMapItem
 {
     /**
@@ -18,6 +20,11 @@ class EntityMapItem
      * @var string
      */
     private $idField = 'id';
+
+    /**
+     * @var ClassMetadata $classMeta
+     */
+    private $classMeta;
 
     /**
      * EntityMapItem constructor.
@@ -39,6 +46,10 @@ class EntityMapItem
 
             if(array_key_exists('idField', $params)) {
                 $this->setIdField($params['idField']);
+            }
+
+            if(array_key_exists('classMeta', $params)) {
+                $this->setClassMeta($params['classMeta']);
             }
         }
     }
@@ -96,4 +107,23 @@ class EntityMapItem
         $this->idField = $idField;
         return $this;
     }
+
+    /**
+     * @return ClassMetadata
+     */
+    public function getClassMeta(): ClassMetadata
+    {
+        return $this->classMeta;
+    }
+
+    /**
+     * @param ClassMetadata $classMeta
+     * @return $this
+     */
+    public function setClassMeta(ClassMetadata $classMeta)
+    {
+        $this->classMeta = $classMeta;
+        return $this;
+    }
+
 }

@@ -95,4 +95,14 @@ class RequestHandlerTest extends TestCase
         $this->assertEquals($rh->getId(), 1);
         $rh->getRelationship(); // Exception
     }
+
+    public function testIsCollection()
+    {
+        $_SERVER = ['REQUEST_URI' => '/api/jad/articles/1'];
+        $rh = new RequestHandler();
+        $rh->setPathPrefix('api/jad');
+
+        $this->assertFalse($rh->isCollection());
+    }
+
 }
