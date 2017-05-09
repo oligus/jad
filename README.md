@@ -30,6 +30,15 @@ $map = new Jad\Map\EntityMap();
 $map->add('articles', 'MyProject/Entities/Articles');
 ```
 
+If your entity class id field differs from `id` you can change it in the map configuration.
+
+```
+$map->add('articles', [
+    'entityClass'   => 'MyProject/Entities/Articles',
+    'idField'       => 'myId',
+]);
+```
+
 ### Usage
 
 Setup Jad in your middleware/plugin:
