@@ -15,9 +15,14 @@ class JadTest extends TestCase
         $this->assertTrue(true);
     }
 
-    public function xtestSingle()
+    public function testSingle()
     {
-        $_SERVER = ['REQUEST_URI' => '/api/jad/articles/1'];
+        $_SERVER = [
+            'REQUEST_URI' => '/api/jad/articles/1',
+            'SERVER_NAME' => 'api.markviss.dev',
+            'SERVER_PORT' => '80',
+            'SERVER_ADDR' => '192.168.56.101',
+        ];
 
         $_GET = [
             'include' => 'author',
@@ -57,11 +62,11 @@ class JadTest extends TestCase
         $jad = new Jad($em, $entityMap);
         $jad->setPathPrefix('/api/jad');
 
-        $expected = '{"data":{"type":"articles","id":"5","attributes":{"title":"Article Title","body":"Article Body","author":"author Entity"}}}';
+        $expected = '{"links":{"self":"http:\/\/api.markviss.dev\/api\/jad\/articles\/1"},"data":{"type":"articles","id":"5","attributes":{"title":"Article Title","body":"Article Body","author":"author Entity"}}}';
         $this->assertEquals($expected, $jad->jsonApiResult());
     }
 
-    public function xtestCollection()
+    public function testCollection()
     {
         $_SERVER = ['REQUEST_URI' => '/api/jad/articles'];
 

@@ -66,6 +66,14 @@ class Jad
             $document = new Document($collection);
         }
 
+        $document->addLink('self', $this->getUrl());
+
         return json_encode($document);
+    }
+
+    private function getUrl()
+    {
+        return $this->requestHandler->getRequest()->getSchemeAndHttpHost()
+            . $this->requestHandler->getRequest()->getPathInfo();
     }
 }
