@@ -3,6 +3,7 @@
 namespace Jad\Tests;
 
 use Jad\DoctrineHandler;
+use Jad\RequestHandler;
 use Jad\Map\EntityMapItem;
 use Tobscure\JsonApi\Document;
 
@@ -79,8 +80,21 @@ class DoctrineHandlerTest extends TestCase
         $entities[] = $this->getArticleEntity(['id' => 3, 'name' => 'article3']);
 
         $repo
-            ->expects($this->any())
+            ->expects($this->at(0))
             ->method('findBy')
+            ->with([], [], null, null)
+            ->willReturn($entities);
+
+        $repo
+            ->expects($this->at(1))
+            ->method('findBy')
+            ->with([], ['id' => 'desc'], null, null)
+            ->willReturn($entities);
+
+        $repo
+            ->expects($this->at(2))
+            ->method('findBy')
+            ->with([], ['id' => 'asc', 'name' => 'desc'], null, null)
             ->willReturn($entities);
 
         $classMeta = $this->getMockBuilder('Doctrine\ORM\Mapping\ClassMetadata')
@@ -110,12 +124,26 @@ class DoctrineHandlerTest extends TestCase
             ->with('TestClass')
             ->willReturn($classMeta);
 
-        $dh = new DoctrineHandler($mapItem, $em, new \Jad\RequestHandler());
+        $dh = new DoctrineHandler($mapItem, $em, new RequestHandler());
         $collection = $dh->getEntities();
         $document = new Document($collection);
 
         $expected = '{"data":[{"type":"article","id":"1","attributes":{"name":"article1"}},{"type":"article","id":"2","attributes":{"name":"article2"}},{"type":"article","id":"3","attributes":{"name":"article3"}}]}';
         $this->assertEquals($expected, json_encode($document));
+
+        $_GET = [
+            'sort' => '-id'
+        ];
+
+        $dh = new DoctrineHandler($mapItem, $em, new RequestHandler());
+        $collection = $dh->getEntities();
+
+        $_GET = [
+            'sort' => 'id,-name'
+        ];
+
+        $dh = new DoctrineHandler($mapItem, $em, new RequestHandler());
+        $collection = $dh->getEntities();
     }
 
     private function getArticleEntity($params)

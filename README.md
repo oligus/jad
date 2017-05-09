@@ -62,6 +62,18 @@ GET /api/v1/jad/articles/45
 GET /api/v1/jad/articles
 ```
 
+##### Fields
+Get the fields requested for inclusion, keyed by resource type.
+```
+// GET /api/v1/jad/articles?fields[articles]=title,body
+```
+
+##### Ordering
+Order collection
+```
+// GET  /api/v1/jad/articles?sort=-created,title
+```
+
 ### Doctrine setup
 
 Doctrine entity

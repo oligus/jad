@@ -5,4 +5,6 @@
 * Serializer getLinks
 * Serializer getMeta
 * Serializer getRelationship
+* getInclude // GET /api?include=author,comments
+* getLimit and getOffset
 
