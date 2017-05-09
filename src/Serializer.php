@@ -8,7 +8,6 @@ use Tobscure\JsonApi\AbstractSerializer;
 
 class Serializer extends AbstractSerializer
 {
-    const ID_PROPERTY = 'id';
     const DATE_FORMAT = 'Y-m-d';
     const TIME_FORMAT = 'H:i:s';
     const DATE_TIME_FORMAT = self::DATE_FORMAT . ' ' . self::TIME_FORMAT;
@@ -34,7 +33,7 @@ class Serializer extends AbstractSerializer
      */
     public function getId($entity): int
     {
-        return $this->getPropertyValue($entity, self::ID_PROPERTY);
+        return $this->getPropertyValue($entity, $this->mapItem->getIdField());
     }
 
     /**
@@ -47,7 +46,7 @@ class Serializer extends AbstractSerializer
         $attributes = [];
 
         foreach($this->mapItem->getClassMeta()->getFieldNames() as $field) {
-            if($field === self::ID_PROPERTY) {
+            if($field === $this->mapItem->getIdField()) {
                 continue;
             }
             $value = $this->normalizeValue($this->getPropertyValue($entity, $field));
