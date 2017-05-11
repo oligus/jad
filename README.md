@@ -62,16 +62,28 @@ GET /api/v1/jad/articles/45
 GET /api/v1/jad/articles
 ```
 
-##### Fields
+#### Fields
 Get the fields requested for inclusion, keyed by resource type.
 ```
 // GET /api/v1/jad/articles?fields[articles]=title,body
 ```
 
-##### Ordering
+#### Ordering
 Order collection
 ```
 // GET  /api/v1/jad/articles?sort=-created,title
+```
+
+#### Limit
+Order collection
+```
+// GET  /api/v1/jad/articles?page[offset]=5
+```
+
+#### Offset
+Order collection
+```
+// GET  /api/v1/jad/articles?page[limit]=25
 ```
 
 ### Doctrine setup

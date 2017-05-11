@@ -61,15 +61,31 @@ class DoctrineHandler
         $entityClass = $this->entityMapItem->getEntityClass();
         $this->entityMapItem->setClassMeta($this->em->getClassMetadata($entityClass));
 
-        $available = $this->entityMapItem->getClassMeta()->getFieldNames();
-        $orderBy = $this->requestHandler->getParameters()->getSort($available);
+        $limit = $this->requestHandler->getParameters()->getLimit(100);
+        $offset = $this->requestHandler->getParameters()->getOffset(25);
 
         $entities = $this->em->getRepository($entityClass)
-            ->findBy($criteria = [], $orderBy, $limit = null, $offset = null);
+            ->findBy($criteria = [], $this->getOrderBy(), $limit, $offset);
 
         $collection = new Collection($entities, new Serializer($this->entityMapItem));
         $collection->fields($this->requestHandler->getParameters()->getFields());
 
         return $collection;
+
+    }
+
+    public function getOrderBy()
+    {
+        $orderBy = null;
+
+        $available = $this->entityMapItem->getClassMeta()->getFieldNames();
+
+        $result = $this->requestHandler->getParameters()->getSort($available);
+
+        if(!empty($result)) {
+            $orderBy = $result;
+        }
+
+        return $orderBy;
     }
 }

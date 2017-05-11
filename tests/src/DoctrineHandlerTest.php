@@ -82,7 +82,7 @@ class DoctrineHandlerTest extends TestCase
         $repo
             ->expects($this->at(0))
             ->method('findBy')
-            ->with([], [], null, null)
+            ->with([], null, null, null)
             ->willReturn($entities);
 
         $repo

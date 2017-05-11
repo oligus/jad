@@ -32,7 +32,8 @@
   "autoload-dev": {
     "psr-4": {
       "Jad\\": "src/",
-      "Jad\\Tests\\": "tests/src"
+      "Jad\\Tests\\": "tests/src",
+      "Jad\\Database\\": "tests/Database"
     }
   },
   "minimum-stability": "dev",
