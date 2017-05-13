@@ -74,16 +74,13 @@ Order collection
 // GET  /api/v1/jad/articles?sort=-created,title
 ```
 
-#### Limit
+#### Limit and offset
 Order collection
 ```
-// GET  /api/v1/jad/articles?page[offset]=5
-```
-
-#### Offset
-Order collection
-```
-// GET  /api/v1/jad/articles?page[limit]=25
+// GET /api/v1/jad/articles?page[offset]=5
+// GET /api/v1/jad/articles?page[limit]=25
+// GET /api/v1/jad/articles?page[number]=5&page[size]=20
+// GET /api/v1/jad/articles?page[offset]=20&page[limit]=200
 ```
 
 ### Doctrine setup

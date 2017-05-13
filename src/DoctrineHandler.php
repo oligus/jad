@@ -50,6 +50,7 @@ class DoctrineHandler
         $resource = new Resource($entity, new Serializer($this->entityMapItem));
         $resource->fields($this->requestHandler->getParameters()->getFields());
 
+        //var_dump($this->em->getClassMetadata($entityClass)->getAssociationNames());
         return $resource;
     }
 

@@ -2,6 +2,9 @@
 
 * Configure item for Jad
 * Setup doctrine for testing purposes
+* Annotations mapper
+* Array mapper
+* Id from classmeta
 * Serializer getLinks
 * Serializer getMeta
 * Serializer getRelationship
