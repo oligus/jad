@@ -2,7 +2,7 @@
 
 namespace Jad;
 
-use Jad\Map\EntityMap;
+use Jad\Map\Mapper;
 use Doctrine\ORM\EntityManager;
 use Tobscure\JsonApi\Document;
 
@@ -14,7 +14,7 @@ class Jad
     private $em;
 
     /**
-     * @var EntityMap $entityMap
+     * @var Mapper $entityMap
      */
     private $entityMap;
 
@@ -26,9 +26,9 @@ class Jad
     /**
      * Jad constructor.
      * @param EntityManager $em
-     * @param EntityMap $entityMap
+     * @param Mapper $entityMap
      */
-    public function __construct(EntityManager $em, EntityMap $entityMap)
+    public function __construct(EntityManager $em, Mapper $entityMap)
     {
         $this->em = $em;
         $this->entityMap = $entityMap;

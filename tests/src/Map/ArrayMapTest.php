@@ -3,15 +3,15 @@
 namespace Jad\Tests\Map;
 
 use Jad\Tests\TestCase;
-use Jad\Map\EntityMap;
+use Jad\Map\ArrayMap;
 use Jad\Map\EntityMapItem;
 
-class EntityMapTest extends TestCase
+class ArrayMapTest extends TestCase
 {
 
     public function testConstruct()
     {
-        $map = new EntityMap([
+        $map = new ArrayMap([
             'test' => 'TestClass',
             'awesome' => [
                 'entityClass' => 'AwesomeClass',
@@ -36,7 +36,7 @@ class EntityMapTest extends TestCase
 
     public function testAdd()
     {
-        $map = new EntityMap();
+        $map = new ArrayMap();
         $map->add('test', 'sfsdf/sfsdf/entity');
         $map->add('test', 'sfsdf/sfsdf/entity');
         $map->add('test3', 'sfsdf/sfsdf/entity');
@@ -68,9 +68,9 @@ class EntityMapTest extends TestCase
             'idField' => 'id'
         ]);
 
-        $method = $this->getMethod('Jad\Map\EntityMap', 'itemExists');
+        $method = $this->getMethod('Jad\Map\ArrayMap', 'itemExists');
 
-        $map = new EntityMap();
+        $map = new ArrayMap();
         $this->assertFalse($method->invokeArgs($map, [$mapItem]));
         $map->add('test', 'TestClass');
         $this->assertTrue($method->invokeArgs($map, [$mapItem]));
@@ -78,7 +78,7 @@ class EntityMapTest extends TestCase
 
     public function testGetEntityMapItem()
     {
-        $map = new EntityMap();
+        $map = new ArrayMap();
         $map->add('test', 'TestClass');
         $map->add('test2', 'Path\To\TestClass');
         $map->add('test3', [
