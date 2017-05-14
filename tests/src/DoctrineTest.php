@@ -2,14 +2,14 @@
 
 use Jad\Tests\TestCase;
 use Jad\Database\Manager;
-use Jad\Map\ArrayMap;
+use Jad\Map\ArrayMapper;
 use Jad\Jad;
 
 class DoctrineTest extends TestCase
 {
     public function xtestMoo()
     {
-        $entityMap = new ArrayMap([
+        $entityMap = new ArrayMapper([
             'albums' => 'Jad\Database\Entities\Albums',
             'artists' => 'Jad\Database\Entities\Artists'
         ]);
@@ -33,7 +33,7 @@ class DoctrineTest extends TestCase
 
     public function testSort()
     {
-        $entityMap = new ArrayMap([
+        $entityMap = new ArrayMapper([
             'tracks' => 'Jad\Database\Entities\Tracks'
         ]);
 
@@ -81,7 +81,7 @@ class DoctrineTest extends TestCase
 
     public function testOffset()
     {
-        $entityMap = new ArrayMap([
+        $entityMap = new ArrayMapper([
             'tracks' => 'Jad\Database\Entities\Tracks'
         ]);
 

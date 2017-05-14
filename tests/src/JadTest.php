@@ -3,7 +3,7 @@
 namespace Jad\Tests;
 
 use Jad\Jad;
-use Jad\Map\ArrayMap;
+use Jad\Map\ArrayMapper;
 
 require_once 'Mocks.php';
 
@@ -46,10 +46,9 @@ class JadTest extends TestCase
             ->with('ArticleEntity')
             ->willReturn($classMeta);
 
-        $entityMap = new ArrayMap([
+        $entityMap = new ArrayMapper([
             'articles' => [
-                'entityClass' => 'ArticleEntity',
-                'id' => 'id'
+                'entityClass' => 'ArticleEntity'
             ]
         ]);
 

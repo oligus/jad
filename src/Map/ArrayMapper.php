@@ -2,7 +2,7 @@
 
 namespace Jad\Map;
 
-class ArrayMap implements Mapper
+class ArrayMapper implements Mapper
 {
     /**
      * @var array
