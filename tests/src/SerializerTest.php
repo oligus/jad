@@ -13,7 +13,13 @@ class SerializerTest extends TestCase
     {
         $classMeta = $this->getMockBuilder('Doctrine\ORM\Mapping\ClassMetadata')
             ->disableOriginalConstructor()
+            ->setMethods(['getIdentifier'])
             ->getMock();
+
+        $classMeta
+            ->expects($this->any())
+            ->method('getIdentifier')
+            ->willReturn(['id']);
 
         $mapItem = new EntityMapItem('articles', [
             'classMeta' => $classMeta
@@ -40,13 +46,18 @@ class SerializerTest extends TestCase
 
         $classMeta = $this->getMockBuilder('Doctrine\ORM\Mapping\ClassMetadata')
             ->disableOriginalConstructor()
-            ->setMethods(['getFieldNames'])
+            ->setMethods(['getFieldNames', 'getIdentifier'])
             ->getMock();
 
         $classMeta
             ->expects($this->any())
             ->method('getFieldNames')
             ->willReturn(['id', 'roleId', 'name', 'date']);
+
+        $classMeta
+            ->expects($this->any())
+            ->method('getIdentifier')
+            ->willReturn(['id']);
 
         $mapItem = new EntityMapItem('articles', [
             'classMeta' => $classMeta

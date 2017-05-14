@@ -26,17 +26,8 @@ Example, if you have a path `/api/v1/jad/articles` and `articles` is the resourc
 MyProject/Entities/Articles entity:
 
 ```
-$map = new Jad\Map\EntityMap();
+$map = new Jad\Map\ArrayMap();
 $map->add('articles', 'MyProject/Entities/Articles');
-```
-
-If your entity class id field differs from `id` you can change it in the map configuration.
-
-```
-$map->add('articles', [
-    'entityClass'   => 'MyProject/Entities/Articles',
-    'idField'       => 'myId',
-]);
 ```
 
 ### Usage

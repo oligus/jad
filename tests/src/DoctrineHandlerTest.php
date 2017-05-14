@@ -27,7 +27,7 @@ class DoctrineHandlerTest extends TestCase
             ->willReturn($this->getArticleEntity(['id' => 1, 'name' => 'article1']));
 
         $classMeta = $this->getMockBuilder('Doctrine\ORM\Mapping\ClassMetadata')
-            ->setMethods(['getFieldNames'])
+            ->setMethods(['getFieldNames', 'getIdentifier'])
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -35,6 +35,11 @@ class DoctrineHandlerTest extends TestCase
             ->expects($this->any())
             ->method('getFieldNames')
             ->willReturn(['id', 'name']);
+
+        $classMeta
+            ->expects($this->any())
+            ->method('getIdentifier')
+            ->willReturn(['id']);
 
         $em = $this->getMockBuilder('Doctrine\ORM\EntityManager')
             ->disableOriginalConstructor()
@@ -98,7 +103,7 @@ class DoctrineHandlerTest extends TestCase
             ->willReturn($entities);
 
         $classMeta = $this->getMockBuilder('Doctrine\ORM\Mapping\ClassMetadata')
-            ->setMethods(['getFieldNames'])
+            ->setMethods(['getFieldNames', 'getIdentifier'])
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -106,6 +111,11 @@ class DoctrineHandlerTest extends TestCase
             ->expects($this->any())
             ->method('getFieldNames')
             ->willReturn(['id', 'name']);
+
+        $classMeta
+            ->expects($this->any())
+            ->method('getIdentifier')
+            ->willReturn(['id']);
 
         $em = $this->getMockBuilder('Doctrine\ORM\EntityManager')
             ->disableOriginalConstructor()

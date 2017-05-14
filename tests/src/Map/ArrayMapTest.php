@@ -14,21 +14,37 @@ class ArrayMapTest extends TestCase
         $map = new ArrayMap([
             'test' => 'TestClass',
             'awesome' => [
-                'entityClass' => 'AwesomeClass',
-                'idField' => 'myAwesomeId'
+                'entityClass' => 'AwesomeClass'
             ]
         ]);
 
         $entityMap = $map->getMap();
         $this->assertEquals(2, count($entityMap));
 
+        $classMeta = $this->getMockBuilder('Doctrine\ORM\Mapping\ClassMetadata')
+            ->setMethods(['getIdentifier'])
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $classMeta
+            ->expects($this->at(0))
+            ->method('getIdentifier')
+            ->willReturn(['id']);
+
+        $classMeta
+            ->expects($this->at(1))
+            ->method('getIdentifier')
+            ->willReturn(['myAwesomeId']);
+
         /** @var EntityMapItem $item */
         $item = $entityMap[0];
+        $item->setClassMeta($classMeta);
         $this->assertEquals('test', $item->getType());
         $this->assertEquals('TestClass', $item->getEntityClass());
         $this->assertEquals('id', $item->getIdField());
 
         $item = $entityMap[1];
+        $item->setClassMeta($classMeta);
         $this->assertEquals('awesome', $item->getType());
         $this->assertEquals('AwesomeClass', $item->getEntityClass());
         $this->assertEquals('myAwesomeId', $item->getIdField());
@@ -47,6 +63,16 @@ class ArrayMapTest extends TestCase
 
         $entityMap = $map->getMap();
 
+        $classMeta = $this->getMockBuilder('Doctrine\ORM\Mapping\ClassMetadata')
+            ->setMethods(['getIdentifier'])
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $classMeta
+            ->expects($this->at(0))
+            ->method('getIdentifier')
+            ->willReturn(['myId']);
+
         /** @var EntityMapItem $item */
         $item = $entityMap[0];
         $this->assertEquals('test', $item->getType());
@@ -56,6 +82,7 @@ class ArrayMapTest extends TestCase
         $this->assertEquals(3, count($entityMap));
 
         $item = $entityMap[2];
+        $item->setClassMeta($classMeta);
         $this->assertEquals('test4', $item->getType());
         $this->assertEquals('TestClass', $item->getEntityClass());
         $this->assertEquals('myId', $item->getIdField());

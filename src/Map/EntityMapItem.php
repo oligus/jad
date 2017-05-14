@@ -3,6 +3,7 @@
 namespace Jad\Map;
 
 use Doctrine\ORM\Mapping\ClassMetadata;
+use Jad\Exceptions\JadException;
 
 class EntityMapItem
 {
@@ -92,10 +93,25 @@ class EntityMapItem
 
     /**
      * @return string
+     * @throws JadException
      */
     public function getIdField(): string
     {
-        return $this->idField;
+        if(!$this->classMeta instanceof ClassMetadata) {
+            throw new JadException('No class meta data found');
+        }
+
+        $identifier = $this->classMeta->getIdentifier();
+
+        if(count($identifier) > 1) {
+            throw new JadException('Composite identifier not supported');
+        }
+
+        if(count($identifier) < 1) {
+            throw new JadException('No identifier found');
+        }
+
+        return $identifier[0];
     }
 
     /**

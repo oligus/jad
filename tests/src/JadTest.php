@@ -94,7 +94,7 @@ class JadTest extends TestCase
     public function getClassMeta()
     {
         $classMeta = $this->getMockBuilder('Doctrine\ORM\Mapping\ClassMetadata')
-            ->setMethods(['getFieldNames'])
+            ->setMethods(['getFieldNames', 'getIdentifier'])
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -102,6 +102,11 @@ class JadTest extends TestCase
             ->expects($this->any())
             ->method('getFieldNames')
             ->willReturn(['id', 'name', 'title', 'body', 'author', 'unwanted']);
+
+        $classMeta
+            ->expects($this->any())
+            ->method('getIdentifier')
+            ->willReturn(['id']);
 
         return $classMeta;
     }
