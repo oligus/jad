@@ -2,12 +2,10 @@
 
 namespace Jad\Tests;
 
-use Jad\Serializer;
+use Jad\Serializers\EntitySerializer;
 use Jad\Map\ArrayMapper;
 
-require_once 'Mocks.php';
-
-class SerializerTest extends TestCase
+class EntitySerializerTest extends TestCase
 {
     public function testGetId()
     {
@@ -26,8 +24,8 @@ class SerializerTest extends TestCase
             'classMeta' => $classMeta
         ]);
 
-        $serializer = new Serializer($mapper, 'articles');
-        $entity = Mocks::getInstance()->getArticleEntity();
+        $serializer = new EntitySerializer($mapper, 'articles');
+        $entity = $this->getArticleEntity(['id' => 5, 'name' => 'Test']);
 
         $this->assertEquals(5, $serializer->getId($entity));
     }
@@ -36,7 +34,7 @@ class SerializerTest extends TestCase
     {
         $mapper = new ArrayMapper($this->getEm());
         $mapper->add('articles', []);
-        $serializer = new Serializer($mapper, 'articles');
+        $serializer = new EntitySerializer($mapper, 'articles');
         $mapItem = $serializer->getMapItem();
 
         $this->assertInstanceOf('Jad\Map\MapItem', $mapItem);
@@ -58,7 +56,7 @@ class SerializerTest extends TestCase
         $mapper = new ArrayMapper($this->getEm());
         $mapper->add('articles', []);
 
-        $serializer = new Serializer($mapper, 'articles');
+        $serializer = new EntitySerializer($mapper, 'articles');
 
         $result = [
             'roleId' => "Master",
@@ -69,19 +67,42 @@ class SerializerTest extends TestCase
         $this->assertEquals($result, $serializer->getAttributes($entity));
     }
 
+    public function xtestGetRelationship()
+    {
+        $relationEntity = $this->getMockBuilder('RelationEntity')
+            ->setMethods(['getRelations'])
+            ->getMock();
+
+        $entity = $this->getMockBuilder('TestEntity')
+            ->setMethods(['getRelation'])
+            ->getMock();
+
+        $entity
+            ->expects($this->any())
+            ->method('getRelation')
+            ->willReturn($relationEntity);
+
+        $mapper = new ArrayMapper($this->getEm());
+        $mapper->add('test', 'TestEntity');
+        $mapper->add('relation', 'RelationEntity');
+
+        $serializer = new EntitySerializer($mapper, 'test');
+        $serializer->getRelationship($entity, 'relation');
+    }
+
     public function testGetPropertyValue()
     {
         $mapper = new ArrayMapper($this->getEm());
         $mapper->add('articles', []);
 
-        $serializer = new Serializer($mapper, 'articles');
+        $serializer = new EntitySerializer($mapper, 'articles');
 
-        $articleEntity = Mocks::getInstance()->getArticleEntity();
+        $articleEntity = $this->getArticleEntity(['id' => 5, 'name' => 'Test']);
 
-        $method = $this->getMethod('Jad\Serializer', 'getPropertyValue');
+        $method = $this->getMethod('Jad\Serializers\EntitySerializer', 'getPropertyValue');
         $this->assertEquals(5, $method->invokeArgs($serializer, [$articleEntity, 'id']));
 
-        $articleEntity->setId(654);
+        $articleEntity = $this->getArticleEntity(['id' => 654, 'name' => 'Test']);
 
         $this->assertEquals(654, $method->invokeArgs($serializer, [$articleEntity, 'id']));
     }
@@ -91,18 +112,35 @@ class SerializerTest extends TestCase
         $mapper = new ArrayMapper($this->getEm());
         $mapper->add('articles', []);
 
-        $serializer = new Serializer($mapper, 'articles');
+        $serializer = new EntitySerializer($mapper, 'articles');
 
-        $method = $this->getMethod('Jad\Serializer', 'normalizeValue');
+        $method = $this->getMethod('Jad\Serializers\EntitySerializer', 'normalizeValue');
         $this->assertEquals('moo', $method->invokeArgs($serializer, ['moo']));
         $this->assertEquals('2017-05-05 22:36:42', $method->invokeArgs($serializer, [new \DateTime('2017-05-05 22:36:42')]));
+    }
+
+    private function getArticleEntity($params)
+    {
+        $entity = $this->getMockBuilder('ArticleEntity')
+            ->setMethods(['getId', 'getName'])
+            ->getMock();
+
+        $entity->expects($this->any())
+            ->method('getId')
+            ->willReturn($params['id']);
+
+        $entity->expects($this->any())
+            ->method('getName')
+            ->willReturn($params['name']);
+
+        return $entity;
     }
 
     private function getEm()
     {
         $classMeta = $this->getMockBuilder('Doctrine\ORM\Mapping\ClassMetadata')
             ->disableOriginalConstructor()
-            ->setMethods(['getIdentifier', 'getFieldNames'])
+            ->setMethods(['getIdentifier', 'getFieldNames', 'hasAssociation'])
             ->getMock();
 
         $classMeta
@@ -114,6 +152,11 @@ class SerializerTest extends TestCase
             ->expects($this->any())
             ->method('getFieldNames')
             ->willReturn(['id', 'roleId', 'name', 'date']);
+
+        $classMeta
+            ->expects($this->any())
+            ->method('hasAssociation')
+            ->willReturn(true);
 
         $em = $this->getMockBuilder('Doctrine\ORM\EntityManager')
             ->disableOriginalConstructor()

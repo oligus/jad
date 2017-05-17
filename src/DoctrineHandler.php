@@ -3,6 +3,7 @@
 namespace Jad;
 
 use Jad\Map\Mapper;
+use Jad\Serializers\EntitySerializer;
 use Tobscure\JsonApi\Resource;
 use Tobscure\JsonApi\Collection;
 
@@ -39,7 +40,7 @@ class DoctrineHandler
         $mapItem = $this->mapper->getMapItem($type);
         $entity = $this->mapper->getEm()->getRepository($mapItem->getEntityClass())->find($id);
 
-        $resource = new Resource($entity, new Serializer($this->mapper, $type));
+        $resource = new Resource($entity, new EntitySerializer($this->mapper, $type));
         $resource->fields($this->requestHandler->getParameters()->getFields());
 
         return $resource;
@@ -59,7 +60,7 @@ class DoctrineHandler
         $entities = $this->mapper->getEm()->getRepository($mapItem->getEntityClass())
             ->findBy($criteria = [], $this->getOrderBy($type), $limit, $offset);
 
-        $collection = new Collection($entities, new Serializer($this->mapper, $type));
+        $collection = new Collection($entities, new EntitySerializer($this->mapper, $type));
         $collection->fields($this->requestHandler->getParameters()->getFields());
 
         return $collection;
