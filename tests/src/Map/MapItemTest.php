@@ -3,17 +3,17 @@
 namespace Jad\Tests\Map;
 
 use Jad\Tests\TestCase;
-use Jad\Map\EntityMapItem;
+use Jad\Map\MapItem;
 
-class EntityMapItemTest extends TestCase
+class MapItemTest extends TestCase
 {
     public function testConstruct()
     {
-        $mapItem = new EntityMapItem('test', 'TestClass');
+        $mapItem = new MapItem('test', 'TestClass');
         $this->assertEquals('test', $mapItem->getType());
         $this->assertEquals('TestClass', $mapItem->getEntityClass());
 
-        $mapItem = new EntityMapItem('test2', [
+        $mapItem = new MapItem('test2', [
             'entityClass' => 'TestClass2'
         ]);
 

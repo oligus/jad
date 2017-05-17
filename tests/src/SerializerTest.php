@@ -3,7 +3,7 @@
 namespace Jad\Tests;
 
 use Jad\Serializer;
-use Jad\Map\EntityMapItem;
+use Jad\Map\ArrayMapper;
 
 require_once 'Mocks.php';
 
@@ -21,14 +21,25 @@ class SerializerTest extends TestCase
             ->method('getIdentifier')
             ->willReturn(['id']);
 
-        $mapItem = new EntityMapItem('articles', [
+        $mapper = new ArrayMapper($this->getEm());
+        $mapper->add('articles', [
             'classMeta' => $classMeta
         ]);
 
-        $serializer = new Serializer($mapItem);
+        $serializer = new Serializer($mapper, 'articles');
         $entity = Mocks::getInstance()->getArticleEntity();
 
         $this->assertEquals(5, $serializer->getId($entity));
+    }
+
+    public function testGetItem()
+    {
+        $mapper = new ArrayMapper($this->getEm());
+        $mapper->add('articles', []);
+        $serializer = new Serializer($mapper, 'articles');
+        $mapItem = $serializer->getMapItem();
+
+        $this->assertInstanceOf('Jad\Map\MapItem', $mapItem);
     }
 
     public function testGetAttributes()
@@ -44,26 +55,10 @@ class SerializerTest extends TestCase
         $entity->expects($this->any())->method('getName')->willReturn('Joe');
         $entity->expects($this->any())->method('getDate')->willReturn($date);
 
-        $classMeta = $this->getMockBuilder('Doctrine\ORM\Mapping\ClassMetadata')
-            ->disableOriginalConstructor()
-            ->setMethods(['getFieldNames', 'getIdentifier'])
-            ->getMock();
+        $mapper = new ArrayMapper($this->getEm());
+        $mapper->add('articles', []);
 
-        $classMeta
-            ->expects($this->any())
-            ->method('getFieldNames')
-            ->willReturn(['id', 'roleId', 'name', 'date']);
-
-        $classMeta
-            ->expects($this->any())
-            ->method('getIdentifier')
-            ->willReturn(['id']);
-
-        $mapItem = new EntityMapItem('articles', [
-            'classMeta' => $classMeta
-        ]);
-
-        $serializer = new Serializer($mapItem);
+        $serializer = new Serializer($mapper, 'articles');
 
         $result = [
             'roleId' => "Master",
@@ -76,15 +71,10 @@ class SerializerTest extends TestCase
 
     public function testGetPropertyValue()
     {
-        $classMeta = $this->getMockBuilder('Doctrine\ORM\Mapping\ClassMetadata')
-            ->disableOriginalConstructor()
-            ->getMock();
+        $mapper = new ArrayMapper($this->getEm());
+        $mapper->add('articles', []);
 
-        $mapItem = new EntityMapItem('articles', [
-            'classMeta' => $classMeta
-        ]);
-
-        $serializer = new Serializer($mapItem);
+        $serializer = new Serializer($mapper, 'articles');
 
         $articleEntity = Mocks::getInstance()->getArticleEntity();
 
@@ -98,17 +88,43 @@ class SerializerTest extends TestCase
 
     public function testNormalizeValue()
     {
-        $classMeta = $this->getMockBuilder('Doctrine\ORM\Mapping\ClassMetadata')
-            ->disableOriginalConstructor()
-            ->getMock();
+        $mapper = new ArrayMapper($this->getEm());
+        $mapper->add('articles', []);
 
-        $mapItem = new EntityMapItem('articles', [
-            'classMeta' => $classMeta
-        ]);
+        $serializer = new Serializer($mapper, 'articles');
 
-        $serializer = new Serializer($mapItem);
         $method = $this->getMethod('Jad\Serializer', 'normalizeValue');
         $this->assertEquals('moo', $method->invokeArgs($serializer, ['moo']));
         $this->assertEquals('2017-05-05 22:36:42', $method->invokeArgs($serializer, [new \DateTime('2017-05-05 22:36:42')]));
+    }
+
+    private function getEm()
+    {
+        $classMeta = $this->getMockBuilder('Doctrine\ORM\Mapping\ClassMetadata')
+            ->disableOriginalConstructor()
+            ->setMethods(['getIdentifier', 'getFieldNames'])
+            ->getMock();
+
+        $classMeta
+            ->expects($this->any())
+            ->method('getIdentifier')
+            ->willReturn(['id']);
+
+        $classMeta
+            ->expects($this->any())
+            ->method('getFieldNames')
+            ->willReturn(['id', 'roleId', 'name', 'date']);
+
+        $em = $this->getMockBuilder('Doctrine\ORM\EntityManager')
+            ->disableOriginalConstructor()
+            ->setMethods(['getClassMetadata'])
+            ->getMock();
+
+        $em
+            ->expects($this->any())
+            ->method('getClassMetadata')
+            ->willReturn($classMeta);
+
+        return $em;
     }
 }

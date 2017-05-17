@@ -5,7 +5,7 @@ namespace Jad\Map;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Jad\Exceptions\JadException;
 
-class EntityMapItem
+class MapItem
 {
     /**
      * @var string
@@ -16,11 +16,6 @@ class EntityMapItem
      * @var string
      */
     private $entityClass = '';
-
-    /**
-     * @var string
-     */
-    private $idField = 'id';
 
     /**
      * @var ClassMetadata $classMeta
@@ -45,10 +40,6 @@ class EntityMapItem
                 $this->setEntityClass($params['entityClass']);
             }
 
-            if(array_key_exists('idField', $params)) {
-                $this->setIdField($params['idField']);
-            }
-
             if(array_key_exists('classMeta', $params)) {
                 $this->setClassMeta($params['classMeta']);
             }
@@ -65,9 +56,9 @@ class EntityMapItem
 
     /**
      * @param string $type
-     * @return EntityMapItem
+     * @return MapItem
      */
-    private function setType(string $type): EntityMapItem
+    private function setType(string $type): MapItem
     {
         $this->type = $type;
         return $this;
@@ -83,9 +74,9 @@ class EntityMapItem
 
     /**
      * @param string $entityClass
-     * @return EntityMapItem
+     * @return MapItem
      */
-    private function setEntityClass(string $entityClass): EntityMapItem
+    private function setEntityClass(string $entityClass): MapItem
     {
         $this->entityClass = $entityClass;
         return $this;
@@ -112,16 +103,6 @@ class EntityMapItem
         }
 
         return $identifier[0];
-    }
-
-    /**
-     * @param string $idField
-     * @return EntityMapItem
-     */
-    private function setIdField(string $idField): EntityMapItem
-    {
-        $this->idField = $idField;
-        return $this;
     }
 
     /**

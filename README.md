@@ -26,8 +26,8 @@ Example, if you have a path `/api/v1/jad/articles` and `articles` is the resourc
 MyProject/Entities/Articles entity:
 
 ```
-$map = new Jad\Map\ArrayMap();
-$map->add('articles', 'MyProject/Entities/Articles');
+$mapper = new Jad\Map\ArrayMapper($em);
+$mappper->add('articles', 'MyProject/Entities/Articles');
 ```
 
 ### Usage
@@ -35,7 +35,7 @@ $map->add('articles', 'MyProject/Entities/Articles');
 Setup Jad in your middleware/plugin:
 
 ```
-$jad = new Jad($em);
+$jad = new Jad($mapper);
 $jad->setPathPrefix('/api/v1/jad');
 $jad->setEntityMap($map);
 $jad->jsonApiResult();

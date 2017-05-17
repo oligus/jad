@@ -7,17 +7,21 @@ use Jad\Jad;
 
 class DoctrineTest extends TestCase
 {
-    public function xtestMoo()
+    public function testMoo()
     {
-        $entityMap = new ArrayMapper([
-            'albums' => 'Jad\Database\Entities\Albums',
-            'artists' => 'Jad\Database\Entities\Artists'
-        ]);
+        $_SERVER = [
+            'SERVER_NAME' => 'api.test.com',
+            'SERVER_PORT' => '80',
+            'REQUEST_URI' => '/api/jad/albums/1',
+        ];
 
-        $_SERVER = ['REQUEST_URI' => '/api/jad/albums/1',];
         $_GET = ['include' => 'artists'];
 
-        $jad = new Jad(Manager::getInstance()->getEm(), $entityMap);
+        $mapper = new ArrayMapper(Manager::getInstance()->getEm());
+        $mapper->add('albums', 'Jad\Database\Entities\Albums');
+        $mapper->add('artists', 'Jad\Database\Entities\Artists');
+
+        $jad = new Jad($mapper);
         $jad->setPathPrefix('/api/jad');
 
         $em = Manager::getInstance()->getEm();
@@ -29,14 +33,12 @@ class DoctrineTest extends TestCase
 
         $result = json_decode($jad->jsonApiResult());
 
+        //print_r(json_encode($result));
+        $this->assertFalse(false);
     }
 
     public function testSort()
     {
-        $entityMap = new ArrayMapper([
-            'tracks' => 'Jad\Database\Entities\Tracks'
-        ]);
-
         $_SERVER = [
             'REQUEST_URI' => '/api/jad/tracks',
         ];
@@ -50,7 +52,10 @@ class DoctrineTest extends TestCase
             'sort' => '-name'
         ];
 
-        $jad = new Jad(Manager::getInstance()->getEm(), $entityMap);
+        $mapper = new ArrayMapper(Manager::getInstance()->getEm());
+        $mapper->add('tracks', ['entityClass' => 'Jad\Database\Entities\Tracks']);
+
+        $jad = new Jad($mapper);
         $jad->setPathPrefix('/api/jad');
 
         $result = json_decode($jad->jsonApiResult());
@@ -68,7 +73,7 @@ class DoctrineTest extends TestCase
             'sort' => 'price'
         ];
 
-        $jad = new Jad(Manager::getInstance()->getEm(), $entityMap);
+        $jad = new Jad($mapper);
         $jad->setPathPrefix('/api/jad');
 
         $result = json_decode($jad->jsonApiResult());
@@ -81,10 +86,6 @@ class DoctrineTest extends TestCase
 
     public function testOffset()
     {
-        $entityMap = new ArrayMapper([
-            'tracks' => 'Jad\Database\Entities\Tracks'
-        ]);
-
         $_GET = [
             'page' => [
                 'offset' => 5,
@@ -94,7 +95,10 @@ class DoctrineTest extends TestCase
             'sort' => 'id'
         ];
 
-        $jad = new Jad(Manager::getInstance()->getEm(), $entityMap);
+        $mapper = new ArrayMapper(Manager::getInstance()->getEm());
+        $mapper->add('tracks', ['entityClass' => 'Jad\Database\Entities\Tracks']);
+
+        $jad = new Jad( $mapper);
         $jad->setPathPrefix('/api/jad');
 
         $result = json_decode($jad->jsonApiResult());

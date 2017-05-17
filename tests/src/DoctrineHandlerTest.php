@@ -4,17 +4,13 @@ namespace Jad\Tests;
 
 use Jad\DoctrineHandler;
 use Jad\RequestHandler;
-use Jad\Map\EntityMapItem;
+use Jad\Map\ArrayMapper;
 use Tobscure\JsonApi\Document;
 
 class DoctrineHandlerTest extends TestCase
 {
     public function testGetEntityById()
     {
-        $mapItem = new EntityMapItem('article', [
-            'entityClass' => 'TestClass'
-        ]);
-
         $repo = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
             ->disableOriginalConstructor()
             ->setMethods(['find'])
@@ -58,7 +54,13 @@ class DoctrineHandlerTest extends TestCase
             ->with('TestClass')
             ->willReturn($classMeta);
 
-        $dh = new DoctrineHandler($mapItem, $em, new \Jad\RequestHandler());
+        $mapper = new ArrayMapper($em);
+        $mapper->add('article', [
+            'entityClass' => 'TestClass'
+        ]);
+
+        $_SERVER = ['REQUEST_URI' => '/article'];
+        $dh = new DoctrineHandler($mapper, new RequestHandler());
 
         $resource = $dh->getEntityById(1);
 
@@ -70,10 +72,6 @@ class DoctrineHandlerTest extends TestCase
 
     public function testGetEntities()
     {
-        $mapItem = new EntityMapItem('article', [
-            'entityClass' => 'TestClass'
-        ]);
-
         $repo = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
             ->disableOriginalConstructor()
             ->setMethods(['findBy'])
@@ -134,7 +132,12 @@ class DoctrineHandlerTest extends TestCase
             ->with('TestClass')
             ->willReturn($classMeta);
 
-        $dh = new DoctrineHandler($mapItem, $em, new RequestHandler());
+        $mapper = new ArrayMapper($em);
+        $mapper->add('article', [
+            'entityClass' => 'TestClass'
+        ]);
+
+        $dh = new DoctrineHandler($mapper, new RequestHandler());
         $collection = $dh->getEntities();
         $document = new Document($collection);
 
@@ -145,14 +148,14 @@ class DoctrineHandlerTest extends TestCase
             'sort' => '-id'
         ];
 
-        $dh = new DoctrineHandler($mapItem, $em, new RequestHandler());
+        $dh = new DoctrineHandler($mapper, new RequestHandler());
         $collection = $dh->getEntities();
 
         $_GET = [
             'sort' => 'id,-name'
         ];
 
-        $dh = new DoctrineHandler($mapItem, $em, new RequestHandler());
+        $dh = new DoctrineHandler($mapper, new RequestHandler());
         $collection = $dh->getEntities();
     }
 

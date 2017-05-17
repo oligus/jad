@@ -3,16 +3,10 @@
 namespace Jad;
 
 use Jad\Map\Mapper;
-use Doctrine\ORM\EntityManager;
 use Tobscure\JsonApi\Document;
 
 class Jad
 {
-    /**
-     * @var EntityManager $em
-     */
-    private $em;
-
     /**
      * @var Mapper $entityMap
      */
@@ -25,12 +19,10 @@ class Jad
 
     /**
      * Jad constructor.
-     * @param EntityManager $em
      * @param Mapper $entityMap
      */
-    public function __construct(EntityManager $em, Mapper $entityMap)
+    public function __construct(Mapper $entityMap)
     {
-        $this->em = $em;
         $this->entityMap = $entityMap;
         $this->requestHandler = new RequestHandler();
     }
@@ -54,12 +46,11 @@ class Jad
     public function jsonApiResult()
     {
         $type = $this->requestHandler->getType();
-        $mapItem = $this->entityMap->getEntityMapItem($type);
-
-        $dh = new DoctrineHandler($mapItem, $this->em, $this->requestHandler);
+        $dh = new DoctrineHandler($this->entityMap, $this->requestHandler);
 
         if($this->requestHandler->hasId()) {
             $resource = $dh->getEntityById($this->requestHandler->getId());
+            //$resource->with('artists');
             $document = new Document($resource);
         } else {
             $collection = $dh->getEntities();

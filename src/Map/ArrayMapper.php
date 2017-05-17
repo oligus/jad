@@ -2,22 +2,35 @@
 
 namespace Jad\Map;
 
+use Doctrine\ORM\EntityManagerInterface;
+
 class ArrayMapper implements Mapper
 {
     /**
-     * @var array
+     * @var EntityManagerInterface $em
      */
-    private $entityMap = [];
+    private $em;
 
     /**
-     * EntityMap constructor.
-     * @param array $params
+     * @var array
      */
-    public function __construct(array $params = [])
+    private $map = [];
+
+    /**
+     * ArrayMapper constructor.
+     * @param $em
+     */
+    public function __construct($em)
     {
-        foreach($params as $key => $value) {
-            $this->add($key, $value);
-        }
+        $this->em = $em;
+    }
+
+    /**
+     * @return EntityManagerInterface
+     */
+    public function getEm(): EntityManagerInterface
+    {
+        return $this->em;
     }
 
     /**
@@ -26,21 +39,24 @@ class ArrayMapper implements Mapper
      */
     public function add($type, $values)
     {
-        $mapItem = new EntityMapItem($type, $values);
+        $mapItem = new MapItem($type, $values);
+
+        $entityClass = $mapItem->getEntityClass();
+        $mapItem->setClassMeta($this->em->getClassMetadata($entityClass));
 
         if(!$this->itemExists($mapItem)) {
-            $this->entityMap[] = $mapItem;
+            $this->map[] = $mapItem;
         }
     }
 
     /**
-     * @param \Jad\Map\EntityMapItem $item
+     * @param \Jad\Map\MapItem $item
      * @return bool
      */
-    public function itemExists(EntityMapItem $item)
+    public function itemExists(MapItem $item)
     {
-        /** @var EntityMapItem $mapItem */
-        foreach ($this->entityMap as $mapItem) {
+        /** @var MapItem $mapItem */
+        foreach ($this->map as $mapItem) {
             if($mapItem->getType() === $item->getType()) {
                 return true;
             }
@@ -51,17 +67,32 @@ class ArrayMapper implements Mapper
 
     /**
      * @param $type
-     * @return EntityMapItem
+     * @return MapItem
      */
-    public function getEntityMapItem($type): EntityMapItem
+    public function getMapItem($type): MapItem
     {
-        foreach ($this->entityMap as $mapItem) {
+        foreach ($this->map as $mapItem) {
             if($mapItem->getType() === $type) {
                 return $mapItem;
             }
         }
 
-        return new EntityMapItem($type, ucfirst($type));
+        return new MapItem($type, ucfirst($type));
+    }
+
+    /**
+     * @param $type
+     * @return bool
+     */
+    public function hasMapItem($type): bool
+    {
+        foreach ($this->map as $mapItem) {
+            if($mapItem->getType() === $type) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -69,6 +100,6 @@ class ArrayMapper implements Mapper
      */
     public function getMap()
     {
-        return $this->entityMap;
+        return $this->map;
     }
 }

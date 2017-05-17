@@ -2,22 +2,16 @@
 
 namespace Jad;
 
-use Jad\Map\EntityMapItem;
-use Doctrine\ORM\EntityManagerInterface;
+use Jad\Map\Mapper;
 use Tobscure\JsonApi\Resource;
 use Tobscure\JsonApi\Collection;
 
 class DoctrineHandler
 {
     /**
-     * @var EntityMapItem
+     * @var Mapper $mapper
      */
-    private $entityMapItem;
-
-    /**
-     * @var EntityManagerInterface
-     */
-    private $em;
+    private $mapper;
 
     /**
      * @var RequestHandler $requestHandler
@@ -26,31 +20,28 @@ class DoctrineHandler
 
     /**
      * DoctrineHandler constructor.
-     * @param EntityMapItem $entityMapItem
-     * @param EntityManagerInterface $em
+     * @param Mapper $mapper
      * @param RequestHandler $requestHandler
      */
-    public function __construct(EntityMapItem $entityMapItem, EntityManagerInterface $em, RequestHandler $requestHandler)
+    public function __construct(Mapper $mapper, RequestHandler $requestHandler)
     {
-        $this->entityMapItem = $entityMapItem;
-        $this->em = $em;
+        $this->mapper = $mapper;
         $this->requestHandler = $requestHandler;
     }
 
     /**
      * @param $id
-     * @return Resource
+     * @return \Tobscure\JsonApi\Resource
      */
-    public function getEntityById($id): Resource
+    public function getEntityById($id): \Tobscure\JsonApi\Resource
     {
-        $entityClass = $this->entityMapItem->getEntityClass();
-        $this->entityMapItem->setClassMeta($this->em->getClassMetadata($entityClass));
-        $entity = $this->em->getRepository($entityClass)->find($id);
+        $type = $this->requestHandler->getType();
+        $mapItem = $this->mapper->getMapItem($type);
+        $entity = $this->mapper->getEm()->getRepository($mapItem->getEntityClass())->find($id);
 
-        $resource = new Resource($entity, new Serializer($this->entityMapItem));
+        $resource = new Resource($entity, new Serializer($this->mapper, $type));
         $resource->fields($this->requestHandler->getParameters()->getFields());
 
-        //var_dump($this->em->getClassMetadata($entityClass)->getAssociationNames());
         return $resource;
     }
 
@@ -59,27 +50,26 @@ class DoctrineHandler
      */
     public function getEntities(): Collection
     {
-        $entityClass = $this->entityMapItem->getEntityClass();
-        $this->entityMapItem->setClassMeta($this->em->getClassMetadata($entityClass));
+        $type = $this->requestHandler->getType();
+        $mapItem = $this->mapper->getMapItem($type);
 
         $limit = $this->requestHandler->getParameters()->getLimit(100);
         $offset = $this->requestHandler->getParameters()->getOffset(25);
 
-        $entities = $this->em->getRepository($entityClass)
-            ->findBy($criteria = [], $this->getOrderBy(), $limit, $offset);
+        $entities = $this->mapper->getEm()->getRepository($mapItem->getEntityClass())
+            ->findBy($criteria = [], $this->getOrderBy($type), $limit, $offset);
 
-        $collection = new Collection($entities, new Serializer($this->entityMapItem));
+        $collection = new Collection($entities, new Serializer($this->mapper, $type));
         $collection->fields($this->requestHandler->getParameters()->getFields());
 
         return $collection;
-
     }
 
-    public function getOrderBy()
+    public function getOrderBy($type)
     {
         $orderBy = null;
-
-        $available = $this->entityMapItem->getClassMeta()->getFieldNames();
+        $mapItem = $this->mapper->getMapItem($type);
+        $available = $mapItem->getClassMeta()->getFieldNames();
 
         $result = $this->requestHandler->getParameters()->getSort($available);
 

@@ -46,13 +46,12 @@ class JadTest extends TestCase
             ->with('ArticleEntity')
             ->willReturn($classMeta);
 
-        $entityMap = new ArrayMapper([
-            'articles' => [
-                'entityClass' => 'ArticleEntity'
-            ]
+        $mapper = new ArrayMapper($em);
+        $mapper->add('articles', [
+            'entityClass' => 'ArticleEntity'
         ]);
 
-        $jad = new Jad($em, $entityMap);
+        $jad = new Jad($mapper);
         $jad->setPathPrefix('/api/jad');
 
         $expected = '{"links":{"self":"http:\/\/api.markviss.dev\/api\/jad\/articles\/1"},"data":{"type":"articles","id":"5","attributes":{"title":"Article Title","body":"Article Body","author":"author Entity"}}}';
