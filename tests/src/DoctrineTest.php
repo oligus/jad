@@ -15,7 +15,7 @@ class DoctrineTest extends TestCase
             'REQUEST_URI' => '/api/jad/albums/1',
         ];
 
-        $_GET = ['include' => 'artists'];
+        $_GET = [];
 
         $mapper = new ArrayMapper(Manager::getInstance()->getEm());
         $mapper->add('albums', 'Jad\Database\Entities\Albums');

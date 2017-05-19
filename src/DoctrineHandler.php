@@ -43,6 +43,13 @@ class DoctrineHandler
         $resource = new Resource($entity, new EntitySerializer($this->mapper, $type));
         $resource->fields($this->requestHandler->getParameters()->getFields());
 
+        $availableAssociations = $mapItem->getClassMeta()->getAssociationNames();
+        $relationships = $this->requestHandler->getParameters()->getInclude($availableAssociations);
+
+        if(!empty($relationships)) {
+            $resource->with($relationships);
+        }
+
         return $resource;
     }
 
@@ -62,6 +69,13 @@ class DoctrineHandler
 
         $collection = new Collection($entities, new EntitySerializer($this->mapper, $type));
         $collection->fields($this->requestHandler->getParameters()->getFields());
+
+        $availableAssociations = $mapItem->getClassMeta()->getAssociationNames();
+        $relationships = $this->requestHandler->getParameters()->getInclude($availableAssociations);
+
+        if(!empty($relationships)) {
+            $collection->with($relationships);
+        }
 
         return $collection;
     }

@@ -73,6 +73,14 @@ Order collection
 // GET /api/v1/jad/articles?page[number]=5&page[size]=20
 // GET /api/v1/jad/articles?page[offset]=20&page[limit]=200
 ```
+### Relationships
+Include relationship
+
+```
+// GET /api/v1/jad/articles??include=author,comments
+```
+
+Will generate relationship. The relationship Entity must be specified in the mapper.
 
 ### Doctrine setup
 

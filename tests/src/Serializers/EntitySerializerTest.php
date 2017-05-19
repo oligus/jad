@@ -4,6 +4,8 @@ namespace Jad\Tests;
 
 use Jad\Serializers\EntitySerializer;
 use Jad\Map\ArrayMapper;
+use Tobscure\JsonApi\Document;
+use Tobscure\JsonApi\Resource;
 
 class EntitySerializerTest extends TestCase
 {
@@ -67,27 +69,117 @@ class EntitySerializerTest extends TestCase
         $this->assertEquals($result, $serializer->getAttributes($entity));
     }
 
-    public function xtestGetRelationship()
+    public function testGetRelationship()
     {
         $relationEntity = $this->getMockBuilder('RelationEntity')
-            ->setMethods(['getRelations'])
+            ->setMethods(['getRelations', 'getId', 'getTest'])
             ->getMock();
 
+        $relationEntity
+            ->expects($this->any())
+            ->method('getId')
+            ->willReturn(55);
+
+        $relationEntity
+            ->expects($this->any())
+            ->method('getTest')
+            ->willReturn('Test Attribute');
+
         $entity = $this->getMockBuilder('TestEntity')
-            ->setMethods(['getRelation'])
+            ->setMethods(['getRelation', 'getId', 'getRoleId', 'getName', 'getDate'])
             ->getMock();
+
+        $entity
+            ->expects($this->any())
+            ->method('getId')
+            ->willReturn(42);
+
+        $entity
+            ->expects($this->any())
+            ->method('getRoleId')
+            ->willReturn('guest');
+
+        $entity
+            ->expects($this->any())
+            ->method('getName')
+            ->willReturn('John Doe');
+
+        $entity
+            ->expects($this->any())
+            ->method('getDate')
+            ->willReturn('2017-05-18');
 
         $entity
             ->expects($this->any())
             ->method('getRelation')
             ->willReturn($relationEntity);
 
-        $mapper = new ArrayMapper($this->getEm());
+        $classMeta = $this->getMockBuilder('Doctrine\ORM\Mapping\ClassMetadata')
+            ->disableOriginalConstructor()
+            ->setMethods(['getIdentifier', 'getFieldNames', 'hasAssociation'])
+            ->getMock();
+
+        $classMeta
+            ->expects($this->any())
+            ->method('getIdentifier')
+            ->willReturn(['id']);
+
+        $classMeta
+            ->expects($this->any())
+            ->method('getFieldNames')
+            ->willReturn(['id', 'roleId', 'name', 'date']);
+
+        $classMeta
+            ->expects($this->any())
+            ->method('hasAssociation')
+            ->willReturn(true);
+
+        $classMetaRelation = $this->getMockBuilder('Doctrine\ORM\Mapping\ClassMetadata')
+            ->disableOriginalConstructor()
+            ->setMethods(['getIdentifier', 'getFieldNames', 'hasAssociation'])
+            ->getMock();
+
+        $classMetaRelation
+            ->expects($this->any())
+            ->method('getIdentifier')
+            ->willReturn(['id']);
+
+        $classMetaRelation
+            ->expects($this->any())
+            ->method('getFieldNames')
+            ->willReturn(['id', 'test']);
+
+        $classMetaRelation
+            ->expects($this->any())
+            ->method('hasAssociation')
+            ->willReturn(true);
+
+        $em = $this->getMockBuilder('Doctrine\ORM\EntityManager')
+            ->disableOriginalConstructor()
+            ->setMethods(['getClassMetadata'])
+            ->getMock();
+
+        $em
+            ->expects($this->at(0))
+            ->method('getClassMetadata')
+            ->willReturn($classMeta);
+
+        $em
+            ->expects($this->at(1))
+            ->method('getClassMetadata')
+            ->willReturn($classMetaRelation);
+
+        $mapper = new ArrayMapper($em);
         $mapper->add('test', 'TestEntity');
         $mapper->add('relation', 'RelationEntity');
 
         $serializer = new EntitySerializer($mapper, 'test');
-        $serializer->getRelationship($entity, 'relation');
+
+        $resource = new Resource($entity, $serializer);
+        $document = new Document($resource->with('relation'));
+
+        $expected = '{"data":{"type":"test","id":"42","attributes":{"roleId":"guest","name":"John Doe","date":"2017-05-18"},"relationships":{"relation":{"data":{"type":"relation","id":"55"},"links":{"related":"path"}}}},"included":[{"type":"relation","id":"55","attributes":{"test":"Test Attribute"}}]}';
+        $this->assertEquals($expected, json_encode($document));
     }
 
     public function testGetPropertyValue()

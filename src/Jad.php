@@ -45,8 +45,8 @@ class Jad
 
     public function jsonApiResult()
     {
-        $type = $this->requestHandler->getType();
         $dh = new DoctrineHandler($this->entityMap, $this->requestHandler);
+
 
         if($this->requestHandler->hasId()) {
             $resource = $dh->getEntityById($this->requestHandler->getId());

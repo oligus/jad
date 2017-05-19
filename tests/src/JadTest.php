@@ -19,7 +19,6 @@ class JadTest extends TestCase
         ];
 
         $_GET = [
-            'include' => 'author',
             'fields' => [
                 'articles' => 'title,body,author'
             ]
