@@ -9,7 +9,8 @@ use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\AnnotationRegistry;
 use Jad\Database\Manager;
 
-$paths = array(realpath(__DIR__ . '/../db/Entities' ));
+$paths = array(realpath(__DIR__ . '/Database/Entities' ));
+
 $isDevMode = true;
 
 $connectionParams = array(

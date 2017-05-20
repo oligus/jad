@@ -7,6 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity(repositoryClass="Jad\Database\Repositories\TracksRepository")
  * @ORM\Table(name="tracks")
+ * @Jad\Map\Annotations(type="tracks")
  */
 class Tracks
 {
