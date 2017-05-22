@@ -5,4 +5,6 @@
 * CREATE
 * UPDATE
 * DELETE
+* Error handling
+* JAD configuration
 

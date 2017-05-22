@@ -94,4 +94,40 @@ class DoctrineHandler
 
         return $orderBy;
     }
+
+    public function updateEntity()
+    {
+        $input = json_decode(file_get_contents("php://input"));
+
+        $type = $input->data->type;
+        $id = $input->data->id;
+        $attributes = (array) $input->data->attributes;
+        $mapItem = $this->mapper->getMapItem($type);
+
+        $entity = $this->mapper->getEm()->getRepository($mapItem->getEntityClass())->find($id);
+        $entityClass = $mapItem->getEntityClass();
+
+        if($entity instanceof $entityClass) {
+            foreach($attributes as $attribute => $value) {
+                if($mapItem->getClassMeta()->hasField($attribute)) {
+                    $methodName = 'set' . ucfirst($attribute);
+
+                    if(method_exists($entity, $methodName)) {
+                        $entity->$methodName($value);
+                    } else {
+                        $reflection = new \ReflectionClass($entity);
+
+                        if($reflection->hasProperty($attribute)) {
+                            $reflectionProperty = $reflection->getProperty($attribute);
+                            $reflectionProperty->setAccessible(true);
+                            $reflectionProperty->setValue($entity, $value);
+                        }
+                    }
+                }
+            }
+        }
+
+        $this->mapper->getEm()->flush();
+    }
+
 }

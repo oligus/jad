@@ -45,8 +45,14 @@ class Jad
 
     public function jsonApiResult()
     {
+        $method = $this->requestHandler->getRequest()->getMethod();
         $dh = new DoctrineHandler($this->entityMap, $this->requestHandler);
 
+        switch($method) {
+            case 'PATCH':
+                $dh->updateEntity();
+                break;
+        }
 
         if($this->requestHandler->hasId()) {
             $resource = $dh->getEntityById($this->requestHandler->getId());

@@ -6,8 +6,10 @@ use Jad\Map\Mapper;
 use Jad\Map\MapItem;
 use Jad\Exceptions\JadException;
 use Tobscure\JsonApi\AbstractSerializer;
+use Tobscure\JsonApi\Collection;
 use Tobscure\JsonApi\Resource;
 use Tobscure\JsonApi\Relationship;
+use Doctrine\ORM\PersistentCollection;
 
 class EntitySerializer extends AbstractSerializer
 {
@@ -103,28 +105,29 @@ class EntitySerializer extends AbstractSerializer
      */
     public function getRelationship($entity, $type)
     {
-        $type = rtrim($type, 's');
-        $types = $type . 's';
+        if(!$this->mapper->hasMapItem($type)) {
+            return null;
+        }
 
         if (!$this->getMapItem()->getClassMeta()->hasAssociation($type)) {
-            if (!$this->getMapItem()->getClassMeta()->hasAssociation($types)) {
-                throw new JadException('Cannot find relationship/association for fields: ' . $type . '/s');
-            }
+            throw new JadException('Cannot find relationship/association for fields: ' . $type . '/s');
         }
 
         $method = 'get' . ucfirst($type);
-        $methods = 'get' . ucfirst($types);
 
         if (!method_exists($entity, $method)) {
-            if (!method_exists($entity, $methods)) {
-                throw new JadException('Fetching relationship/association, method does not exists: ' . $method . '/s');
-            }
+            throw new JadException('Fetching relationship/association, method does not exists: ' . $method . '/s');
+        } else {
+            $result = $entity->$method();
         }
 
-        $relationshipEntity = $entity->$method();
-        $resource = new Resource($relationshipEntity, new self($this->mapper, 'relation'));
+        if($result instanceof PersistentCollection) {
+            $element = new Collection($result, new self($this->mapper, $type));
+        } else {
+            $element = new Resource($result, new self($this->mapper, $type));
+        }
 
-        $relationship = new Relationship($resource);
+        $relationship = new Relationship($element);
         $relationship->addLink('related', 'path');
 
         return $relationship;

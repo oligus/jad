@@ -1,5 +1,5 @@
-JAD
----
+# JAD
+
 JSON Api To Doctrine ORM
 
 [![Build Status](https://travis-ci.org/oligus/jad.svg?branch=master)](https://travis-ci.org/oligus/jad)
@@ -10,22 +10,22 @@ JAD is a library that marries two other libraries, [tobscure/json-api](https://g
 You preferably use Jad in a middleware or plugin where Jad will capture the request by itself and return a json response
 if it can correctly find the mapping, otherwise response is empty.
 
-### Requirements
+## Requirements
 
 You need to have Doctrine installed and preferably setup before you can use Jad.
 
-### Install
+## Install
 
 `composer require oligus/jad`
 
-### Quick start
+## Quick start
 ```
 $jad = new Jad(new Jad\Map\AutoMapper($em));
 $jad->setPathPrefix('/api/v1/jad');
 $jad->jsonApiResult();
 ```
 
-### Mapping entities
+## Mapping entities
 
 Jad needs to know what resource belongs to what entity so a mapping is required before you can use Jad. There are three
 different types of mapping options available:
@@ -34,7 +34,7 @@ different types of mapping options available:
 * AnnotationMapper
 * ArrayMapper
 
-#### AutoMapper
+### AutoMapper
 
 Auto mapper tries to map everything for you automagically, it will simply take all entity classes it can find and create
 json api type names from the class names. Optionally, you can add an array with excluded types in the constructor, these
@@ -44,7 +44,7 @@ types will then not be exposed to json api.
 $mapper = new Jad\Map\AutoMapper($em, ['excluded']);
 ```
 
-#### AnnotationMapper
+### AnnotationMapper
 
 The the annotation mapper requires you to use annotated entities in Doctrine. In your entity file you simply add a 
 annotation `@Jad\Map\Annotations(type="albums")`, this annotation will map json api resource type `albums` to the entity
@@ -69,7 +69,7 @@ After your entities have been annotated, simply create annotations mapper to inj
 $mapper = new Jad\Map\AnnotationsMapper($em);
 ```
 
-#### ArrayMapper
+### ArrayMapper
 
 With the array mapper, you simply add every type using `mapper->add` method with type name and the corresponding entity
 class. All added entities will be exposed to json api.
@@ -79,7 +79,7 @@ $mapper = new Jad\Map\ArrayMapper($em);
 $mappper->add('articles', 'MyProject/Entities/Articles');
 ```
 
-### Usage
+## Usage
 
 Setup Jad in your middleware/plugin:
 
@@ -125,7 +125,7 @@ Order collection
 Include relationship
 
 ```
-// GET /api/v1/jad/articles??include=author,comments
+// GET /api/jad/tracks/1?include=playlists
 ```
 
 Will generate relationship. The relationship Entity must be specified in the mapper.
