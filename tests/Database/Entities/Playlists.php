@@ -5,7 +5,8 @@ namespace Jad\Database\Entities;
 use Doctrine\ORM\Mapping as ORM;
 use Jad\Map\Annotations;
 use Doctrine\Common\Collections\ArrayCollection;
-//
+use Jad\Database\Entities\Tracks;
+
 /**
  * @ORM\Entity(repositoryClass="Jad\Database\Repositories\PlaylistsRepository")
  * @ORM\Table(name="playlists")
@@ -44,10 +45,18 @@ class Playlists
     }
 
     /**
-     * @return mixed
+     * @return ArrayCollection
      */
     public function getTracks()
     {
         return $this->tracks;
+    }
+
+    /**
+     * @param \Jad\Database\Entities\Tracks $track
+     */
+    public function addTracks(Tracks $track)
+    {
+        $this->getTracks()->add($track);
     }
 }

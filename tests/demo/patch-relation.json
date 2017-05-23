@@ -1,0 +1,11 @@
+{
+  "data": {
+    "type": "playlists",
+    "id": "17",
+    "relationship": {
+      "tracks": {
+        "data": { "type": "tracks", "id": 44 }
+      }
+    }
+  }
+}

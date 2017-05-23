@@ -2,6 +2,7 @@
 
 namespace Jad;
 
+use Jad\Map\MapItem;
 use Jad\Map\Mapper;
 use Jad\Serializers\EntitySerializer;
 use Tobscure\JsonApi\Resource;
@@ -32,9 +33,9 @@ class DoctrineHandler
 
     /**
      * @param $id
-     * @return \Tobscure\JsonApi\Resource
+     * @return Resource
      */
-    public function getEntityById($id): \Tobscure\JsonApi\Resource
+    public function getEntityById($id): Resource
     {
         $type = $this->requestHandler->getType();
         $mapItem = $this->mapper->getMapItem($type);
@@ -101,7 +102,7 @@ class DoctrineHandler
 
         $type = $input->data->type;
         $id = $input->data->id;
-        $attributes = (array) $input->data->attributes;
+        $attributes = isset($input->data->attributes) ? (array) $input->data->attributes : [];
         $mapItem = $this->mapper->getMapItem($type);
 
         $entity = $this->mapper->getEm()->getRepository($mapItem->getEntityClass())->find($id);
@@ -125,9 +126,44 @@ class DoctrineHandler
                     }
                 }
             }
-        }
 
-        $this->mapper->getEm()->flush();
+            $relationships = isset($input->data->relationship) ? (array) $input->data->relationship : [];
+
+            foreach($relationships as $relationship) {
+                $type = $relationship->data->type;
+                $id = $relationship->data->id;
+
+                $relationalMapItem = $this->mapper->getMapItem($type);
+                $relationalClass = $relationalMapItem->getEntityClass();
+
+                $reference = $this->mapper->getEm()->getReference($relationalClass, $id);
+
+                $method = 'add' . ucfirst($type);
+
+                if(method_exists($entity, $method)) {
+                    $entity->$method($reference);
+                }
+            }
+
+            $this->mapper->getEm()->persist($entity);
+            $this->mapper->getEm()->flush();
+        }
     }
 
+    /**
+     * @param $type
+     * @param $id
+     * @return null|object
+     */
+    public function getEntity($type, $id)
+    {
+        $mapItem = $this->mapper->getMapItem($type);
+
+        if($mapItem instanceof MapItem) {
+            $entity = $this->mapper->getEm()->getRepository($mapItem->getEntityClass())->find($id);
+            return $entity;
+        }
+
+        return null; // TODO new ?
+    }
 }

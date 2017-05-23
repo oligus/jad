@@ -5,6 +5,7 @@ namespace Jad\Tests;
 use Jad\DoctrineHandler;
 use Jad\RequestHandler;
 use Jad\Map\ArrayMapper;
+use Jad\Database\Manager;
 use Tobscure\JsonApi\Document;
 
 class DoctrineHandlerTest extends TestCase
@@ -157,6 +158,17 @@ class DoctrineHandlerTest extends TestCase
 
         $dh = new DoctrineHandler($mapper, new RequestHandler());
         $collection = $dh->getEntities();
+    }
+
+    public function testGetEntity()
+    {
+        $mapper = new ArrayMapper(Manager::getInstance()->getEm());
+        $mapper->add('playlists', ['entityClass' => 'Jad\Database\Entities\Playlists']);
+        $mapper->add('tracks', ['entityClass' => 'Jad\Database\Entities\Tracks']);
+
+        $dh = new DoctrineHandler($mapper, new RequestHandler());
+        $entity = $dh->getEntity('tracks', 44);
+        $this->assertInstanceOf('Jad\Database\Entities\Tracks', $entity);
     }
 
     private function getArticleEntity($params)

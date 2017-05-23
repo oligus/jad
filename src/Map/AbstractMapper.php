@@ -92,7 +92,7 @@ abstract class AbstractMapper implements Mapper
      * @param $type
      * @return MapItem
      */
-    public function getMapItem($type): MapItem
+    public function getMapItem($type)
     {
         foreach ($this->map as $mapItem) {
             if($mapItem->getType() === $type) {
@@ -100,6 +100,6 @@ abstract class AbstractMapper implements Mapper
             }
         }
 
-        return new MapItem($type, ucfirst($type));
+        //return new MapItem($type, ucfirst($type));
     }
 }
