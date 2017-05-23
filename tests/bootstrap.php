@@ -17,13 +17,11 @@ $connectionParams = array(
     'url' => 'sqlite:///' . realpath(__DIR__ . '/../tests/Database' ) .'/chinook.db'
 );
 
-
 $config = Setup::createConfiguration($isDevMode);
 $driver = new AnnotationDriver(new AnnotationReader(), $paths);
 
 AnnotationRegistry::registerLoader('class_exists');
 $config->setMetadataDriverImpl($driver);
-
 
 $em = EntityManager::create($connectionParams, $config);
 

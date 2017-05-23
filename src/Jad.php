@@ -52,6 +52,14 @@ class Jad
             case 'PATCH':
                 $dh->updateEntity();
                 break;
+
+            case 'POST':
+                $dh->createEntity();
+                break;
+
+            case 'DELETE':
+                $dh->deleteEntity($this->requestHandler->getId());
+                break;
         }
 
         if($this->requestHandler->hasId()) {

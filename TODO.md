@@ -7,7 +7,6 @@
     Automatically add meta data such as pagination information and counts
     
 * CREATE
-* UPDATE
 * DELETE
 
 * Error handling

@@ -127,24 +127,40 @@ Include relationship
 ```
 // GET /api/jad/tracks/1?include=playlists
 ```
-
 Will generate relationship. The relationship Entity must be specified in the mapper.
 
-### Doctrine setup
+#### Create
 
-Doctrine entity
-```
-/**
- * @ORM\Entity(repositoryClass="MyProject\Repositories\ArticlesRepository")
- * @ORM\Table(name="articles")
- */
-class Articles
+```json
 {
-    /**
-     * @ORM\Id
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
+  "data": {
+    "type": "artists",
+    "attributes": {
+      "name": "Test artist"
+    }
+  }
+}
+```
+#### Update
+When updating an entity with relationship, you add
+
+```json
+{
+  "data": {
+    "type": "playlists",
+    "id": "17",
+    "relationship": {
+      "tracks": { "data": { "type": "tracks", "id": 44 } }
+    }
+  }
+}
+``` 
+
+
+#### Delete
 
 ```
+DELETE /api/v1/jad/articles/45
+```
+
+### Doctrine setup

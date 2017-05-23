@@ -150,6 +150,69 @@ class DoctrineHandler
         }
     }
 
+    public function createEntity()
+    {
+        $input = json_decode(file_get_contents("php://input"));
+
+        $type = $input->data->type;
+        $attributes = isset($input->data->attributes) ? (array) $input->data->attributes : [];
+        $mapItem = $this->mapper->getMapItem($type);
+        $entityClass = $mapItem->getEntityClass();
+
+        $entity = new $entityClass;
+
+        foreach($attributes as $attribute => $value) {
+            if($mapItem->getClassMeta()->hasField($attribute)) {
+                $methodName = 'set' . ucfirst($attribute);
+
+                if(method_exists($entity, $methodName)) {
+                    $entity->$methodName($value);
+                } else {
+                    $reflection = new \ReflectionClass($entity);
+
+                    if($reflection->hasProperty($attribute)) {
+                        $reflectionProperty = $reflection->getProperty($attribute);
+                        $reflectionProperty->setAccessible(true);
+                        $reflectionProperty->setValue($entity, $value);
+                    }
+                }
+            }
+        }
+
+        $relationships = isset($input->data->relationship) ? (array) $input->data->relationship : [];
+
+        foreach($relationships as $relationship) {
+            $type = $relationship->data->type;
+            $id = $relationship->data->id;
+
+            $relationalMapItem = $this->mapper->getMapItem($type);
+            $relationalClass = $relationalMapItem->getEntityClass();
+
+            $reference = $this->mapper->getEm()->getReference($relationalClass, $id);
+
+            $method = 'add' . ucfirst($type);
+
+            if(method_exists($entity, $method)) {
+                $entity->$method($reference);
+            }
+        }
+
+        $this->mapper->getEm()->persist($entity);
+        $this->mapper->getEm()->flush();
+    }
+
+    public function deleteEntity($id)
+    {
+        $mapItem = $this->mapper->getMapItem($this->requestHandler->getType());
+        $entity = $this->mapper->getEm()->getRepository($mapItem->getEntityClass())->find($id);
+        $entityClass = $mapItem->getEntityClass();
+
+        if($entity instanceof $entityClass) {
+            $this->mapper->getEm()->remove($entity);
+            $this->mapper->getEm()->flush();
+        }
+    }
+
     /**
      * @param $type
      * @param $id
