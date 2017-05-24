@@ -208,7 +208,7 @@ class DoctrineHandler
      * @param $attribute
      * @param $value
      */
-    protected function setEntityAttribute($entity, $attribute, $value): void
+    protected function setEntityAttribute($entity, $attribute, $value)
     {
         $methodName = 'set' . ucfirst($attribute);
 
