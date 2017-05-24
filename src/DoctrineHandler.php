@@ -8,12 +8,21 @@ use Jad\Serializers\EntitySerializer;
 use Tobscure\JsonApi\Resource;
 use Tobscure\JsonApi\Collection;
 
+/**
+ * Class DoctrineHandler
+ * @package Jad
+ */
 class DoctrineHandler
 {
     /**
      * @var Mapper $mapper
      */
     private $mapper;
+
+    /**
+     * @var string
+     */
+    private $type;
 
     /**
      * @var RequestHandler $requestHandler
@@ -29,19 +38,20 @@ class DoctrineHandler
     {
         $this->mapper = $mapper;
         $this->requestHandler = $requestHandler;
+
+        $this->type = $requestHandler->getType();
     }
 
     /**
      * @param $id
      * @return Resource
      */
-    public function getEntityById($id): Resource
+    public function getEntityById($id)
     {
-        $type = $this->requestHandler->getType();
-        $mapItem = $this->mapper->getMapItem($type);
+        $mapItem = $this->mapper->getMapItem($this->type);
         $entity = $this->mapper->getEm()->getRepository($mapItem->getEntityClass())->find($id);
 
-        $resource = new Resource($entity, new EntitySerializer($this->mapper, $type));
+        $resource = new Resource($entity, new EntitySerializer($this->mapper, $this->type));
         $resource->fields($this->requestHandler->getParameters()->getFields());
 
         $availableAssociations = $mapItem->getClassMeta()->getAssociationNames();
@@ -59,16 +69,15 @@ class DoctrineHandler
      */
     public function getEntities(): Collection
     {
-        $type = $this->requestHandler->getType();
-        $mapItem = $this->mapper->getMapItem($type);
+        $mapItem = $this->mapper->getMapItem($this->type);
 
         $limit = $this->requestHandler->getParameters()->getLimit(100);
         $offset = $this->requestHandler->getParameters()->getOffset(25);
 
         $entities = $this->mapper->getEm()->getRepository($mapItem->getEntityClass())
-            ->findBy($criteria = [], $this->getOrderBy($type), $limit, $offset);
+            ->findBy($criteria = [], $this->getOrderBy($this->type), $limit, $offset);
 
-        $collection = new Collection($entities, new EntitySerializer($this->mapper, $type));
+        $collection = new Collection($entities, new EntitySerializer($this->mapper, $this->type));
         $collection->fields($this->requestHandler->getParameters()->getFields());
 
         $availableAssociations = $mapItem->getClassMeta()->getAssociationNames();
@@ -79,21 +88,6 @@ class DoctrineHandler
         }
 
         return $collection;
-    }
-
-    public function getOrderBy($type)
-    {
-        $orderBy = null;
-        $mapItem = $this->mapper->getMapItem($type);
-        $available = $mapItem->getClassMeta()->getFieldNames();
-
-        $result = $this->requestHandler->getParameters()->getSort($available);
-
-        if(!empty($result)) {
-            $orderBy = $result;
-        }
-
-        return $orderBy;
     }
 
     public function updateEntity()
@@ -111,19 +105,7 @@ class DoctrineHandler
         if($entity instanceof $entityClass) {
             foreach($attributes as $attribute => $value) {
                 if($mapItem->getClassMeta()->hasField($attribute)) {
-                    $methodName = 'set' . ucfirst($attribute);
-
-                    if(method_exists($entity, $methodName)) {
-                        $entity->$methodName($value);
-                    } else {
-                        $reflection = new \ReflectionClass($entity);
-
-                        if($reflection->hasProperty($attribute)) {
-                            $reflectionProperty = $reflection->getProperty($attribute);
-                            $reflectionProperty->setAccessible(true);
-                            $reflectionProperty->setValue($entity, $value);
-                        }
-                    }
+                    $this->setEntityAttribute($entity, $attribute, $value);
                 }
             }
 
@@ -163,19 +145,7 @@ class DoctrineHandler
 
         foreach($attributes as $attribute => $value) {
             if($mapItem->getClassMeta()->hasField($attribute)) {
-                $methodName = 'set' . ucfirst($attribute);
-
-                if(method_exists($entity, $methodName)) {
-                    $entity->$methodName($value);
-                } else {
-                    $reflection = new \ReflectionClass($entity);
-
-                    if($reflection->hasProperty($attribute)) {
-                        $reflectionProperty = $reflection->getProperty($attribute);
-                        $reflectionProperty->setAccessible(true);
-                        $reflectionProperty->setValue($entity, $value);
-                    }
-                }
+                $this->setEntityAttribute($entity, $attribute, $value);
             }
         }
 
@@ -201,9 +171,12 @@ class DoctrineHandler
         $this->mapper->getEm()->flush();
     }
 
+    /**
+     * @param $id
+     */
     public function deleteEntity($id)
     {
-        $mapItem = $this->mapper->getMapItem($this->requestHandler->getType());
+        $mapItem = $this->mapper->getMapItem($this->type);
         $entity = $this->mapper->getEm()->getRepository($mapItem->getEntityClass())->find($id);
         $entityClass = $mapItem->getEntityClass();
 
@@ -227,6 +200,46 @@ class DoctrineHandler
             return $entity;
         }
 
-        return null; // TODO new ?
+        return null;
+    }
+
+    /**
+     * @param $entity
+     * @param $attribute
+     * @param $value
+     */
+    protected function setEntityAttribute($entity, $attribute, $value): void
+    {
+        $methodName = 'set' . ucfirst($attribute);
+
+        if (method_exists($entity, $methodName)) {
+            $entity->$methodName($value);
+        } else {
+            $reflection = new \ReflectionClass($entity);
+            if ($reflection->hasProperty($attribute)) {
+                $reflectionProperty = $reflection->getProperty($attribute);
+                $reflectionProperty->setAccessible(true);
+                $reflectionProperty->setValue($entity, $value);
+            }
+        }
+    }
+
+    /**
+     * @param $type
+     * @return array|null
+     */
+    public function getOrderBy($type)
+    {
+        $orderBy = null;
+        $mapItem = $this->mapper->getMapItem($type);
+        $available = $mapItem->getClassMeta()->getFieldNames();
+
+        $result = $this->requestHandler->getParameters()->getSort($available);
+
+        if(!empty($result)) {
+            $orderBy = $result;
+        }
+
+        return $orderBy;
     }
 }

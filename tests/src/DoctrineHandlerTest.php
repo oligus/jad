@@ -160,6 +160,39 @@ class DoctrineHandlerTest extends TestCase
         $collection = $dh->getEntities();
     }
 
+    public function testSetEntityAttribute()
+    {
+        $mapper = new ArrayMapper($this->getEm());
+        $mapper->add('article', ['entityClass' => 'ArticleEntity']);
+        $dh = new DoctrineHandler($mapper, new RequestHandler());
+        $method = $this->getMethod('Jad\DoctrineHandler', 'setEntityAttribute');
+
+        $article = $this->getArticleEntity(['id' => 2, 'name' => 'test']);
+
+        $article->expects($this->at(0))
+            ->method('setName')
+            ->with('My new test name');
+
+        $method->invokeArgs($dh, [$article, 'name', 'My new test name']);
+    }
+
+    public function testDeleteEntity()
+    {
+        $_SERVER = ['REQUEST_URI' => '/article'];
+
+        $em = $this->getEm();
+
+        $em
+            ->expects($this->at(2))
+            ->method('remove')
+            ->with($this->getArticleEntity(['id' => 44, 'name' => 'test']));
+
+        $mapper = new ArrayMapper($em);
+        $mapper->add('article', ['entityClass' => 'ArticleEntity']);
+        $dh = new DoctrineHandler($mapper, new RequestHandler());
+        $dh->deleteEntity(44);
+    }
+
     public function testGetEntity()
     {
         $mapper = new ArrayMapper(Manager::getInstance()->getEm());
@@ -174,7 +207,7 @@ class DoctrineHandlerTest extends TestCase
     private function getArticleEntity($params)
     {
         $entity = $this->getMockBuilder('ArticleEntity')
-            ->setMethods(['getId', 'getName'])
+            ->setMethods(['getId', 'getName', 'setName'])
             ->getMock();
 
         $entity->expects($this->any())
@@ -186,6 +219,58 @@ class DoctrineHandlerTest extends TestCase
             ->willReturn($params['name']);
 
         return $entity;
+    }
+
+    private function getEm()
+    {
+        $repo = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
+            ->disableOriginalConstructor()
+            ->setMethods(['find'])
+            ->getMock();
+
+        $entities = [];
+        $entities[] = $this->getArticleEntity(['id' => 1, 'name' => 'article1']);
+        $entities[] = $this->getArticleEntity(['id' => 2, 'name' => 'article2']);
+        $entities[] = $this->getArticleEntity(['id' => 3, 'name' => 'article3']);
+
+        $repo
+            ->expects($this->any())
+            ->method('find')
+            ->willReturn($this->getArticleEntity(['id' => 1, 'name' => 'article1']));
+
+        $classMeta = $this->getMockBuilder('Doctrine\ORM\Mapping\ClassMetadata')
+            ->setMethods(['getFieldNames', 'getIdentifier'])
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $classMeta
+            ->expects($this->any())
+            ->method('getFieldNames')
+            ->willReturn(['id', 'name']);
+
+        $classMeta
+            ->expects($this->any())
+            ->method('getIdentifier')
+            ->willReturn(['id']);
+
+        $em = $this->getMockBuilder('Doctrine\ORM\EntityManager')
+            ->disableOriginalConstructor()
+            ->setMethods(['getRepository', 'getClassMetadata', 'remove', 'flush'])
+            ->getMock();
+
+        $em
+            ->expects($this->any())
+            ->method('getRepository')
+            ->with('ArticleEntity')
+            ->willReturn($repo);
+
+        $em
+            ->expects($this->any())
+            ->method('getClassMetadata')
+            ->with('ArticleEntity')
+            ->willReturn($classMeta);
+
+        return $em;
     }
 
 }
