@@ -4,6 +4,8 @@ JSON Api To Doctrine ORM
 
 [![Build Status](https://travis-ci.org/oligus/jad.svg?branch=master)](https://travis-ci.org/oligus/jad)
 
+[![Code Triagers Badge](https://www.codetriage.com/oligus/jad/badges/users.svg)](https://www.codetriage.com/oligus/jad)
+
 JAD is a library that marries two other libraries, [tobscure/json-api](https://github.com/tobscure/json-api) and
 [doctrine/doctrine2](https://github.com/doctrine/doctrine2), to transform a doctrine entity to a json api resource.
 
