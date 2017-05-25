@@ -2,6 +2,7 @@
 
 namespace Jad\Map;
 
+use Jad\Exceptions\ResourceNotFoundException;
 use Doctrine\ORM\EntityManagerInterface;
 
 abstract class AbstractMapper implements Mapper
@@ -91,8 +92,9 @@ abstract class AbstractMapper implements Mapper
     /**
      * @param $type
      * @return MapItem
+     * @throws ResourceNotFoundException
      */
-    public function getMapItem($type)
+    public function getMapItem($type): MapItem
     {
         foreach ($this->map as $mapItem) {
             if($mapItem->getType() === $type) {
@@ -100,6 +102,6 @@ abstract class AbstractMapper implements Mapper
             }
         }
 
-        //return new MapItem($type, ucfirst($type));
+        throw new ResourceNotFoundException('Resource type not found (' . $type . ')');
     }
 }

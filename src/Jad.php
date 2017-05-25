@@ -3,6 +3,7 @@
 namespace Jad;
 
 use Jad\Map\Mapper;
+use Jad\Serializers\ErrorDocument;
 use Tobscure\JsonApi\Document;
 
 class Jad
@@ -45,6 +46,18 @@ class Jad
 
     public function jsonApiResult()
     {
+        try {
+            $document = $this->getDocument();
+            return json_encode($document);
+        } catch (\Exception $e) {
+            $errorDocument = new ErrorDocument();
+            $errorDocument->addError($e);
+            return json_encode($errorDocument);
+        }
+    }
+
+    private function getDocument()
+    {
         $method = $this->requestHandler->getRequest()->getMethod();
         $dh = new DoctrineHandler($this->entityMap, $this->requestHandler);
 
@@ -66,7 +79,6 @@ class Jad
 
         if($this->requestHandler->hasId()) {
             $resource = $dh->getEntityById($this->requestHandler->getId());
-            //$resource->with('artists');
             $document = new Document($resource);
         } else {
             $collection = $dh->getEntities();
@@ -75,7 +87,7 @@ class Jad
 
         $document->addLink('self', $this->getUrl());
 
-        return json_encode($document);
+        return $document;
     }
 
     private function getUrl()

@@ -34,7 +34,8 @@
     "psr-4": {
       "Jad\\": "src/",
       "Jad\\Tests\\": "tests/src",
-      "Jad\\Database\\": "tests/Database"
+      "Jad\\Database\\": "tests/Database",
+      "Jad\\E2E\\": "tests/e2e"
     }
   },
   "minimum-stability": "dev",

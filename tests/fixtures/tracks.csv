@@ -1,0 +1,27 @@
+TrackId,Name,AlbumId,MediaTypeId,GenreId,Composer,Milliseconds,Bytes,UnitPrice
+15,"Go Down",4,1,1,AC/DC,331180,10847611,0.99
+43,Forgiven,6,1,1,"Alanis Morissette & Glenn Ballard",300355,9753256,0.99
+77,"Enter Sandman",9,1,3,Apocalyptica,221701,7286305,0.99
+117,"Rock 'N' Roll Music",12,1,5,"Chuck Berry",141923,2276788,0.99
+351,"Debra Kadabra",31,1,1,"Frank Zappa",234553,7649679,0.99
+422,"I Want It All",36,1,1,Queen,241684,7876564,0.99
+603,"Bye Bye Blackbird",48,1,2,"Miles Davis",476003,15549224,0.99
+645,"Swedish Schnapps",51,1,2,,191268,6359750,0.99
+678,"Bad Moon Rising",54,1,1,"J. C. Fogerty",140146,4609835,0.99
+1139,"Give Me Novacaine",89,1,4,"Green Day",205871,6752485,0.99
+1246,Rainmaker,98,1,13,"Bruce Dickinson/David Murray/Steve Harris",228623,9146496,0.99
+1490,"Hey Joe",120,1,1,"Billy Roberts",210259,6870054,0.99
+1492,"Purple Haze",120,1,1,"Jimi Hendrix",171572,5597056,0.99
+1874,"Fight Fire With Fire",154,1,3,Metallica,285753,9420856,0.99
+1876,"For Whom The Bell Tolls",154,1,3,Metallica,311719,10159725,0.99
+1877,"Fade To Black",154,1,3,Metallica,414824,13531954,0.99
+2003,"Smells Like Teen Spirit",164,1,1,"Kurt Cobain",301296,9823847,0.99
+2005,"Come As You Are",164,1,1,"Kurt Cobain",219219,7123357,0.99
+2008,Polly,164,1,1,"Kurt Cobain",177031,5788407,0.99
+2013,"On A Plain",164,1,1,"Kurt Cobain",196440,6390635,0.99
+2014,"Something In The Way",164,1,1,"Kurt Cobain",230556,7472168,0.99
+2333,"It's The End Of The World As We Know It (And I Feel Fine)",190,1,4,R.E.M.,244819,7998987,0.99
+2396,Californication,195,1,1,"Red Hot Chili Peppers",321671,10568999,0.99
+2957,"Walk To The Water",234,1,1,U2,289253,9523336,0.99
+3065,"Ain't Talkin' 'bout Love",243,1,1,"Edward Van Halen, Alex Van Halen, David Lee Roth, Michael Anthony",228336,7569506,0.99
+3479,"Prometheus Overture, Op. 43",324,4,24,"Ludwig van Beethoven",339567,10887931,0.99

@@ -16,4 +16,14 @@ class AnnotationsMapperTest extends TestCase
         $this->assertTrue($mapper->hasMapItem('albums'));
         $this->assertTrue($mapper->hasMapItem('artists'));
     }
+
+    /**
+     * @expectedException     \Jad\Exceptions\ResourceNotFoundException
+     * @expectedExceptionCode 404
+     */
+    public function testGetMapItemException()
+    {
+        $mapper = new AnnotationsMapper(Manager::getInstance()->getEm());
+        $mapper->getMapItem('moo');
+    }
 }

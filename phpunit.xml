@@ -5,5 +5,8 @@
         <testsuite name="JAD test suite">
             <directory>tests</directory>
         </testsuite>
+        <testsuite name="JAD e2e suit">
+            <directory>tests</directory>
+        </testsuite>
     </testsuites>
 </phpunit>

@@ -61,8 +61,8 @@ class DoctrineTest extends TestCase
         $result = json_decode($jad->jsonApiResult());
 
         $this->assertEquals(5, count($result->data));
-        $this->assertEquals('2078', $result->data[2]->id);
-        $this->assertEquals('Óculos', $result->data[2]->attributes->name);
+        $this->assertEquals('2014', $result->data[2]->id);
+        $this->assertEquals('Something In The Way', $result->data[2]->attributes->name);
 
         $_GET = [
             'page' => [
@@ -79,7 +79,7 @@ class DoctrineTest extends TestCase
         $result = json_decode($jad->jsonApiResult());
 
         $this->assertEquals(10, count($result->data));
-        $this->assertEquals('8', $result->data[7]->id);
+        $this->assertEquals('645', $result->data[7]->id);
         $this->assertEquals('0.99', $result->data[7]->attributes->price);
 
     }
@@ -103,11 +103,11 @@ class DoctrineTest extends TestCase
 
         $result = json_decode($jad->jsonApiResult());
 
-        $this->assertEquals('6', $result->data[0]->id);
-        $this->assertEquals('7', $result->data[1]->id);
-        $this->assertEquals('8', $result->data[2]->id);
-        $this->assertEquals('9', $result->data[3]->id);
-        $this->assertEquals('10', $result->data[4]->id);
+        $this->assertEquals('422', $result->data[0]->id);
+        $this->assertEquals('603', $result->data[1]->id);
+        $this->assertEquals('645', $result->data[2]->id);
+        $this->assertEquals('678', $result->data[3]->id);
+        $this->assertEquals('1139', $result->data[4]->id);
 
         $this->assertTrue(true);
     }

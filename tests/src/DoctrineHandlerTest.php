@@ -25,6 +25,7 @@ class DoctrineHandlerTest extends TestCase
     {
         $dataSet = new CsvDataSet();
         $dataSet->addTable('artists', dirname(__DIR__ ) . '/fixtures/artists.csv');
+        $dataSet->addTable('tracks', dirname(__DIR__ ) . '/fixtures/tracks.csv');
         return $dataSet;
     }
 
@@ -175,12 +176,14 @@ class DoctrineHandlerTest extends TestCase
 
     public function testGetEntity()
     {
+        $_SERVER = ['REQUEST_URI' => '/tracks'];
+
         $mapper = new ArrayMapper(Manager::getInstance()->getEm());
-        $mapper->add('playlists', ['entityClass' => 'Jad\Database\Entities\Playlists']);
         $mapper->add('tracks', ['entityClass' => 'Jad\Database\Entities\Tracks']);
 
         $dh = new DoctrineHandler($mapper, new RequestHandler());
-        $entity = $dh->getEntity('tracks', 44);
-        $this->assertInstanceOf('Jad\Database\Entities\Tracks', $entity);
+        $track = $dh->getEntity('tracks', 43);
+        $this->assertInstanceOf('Jad\Database\Entities\Tracks', $track);
+        $this->assertEquals($track->getName(), 'Forgiven');
     }
 }
