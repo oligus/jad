@@ -50,11 +50,13 @@ class Jad
 
         switch($method) {
             case 'PATCH':
-                $dh->updateEntity();
+                $input = json_decode(file_get_contents("php://input"));
+                $dh->updateEntity($input);
                 break;
 
             case 'POST':
-                $dh->createEntity();
+                $input = json_decode(file_get_contents("php://input"));
+                $dh->createEntity($input);
                 break;
 
             case 'DELETE':

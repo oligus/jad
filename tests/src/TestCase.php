@@ -14,7 +14,7 @@ class TestCase extends PHPUnitTestCase
     /**
      * @param $className
      * @param $methodName
-     * @return ReflectionMethod
+     * @return \ReflectionMethod
      */
     protected static function getMethod($className, $methodName) {
         $class = new \ReflectionClass($className);
@@ -26,7 +26,7 @@ class TestCase extends PHPUnitTestCase
     /**
      * @param $className
      * @param array $options
-     * @return PHPUnit_Framework_MockObject_MockObject
+     * @return \PHPUnit_Framework_MockObject_MockObject
      */
     protected function getClassMock($className, array $options = [])
     {

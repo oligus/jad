@@ -38,13 +38,12 @@ class DoctrineHandler
     {
         $this->mapper = $mapper;
         $this->requestHandler = $requestHandler;
-
         $this->type = $requestHandler->getType();
     }
 
     /**
      * @param $id
-     * @return Resource
+     * @return \Tobscure\JsonApi\Resource
      */
     public function getEntityById($id)
     {
@@ -90,10 +89,8 @@ class DoctrineHandler
         return $collection;
     }
 
-    public function updateEntity()
+    public function updateEntity($input)
     {
-        $input = json_decode(file_get_contents("php://input"));
-
         $type = $input->data->type;
         $id = $input->data->id;
         $attributes = isset($input->data->attributes) ? (array) $input->data->attributes : [];
@@ -132,10 +129,8 @@ class DoctrineHandler
         }
     }
 
-    public function createEntity()
+    public function createEntity($input)
     {
-        $input = json_decode(file_get_contents("php://input"));
-
         $type = $input->data->type;
         $attributes = isset($input->data->attributes) ? (array) $input->data->attributes : [];
         $mapItem = $this->mapper->getMapItem($type);

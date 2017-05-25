@@ -8,189 +8,169 @@ use Jad\Map\ArrayMapper;
 use Jad\Database\Manager;
 use Tobscure\JsonApi\Document;
 
+use PHPUnit\DbUnit\TestCaseTrait;
+use PHPUnit\DbUnit\DataSet\CsvDataSet;
+
 class DoctrineHandlerTest extends TestCase
 {
+    use TestCaseTrait;
+
+    public function getConnection()
+    {
+        $pdo = new \PDO('sqlite://' . dirname(__DIR__ ) . '/fixtures/test_db.sqlite');
+        return $this->createDefaultDBConnection($pdo, ':memory:');
+    }
+
+    public function getDataSet()
+    {
+        $dataSet = new CsvDataSet();
+        $dataSet->addTable('artists', dirname(__DIR__ ) . '/fixtures/artists.csv');
+        return $dataSet;
+    }
+
     public function testGetEntityById()
     {
-        $repo = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
-            ->disableOriginalConstructor()
-            ->setMethods(['find'])
-            ->getMock();
-
-        $repo
-            ->expects($this->at(0))
-            ->method('find')
-            ->with(1)
-            ->willReturn($this->getArticleEntity(['id' => 1, 'name' => 'article1']));
-
-        $classMeta = $this->getMockBuilder('Doctrine\ORM\Mapping\ClassMetadata')
-            ->setMethods(['getFieldNames', 'getIdentifier'])
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $classMeta
-            ->expects($this->any())
-            ->method('getFieldNames')
-            ->willReturn(['id', 'name']);
-
-        $classMeta
-            ->expects($this->any())
-            ->method('getIdentifier')
-            ->willReturn(['id']);
-
-        $em = $this->getMockBuilder('Doctrine\ORM\EntityManager')
-            ->disableOriginalConstructor()
-            ->setMethods(['getRepository', 'getClassMetadata'])
-            ->getMock();
-
-        $em
-            ->expects($this->any())
-            ->method('getRepository')
-            ->with('TestClass')
-            ->willReturn($repo);
-
-        $em
-            ->expects($this->any())
-            ->method('getClassMetadata')
-            ->with('TestClass')
-            ->willReturn($classMeta);
-
-        $mapper = new ArrayMapper($em);
-        $mapper->add('article', [
-            'entityClass' => 'TestClass'
+        $mapper = new ArrayMapper(Manager::getInstance()->getEm());
+        $mapper->add('artists', [
+            'entityClass' => 'Jad\Database\Entities\Artists'
         ]);
 
-        $_SERVER = ['REQUEST_URI' => '/article'];
+        $_SERVER = ['REQUEST_URI' => '/artists'];
         $dh = new DoctrineHandler($mapper, new RequestHandler());
 
-        $resource = $dh->getEntityById(1);
-
+        $resource = $dh->getEntityById(5);
         $document = new Document($resource);
 
-        $expected = '{"data":{"type":"article","id":"1","attributes":{"name":"article1"}}}';
+        $expected = '{"data":{"type":"artists","id":"5","attributes":{"name":"Alice In Chains"}}}';
         $this->assertEquals($expected, json_encode($document));
     }
 
     public function testGetEntities()
     {
-        $repo = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
-            ->disableOriginalConstructor()
-            ->setMethods(['findBy'])
-            ->getMock();
+        $_GET = [
+            'sort' => '-name',
+            'page' => [
+                'offset' => 0,
+                'limit' => 10
+            ],
+        ];
 
-        $entities = [];
-        $entities[] = $this->getArticleEntity(['id' => 1, 'name' => 'article1']);
-        $entities[] = $this->getArticleEntity(['id' => 2, 'name' => 'article2']);
-        $entities[] = $this->getArticleEntity(['id' => 3, 'name' => 'article3']);
+        $_SERVER = ['REQUEST_URI' => '/artists'];
 
-        $repo
-            ->expects($this->at(0))
-            ->method('findBy')
-            ->with([], null, null, null)
-            ->willReturn($entities);
-
-        $repo
-            ->expects($this->at(1))
-            ->method('findBy')
-            ->with([], ['id' => 'desc'], null, null)
-            ->willReturn($entities);
-
-        $repo
-            ->expects($this->at(2))
-            ->method('findBy')
-            ->with([], ['id' => 'asc', 'name' => 'desc'], null, null)
-            ->willReturn($entities);
-
-        $classMeta = $this->getMockBuilder('Doctrine\ORM\Mapping\ClassMetadata')
-            ->setMethods(['getFieldNames', 'getIdentifier'])
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $classMeta
-            ->expects($this->any())
-            ->method('getFieldNames')
-            ->willReturn(['id', 'name']);
-
-        $classMeta
-            ->expects($this->any())
-            ->method('getIdentifier')
-            ->willReturn(['id']);
-
-        $em = $this->getMockBuilder('Doctrine\ORM\EntityManager')
-            ->disableOriginalConstructor()
-            ->setMethods(['getRepository', 'getClassMetadata'])
-            ->getMock();
-
-        $em
-            ->expects($this->any())
-            ->method('getRepository')
-            ->with('TestClass')
-            ->willReturn($repo);
-
-        $em
-            ->expects($this->any())
-            ->method('getClassMetadata')
-            ->with('TestClass')
-            ->willReturn($classMeta);
-
-        $mapper = new ArrayMapper($em);
-        $mapper->add('article', [
-            'entityClass' => 'TestClass'
+        $mapper = new ArrayMapper(Manager::getInstance()->getEm());
+        $mapper->add('artists', [
+            'entityClass' => 'Jad\Database\Entities\Artists'
         ]);
 
         $dh = new DoctrineHandler($mapper, new RequestHandler());
         $collection = $dh->getEntities();
         $document = new Document($collection);
 
-        $expected = '{"data":[{"type":"article","id":"1","attributes":{"name":"article1"}},{"type":"article","id":"2","attributes":{"name":"article2"}},{"type":"article","id":"3","attributes":{"name":"article3"}}]}';
+        $expected = '{"data":[{"type":"artists","id":"155","attributes":{"name":"Zeca Pagodinho"}},{"type":"artists","id":"168","attributes":{"name":"Youssou N\'Dour"}},{"type":"artists","id":"212","attributes":{"name":"Yo-Yo Ma"}},{"type":"artists","id":"255","attributes":{"name":"Yehudi Menuhin"}},{"type":"artists","id":"181","attributes":{"name":"Xis"}},{"type":"artists","id":"211","attributes":{"name":"Wilhelm Kempff"}},{"type":"artists","id":"154","attributes":{"name":"Whitesnake"}},{"type":"artists","id":"73","attributes":{"name":"Vin\u00edcius E Qurteto Em Cy"}},{"type":"artists","id":"74","attributes":{"name":"Vin\u00edcius E Odette Lara"}},{"type":"artists","id":"71","attributes":{"name":"Vin\u00edcius De Moraes & Baden Powell"}}]}';
         $this->assertEquals($expected, json_encode($document));
 
         $_GET = [
-            'sort' => '-id'
+            'sort' => 'name',
+            'page' => [
+                'offset' => 10,
+                'limit' => 5
+            ],
         ];
 
         $dh = new DoctrineHandler($mapper, new RequestHandler());
         $collection = $dh->getEntities();
+        $document = new Document($collection);
 
-        $_GET = [
-            'sort' => 'id,-name'
-        ];
+        $expected = '{"data":[{"type":"artists","id":"260","attributes":{"name":"Adrian Leaper & Doreen de Feis"}},{"type":"artists","id":"3","attributes":{"name":"Aerosmith"}},{"type":"artists","id":"161","attributes":{"name":"Aerosmith & Sierra Leone\'s Refugee Allstars"}},{"type":"artists","id":"197","attributes":{"name":"Aisha Duo"}},{"type":"artists","id":"4","attributes":{"name":"Alanis Morissette"}}]}';
+        $this->assertEquals($expected, json_encode($document));
+    }
+
+    public function testUpdateEntity()
+    {
+        $_SERVER = ['REQUEST_URI' => '/artists'];
+
+        $mapper = new ArrayMapper(Manager::getInstance()->getEm());
+        $mapper->add('artists', [
+            'entityClass' => 'Jad\Database\Entities\Artists'
+        ]);
 
         $dh = new DoctrineHandler($mapper, new RequestHandler());
-        $collection = $dh->getEntities();
+        $input = new \stdClass();
+        $input->data = new \stdClass();
+        $input->data->id = 22;
+        $input->data->type = 'artists';
+        $input->data->attributes = new \stdClass();
+        $input->data->attributes->name = 'Test Artist';
+
+        $dh->updateEntity($input);
+
+        /** @var \Jad\Database\Entities\Artists $result */
+        $result = Manager::getInstance()->getEm()->getRepository('Jad\Database\Entities\Artists')->find(22);
+        $this->assertEquals('Test Artist', $result->getName());
+    }
+
+    public function testCreateEntity()
+    {
+        $_SERVER = ['REQUEST_URI' => '/artists'];
+
+        $mapper = new ArrayMapper(Manager::getInstance()->getEm());
+        $mapper->add('artists', [
+            'entityClass' => 'Jad\Database\Entities\Artists'
+        ]);
+
+        $dh = new DoctrineHandler($mapper, new RequestHandler());
+        $input = new \stdClass();
+        $input->data = new \stdClass();
+        $input->data->type = 'artists';
+        $input->data->attributes = new \stdClass();
+        $input->data->attributes->name = 'New Created Artist';
+
+        $dh->createEntity($input);
+
+        $result = Manager::getInstance()->getEm()->getRepository('Jad\Database\Entities\Artists')
+            ->findOneBy([], ['id' => 'DESC']);
+        $this->assertEquals('New Created Artist', $result->getName());
     }
 
     public function testSetEntityAttribute()
     {
-        $mapper = new ArrayMapper($this->getEm());
-        $mapper->add('article', ['entityClass' => 'ArticleEntity']);
+        $_SERVER = ['REQUEST_URI' => '/artists'];
+
+        $mapper = new ArrayMapper(Manager::getInstance()->getEm());
+        $mapper->add('artists', [
+            'entityClass' => 'Jad\Database\Entities\Artists'
+        ]);
+
         $dh = new DoctrineHandler($mapper, new RequestHandler());
         $method = $this->getMethod('Jad\DoctrineHandler', 'setEntityAttribute');
 
-        $article = $this->getArticleEntity(['id' => 2, 'name' => 'test']);
+        $artist = Manager::getInstance()->getEm()->getRepository('Jad\Database\Entities\Artists')->find(56);
+        $this->assertEquals('Gonzaguinha', $artist->getName());
 
-        $article->expects($this->at(0))
-            ->method('setName')
-            ->with('My new test name');
+        $method->invokeArgs($dh, [$artist, 'name', 'Ted Apple']);
 
-        $method->invokeArgs($dh, [$article, 'name', 'My new test name']);
+        $artist = Manager::getInstance()->getEm()->getRepository('Jad\Database\Entities\Artists')->find(56);
+        $this->assertEquals('Ted Apple', $artist->getName());
     }
 
     public function testDeleteEntity()
     {
-        $_SERVER = ['REQUEST_URI' => '/article'];
+        $_SERVER = ['REQUEST_URI' => '/artists'];
 
-        $em = $this->getEm();
+        $mapper = new ArrayMapper(Manager::getInstance()->getEm());
+        $mapper->add('artists', [
+            'entityClass' => 'Jad\Database\Entities\Artists'
+        ]);
 
-        $em
-            ->expects($this->at(2))
-            ->method('remove')
-            ->with($this->getArticleEntity(['id' => 44, 'name' => 'test']));
+        $artist = Manager::getInstance()->getEm()->getRepository('Jad\Database\Entities\Artists')->find(44);
+        $this->assertInstanceOf('Jad\Database\Entities\Artists', $artist);
+        $this->assertEquals('Kid Abelha', $artist->getName());
 
-        $mapper = new ArrayMapper($em);
-        $mapper->add('article', ['entityClass' => 'ArticleEntity']);
         $dh = new DoctrineHandler($mapper, new RequestHandler());
         $dh->deleteEntity(44);
+
+        $artist = Manager::getInstance()->getEm()->getRepository('Jad\Database\Entities\Artists')->find(44);
+        $this->assertNull($artist);
     }
 
     public function testGetEntity()
@@ -203,74 +183,4 @@ class DoctrineHandlerTest extends TestCase
         $entity = $dh->getEntity('tracks', 44);
         $this->assertInstanceOf('Jad\Database\Entities\Tracks', $entity);
     }
-
-    private function getArticleEntity($params)
-    {
-        $entity = $this->getMockBuilder('ArticleEntity')
-            ->setMethods(['getId', 'getName', 'setName'])
-            ->getMock();
-
-        $entity->expects($this->any())
-            ->method('getId')
-            ->willReturn($params['id']);
-
-        $entity->expects($this->any())
-            ->method('getName')
-            ->willReturn($params['name']);
-
-        return $entity;
-    }
-
-    private function getEm()
-    {
-        $repo = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
-            ->disableOriginalConstructor()
-            ->setMethods(['find'])
-            ->getMock();
-
-        $entities = [];
-        $entities[] = $this->getArticleEntity(['id' => 1, 'name' => 'article1']);
-        $entities[] = $this->getArticleEntity(['id' => 2, 'name' => 'article2']);
-        $entities[] = $this->getArticleEntity(['id' => 3, 'name' => 'article3']);
-
-        $repo
-            ->expects($this->any())
-            ->method('find')
-            ->willReturn($this->getArticleEntity(['id' => 1, 'name' => 'article1']));
-
-        $classMeta = $this->getMockBuilder('Doctrine\ORM\Mapping\ClassMetadata')
-            ->setMethods(['getFieldNames', 'getIdentifier'])
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $classMeta
-            ->expects($this->any())
-            ->method('getFieldNames')
-            ->willReturn(['id', 'name']);
-
-        $classMeta
-            ->expects($this->any())
-            ->method('getIdentifier')
-            ->willReturn(['id']);
-
-        $em = $this->getMockBuilder('Doctrine\ORM\EntityManager')
-            ->disableOriginalConstructor()
-            ->setMethods(['getRepository', 'getClassMetadata', 'remove', 'flush'])
-            ->getMock();
-
-        $em
-            ->expects($this->any())
-            ->method('getRepository')
-            ->with('ArticleEntity')
-            ->willReturn($repo);
-
-        $em
-            ->expects($this->any())
-            ->method('getClassMetadata')
-            ->with('ArticleEntity')
-            ->willReturn($classMeta);
-
-        return $em;
-    }
-
 }
