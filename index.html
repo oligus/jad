@@ -1,0 +1,62 @@
+<html>
+<head>
+    <title>test</title>
+</head>
+<body>
+
+<main></main>
+
+<script src="https://www.gstatic.com/firebasejs/3.9.0/firebase.js"></script>
+
+<script >
+  var config = {
+    apiKey: "AIzaSyCbN5dsJKcsCaLPs2-Iy5GAE_iGnUhMzwk",
+    authDomain: "ellos-783de.firebaseapp.com",
+    databaseURL: "https://ellos-783de.firebaseio.com",
+    projectId: "ellos-783de",
+    storageBucket: "ellos-783de.appspot.com",
+    messagingSenderId: "146241567729"
+  };
+
+  firebase.initializeApp(config);
+
+  let db = firebase.database();
+  let bukser = db.ref("varer/bukser");
+  let Jackets = db.ref("ellos-783de/varer/Jackets");
+
+  let main = document.querySelector("main");
+  let counter = 0;
+
+  function visVare (snap) {
+    let vare = snap.val();
+    let html = '';
+
+    if(counter % 3 === 0) {
+      html += `<div class="w3-row">`
+    }
+
+    html += `<article>
+        <img src="${vare.bilde}">
+        <h1>${vare.merke} ${vare.navn} </h1>
+        <button>Shop now</button>
+    </article> `;
+
+    if(counter % 3 === 0) {
+      html += `</div>`
+    }
+
+    main.innerHTML += html;
+
+
+    console.log(counter);
+    counter++;
+  }
+
+
+  bukser.on("child_added", visVare);
+</script>
+
+</body>
+
+</html>
+

@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity(repositoryClass="Jad\Database\Repositories\GenresRepository")
  * @ORM\Table(name="genres")
- * @Jad\Map\Annotations(type="genres")
+ * @Jad\Map\Annotations(type="genre")
  */
 class Genres
 {

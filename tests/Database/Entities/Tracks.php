@@ -8,7 +8,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 /**
  * @ORM\Entity(repositoryClass="Jad\Database\Repositories\TracksRepository")
  * @ORM\Table(name="tracks")
- * @Jad\Map\Annotations(type="tracks")
+ * @Jad\Map\Annotations(type="track")
  */
 class Tracks
 {

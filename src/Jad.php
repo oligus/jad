@@ -3,37 +3,42 @@
 namespace Jad;
 
 use Jad\Map\Mapper;
-use Jad\Serializers\ErrorDocument;
-use Tobscure\JsonApi\Document;
+use Jad\Response\JsonApiResponse;
+use Jad\Response\Error;
+use Jad\Request\JsonApiRequest;
 
+/**
+ * Class Jad
+ * @package Jad
+ */
 class Jad
 {
     /**
-     * @var Mapper $entityMap
+     * @var Mapper $mapper
      */
-    private $entityMap;
+    private $mapper;
 
     /**
-     * @var RequestHandler $requestHandler
+     * @var JsonApiRequest $jsonApiRequest
      */
-    private $requestHandler;
+    private $jsonApiRequest;
 
     /**
      * Jad constructor.
-     * @param Mapper $entityMap
+     * @param Mapper $mapper
      */
-    public function __construct(Mapper $entityMap)
+    public function __construct(Mapper $mapper)
     {
-        $this->entityMap = $entityMap;
-        $this->requestHandler = new RequestHandler();
+        $this->mapper = $mapper;
+        $this->jsonApiRequest = new JsonApiRequest();
     }
 
     /**
-     * @return \Jad\RequestHandler
+     * @return JsonApiRequest
      */
-    public function getRequestHandler(): RequestHandler
+    public function getJsonApiRequest(): JsonApiRequest
     {
-        return $this->requestHandler;
+        return $this->jsonApiRequest;
     }
 
     /**
@@ -41,58 +46,20 @@ class Jad
      */
     public function setPathPrefix($pathPrefix)
     {
-        $this->getRequestHandler()->setPathPrefix($pathPrefix);
+        $this->getJsonApiRequest()->setPathPrefix($pathPrefix);
     }
 
+    /**
+     *
+     */
     public function jsonApiResult()
     {
         try {
-            $document = $this->getDocument();
-            return json_encode($document);
-        } catch (\Exception $e) {
-            $errorDocument = new ErrorDocument();
-            $errorDocument->addError($e);
-            return json_encode($errorDocument);
+            $response = new JsonApiResponse($this->jsonApiRequest, $this->mapper);
+            $response->render();
+        } catch (\Exception $exception) {
+            $error = new Error($exception);
+            $error->render();
         }
-    }
-
-    private function getDocument()
-    {
-        $method = $this->requestHandler->getRequest()->getMethod();
-        $dh = new DoctrineHandler($this->entityMap, $this->requestHandler);
-
-        switch($method) {
-            case 'PATCH':
-                $input = json_decode(file_get_contents("php://input"));
-                $dh->updateEntity($input);
-                break;
-
-            case 'POST':
-                $input = json_decode(file_get_contents("php://input"));
-                $dh->createEntity($input);
-                break;
-
-            case 'DELETE':
-                $dh->deleteEntity($this->requestHandler->getId());
-                break;
-        }
-
-        if($this->requestHandler->hasId()) {
-            $resource = $dh->getEntityById($this->requestHandler->getId());
-            $document = new Document($resource);
-        } else {
-            $collection = $dh->getEntities();
-            $document = new Document($collection);
-        }
-
-        $document->addLink('self', $this->getUrl());
-
-        return $document;
-    }
-
-    private function getUrl()
-    {
-        return $this->requestHandler->getRequest()->getSchemeAndHttpHost()
-            . $this->requestHandler->getRequest()->getPathInfo();
     }
 }

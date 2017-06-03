@@ -2,6 +2,7 @@
 
 namespace Jad\Map;
 
+use Jad\Exceptions\MappingException;
 use Jad\Exceptions\ResourceNotFoundException;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -102,6 +103,22 @@ abstract class AbstractMapper implements Mapper
             }
         }
 
-        throw new ResourceNotFoundException('Resource type not found (' . $type . ')');
+        throw new ResourceNotFoundException('Resource type not found [' . $type . ']');
+    }
+
+    /**
+     * @param $className
+     * @return mixed
+     * @throws MappingException
+     */
+    public function getMapItemByClass($className)
+    {
+        foreach ($this->map as $mapItem) {
+            if($mapItem->getEntityClass() === $className) {
+                return $mapItem;
+            }
+        }
+
+        throw new MappingException('Map item with class name [' . $className . '] not found.', 400);
     }
 }

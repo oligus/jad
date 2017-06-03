@@ -11,10 +11,10 @@ class AnnotationsMapperTest extends TestCase
     public function testConstruct()
     {
         $mapper = new AnnotationsMapper(Manager::getInstance()->getEm());
-        $this->assertTrue($mapper->hasMapItem('tracks'));
+        $this->assertTrue($mapper->hasMapItem('track'));
         $this->assertFalse($mapper->hasMapItem('moo'));
-        $this->assertTrue($mapper->hasMapItem('albums'));
-        $this->assertTrue($mapper->hasMapItem('artists'));
+        $this->assertTrue($mapper->hasMapItem('album'));
+        $this->assertTrue($mapper->hasMapItem('artist'));
     }
 
     /**

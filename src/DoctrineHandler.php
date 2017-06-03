@@ -4,9 +4,9 @@ namespace Jad;
 
 use Jad\Map\MapItem;
 use Jad\Map\Mapper;
-use Jad\Serializers\EntitySerializer;
-use Tobscure\JsonApi\Resource;
-use Tobscure\JsonApi\Collection;
+use Jad\Document\Resource;
+use Jad\Document\EntitySerializer;
+use Jad\Request\JsonApiRequest;
 
 /**
  * Class DoctrineHandler
@@ -25,68 +25,77 @@ class DoctrineHandler
     private $type;
 
     /**
-     * @var RequestHandler $requestHandler
+     * @var JsonApiRequest $jsonApiRequest
      */
-    private $requestHandler;
+    private $jsonApiRequest;
 
     /**
      * DoctrineHandler constructor.
      * @param Mapper $mapper
-     * @param RequestHandler $requestHandler
+     * @param JsonApiRequest $jsonApiRequest
      */
-    public function __construct(Mapper $mapper, RequestHandler $requestHandler)
+    public function __construct(Mapper $mapper, JsonApiRequest $jsonApiRequest)
     {
         $this->mapper = $mapper;
-        $this->requestHandler = $requestHandler;
-        $this->type = $requestHandler->getType();
+        $this->jsonApiRequest = $jsonApiRequest;
+        $this->type = $jsonApiRequest->getType();
+    }
+
+    /**
+     * @return array
+     */
+    public function getEntityCollection(): array
+    {
+        $mapItem = $this->mapper->getMapItem($this->type);
+        $limit = $this->jsonApiRequest->getParameters()->getLimit(100);
+        $offset = $this->jsonApiRequest->getParameters()->getOffset(25);
+
+        $entities = $this->mapper->getEm()->getRepository($mapItem->getEntityClass())
+            ->findBy($criteria = [], $this->getOrderBy($this->type), $limit, $offset);
+
+        $collection = [];
+
+        foreach($entities as $entity) {
+            $resource = new Resource($entity, new EntitySerializer($this->mapper, $this->type));
+            $resource->setFields($this->jsonApiRequest->getParameters()->getFields());
+
+            $availableAssociations = $mapItem->getClassMeta()->getAssociationNames();
+            $relationships = $this->jsonApiRequest->getParameters()->getInclude($availableAssociations);
+            $resource->setRelationships($availableAssociations);
+
+            if(!empty($relationships)) {
+                die('$resource->with($relationships');
+                //$resource->with($relationships);
+            }
+
+            $collection[] = $resource;
+        }
+
+        return $collection;
     }
 
     /**
      * @param $id
-     * @return \Tobscure\JsonApi\Resource
+     * @return Document\Resource
      */
-    public function getEntityById($id)
+    public function getEntityById($id): Document\Resource
     {
         $mapItem = $this->mapper->getMapItem($this->type);
         $entity = $this->mapper->getEm()->getRepository($mapItem->getEntityClass())->find($id);
 
         $resource = new Resource($entity, new EntitySerializer($this->mapper, $this->type));
-        $resource->fields($this->requestHandler->getParameters()->getFields());
+        $resource->setFields($this->jsonApiRequest->getParameters()->getFields());
 
         $availableAssociations = $mapItem->getClassMeta()->getAssociationNames();
-        $relationships = $this->requestHandler->getParameters()->getInclude($availableAssociations);
+        $relationships = $this->jsonApiRequest->getParameters()->getInclude($availableAssociations);
+        $resource->setRelationships($availableAssociations);
 
         if(!empty($relationships)) {
-            $resource->with($relationships);
+            die('$resource->with($relationships');
+            //$resource->with($relationships);
         }
 
         return $resource;
-    }
-
-    /**
-     * @return Collection
-     */
-    public function getEntities(): Collection
-    {
-        $mapItem = $this->mapper->getMapItem($this->type);
-
-        $limit = $this->requestHandler->getParameters()->getLimit(100);
-        $offset = $this->requestHandler->getParameters()->getOffset(25);
-
-        $entities = $this->mapper->getEm()->getRepository($mapItem->getEntityClass())
-            ->findBy($criteria = [], $this->getOrderBy($this->type), $limit, $offset);
-
-        $collection = new Collection($entities, new EntitySerializer($this->mapper, $this->type));
-        $collection->fields($this->requestHandler->getParameters()->getFields());
-
-        $availableAssociations = $mapItem->getClassMeta()->getAssociationNames();
-        $relationships = $this->requestHandler->getParameters()->getInclude($availableAssociations);
-
-        if(!empty($relationships)) {
-            $collection->with($relationships);
-        }
-
-        return $collection;
     }
 
     public function updateEntity($input)
@@ -229,7 +238,7 @@ class DoctrineHandler
         $mapItem = $this->mapper->getMapItem($type);
         $available = $mapItem->getClassMeta()->getFieldNames();
 
-        $result = $this->requestHandler->getParameters()->getSort($available);
+        $result = $this->jsonApiRequest->getParameters()->getSort($available);
 
         if(!empty($result)) {
             $orderBy = $result;

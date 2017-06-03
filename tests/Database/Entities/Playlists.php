@@ -10,7 +10,7 @@ use Jad\Database\Entities\Tracks;
 /**
  * @ORM\Entity(repositoryClass="Jad\Database\Repositories\PlaylistsRepository")
  * @ORM\Table(name="playlists")
- * @Jad\Map\Annotations(type="playlists")
+ * @Jad\Map\Annotations(type="playlist")
  */
 class Playlists
 {
