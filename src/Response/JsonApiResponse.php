@@ -236,6 +236,7 @@ class JsonApiResponse
 
         $criteria = array();
 
+
         if(!is_null($filter)) {
             // TODO full criteria support
             //$criteria = new \Doctrine\Common\Collections\Criteria();

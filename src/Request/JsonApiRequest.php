@@ -149,7 +149,7 @@ class JsonApiRequest
      */
     public function getCurrentUrl()
     {
-        return $this->getRequest()->getSchemeAndHttpHost() . $this->getRequest()->getRequestUri();
+        return $this->getRequest()->getSchemeAndHttpHost() . $this->getRequest()->getPathInfo();
     }
 
     /**
