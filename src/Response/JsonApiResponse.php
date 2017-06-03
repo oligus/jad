@@ -183,13 +183,13 @@ class JsonApiResponse
             } else {
                 $collection = $this->getEntities();
                 $document = new Document($collection);
+                $this->setResponse(json_encode($document));
             }
         } else {
             $resource = $this->getRelationship($relationship);
             $document = new Document($resource);
+            $this->setResponse(json_encode($document));
         }
-
-        $this->setResponse(json_encode($document));
     }
 
     public function fetchSingleResourceById($id)
