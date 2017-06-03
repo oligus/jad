@@ -28,6 +28,7 @@ $jad->jsonApiResult();
 ## Contents
 
 [Mapping your entities](docs/mapping.md)
+
 [Fetching the resources](docs/fetch.md)
 
 ## Usage

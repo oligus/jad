@@ -86,8 +86,10 @@ At the moment only one type of filter is available, the equal `[eq]` filter
         "name": "Go Down",
         "composer": "AC\/DC",
         "price": "0.99"
-    },
-    ...
+      }
+    }
   ]
- }
+}
 ```
+
+
