@@ -25,6 +25,8 @@ $jad->setPathPrefix('/api/v1/jad');
 $jad->jsonApiResult();
 ```
 
+[Mapping](docs/mapping.md)
+
 ## Mapping entities
 
 Jad needs to know what resource belongs to what entity so a mapping is required before you can use Jad. There are three
