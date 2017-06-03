@@ -6,6 +6,7 @@ use Jad\Map\Mapper;
 use Jad\Common\ClassHelper;
 use Jad\Document\Collection;
 use Jad\Document\Resource;
+use Jad\Document\Links;
 use Jad\Document\JsonDocument as Document;
 use Jad\Request\JsonApiRequest as Request;
 use Jad\Serializers\EntitySerializer;
@@ -181,22 +182,17 @@ class JsonApiResponse
             if($this->request->hasId()) {
                 $this->fetchSingleResourceById($this->request->getId());
             } else {
-                $collection = $this->getEntities();
-                $document = new Document($collection);
-                $this->setResponse(json_encode($document));
+                $this->createDocument($this->getEntities());
             }
         } else {
-            $resource = $this->getRelationship($relationship);
-            $document = new Document($resource);
-            $this->setResponse(json_encode($document));
+            $this->createDocument($this->getRelationship($relationship));
         }
     }
 
     public function fetchSingleResourceById($id)
     {
         $resource = $this->getEntityById($id);
-        $document = new Document($resource);
-        $this->setResponse(json_encode($document));
+        $this->createDocument($resource);
     }
 
     /**
@@ -308,6 +304,19 @@ class JsonApiResponse
         return $orderBy;
     }
 
+    /**
+     * @param \JsonSerializable $resource
+     */
+    private function createDocument(\JsonSerializable $resource)
+    {
+        $document = new Document($resource);
+
+        $links = new Links();
+        $links->setSelf($this->request->getCurrentUrl());
+        $document->addLinks($links);
+
+        $this->setResponse(json_encode($document));
+    }
     /**
      * @param $content
      * @param array $headers
