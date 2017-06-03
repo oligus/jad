@@ -73,17 +73,104 @@ class JsonApiResponse
 
     public function updateResource()
     {
+        $input = $this->request->getInputJson();
+        $type = $input->data->type;
+        $id = $input->data->id;
 
+        $attributes = isset($input->data->attributes) ? (array) $input->data->attributes : [];
+        $mapItem = $this->mapper->getMapItem($type);
+
+        $entity = $this->mapper->getEm()->getRepository($mapItem->getEntityClass())->find($id);
+        $entityClass = $mapItem->getEntityClass();
+
+        if($entity instanceof $entityClass) {
+            foreach($attributes as $attribute => $value) {
+                if($mapItem->getClassMeta()->hasField($attribute)) {
+                    ClassHelper::setPropertyValue($entity, $attribute, $value);
+                }
+            }
+
+            $relationships = isset($input->data->relationship) ? (array) $input->data->relationship : [];
+
+            foreach($relationships as $relationship) {
+                $type = $relationship->data->type;
+                $id = $relationship->data->id;
+
+                $relationalMapItem = $this->mapper->getMapItem($type);
+                $relationalClass = $relationalMapItem->getEntityClass();
+
+                $reference = $this->mapper->getEm()->getReference($relationalClass, $id);
+
+                $method = 'add' . ucfirst($type);
+
+                if(method_exists($entity, $method)) {
+                    $entity->$method($reference);
+                }
+            }
+
+            $this->mapper->getEm()->persist($entity);
+            $this->mapper->getEm()->flush();
+
+            $this->fetchSingleResourceById($id);
+        }
     }
 
     public function createResource()
     {
+        $input = $this->request->getInputJson();
+        $type = $input->data->type;
 
+        $attributes = isset($input->data->attributes) ? (array) $input->data->attributes : [];
+        $mapItem = $this->mapper->getMapItem($type);
+        $entityClass = $mapItem->getEntityClass();
+
+        $entity = new $entityClass;
+
+        foreach($attributes as $attribute => $value) {
+            if($mapItem->getClassMeta()->hasField($attribute)) {
+                ClassHelper::setPropertyValue($entity, $attribute, $value);
+            }
+        }
+
+        $relationships = isset($input->data->relationship) ? (array) $input->data->relationship : [];
+
+        foreach($relationships as $relationship) {
+            $type = $relationship->data->type;
+            $id = $relationship->data->id;
+
+            $relationalMapItem = $this->mapper->getMapItem($type);
+            $relationalClass = $relationalMapItem->getEntityClass();
+
+            $reference = $this->mapper->getEm()->getReference($relationalClass, $id);
+
+            $method = 'add' . ucfirst($type);
+
+            if(method_exists($entity, $method)) {
+                $entity->$method($reference);
+            }
+        }
+
+        $this->mapper->getEm()->persist($entity);
+        $this->mapper->getEm()->flush();
+
+        /** @var \Jad\Map\MapItem $mapItem */
+        $id = ClassHelper::getPropertyValue($entity, $mapItem->getIdField());
+
+        $this->fetchSingleResourceById($id);
     }
 
     public function deleteResource()
     {
+        $mapItem = $this->mapper->getMapItem($this->request->getType());
+        $entity = $this->mapper->getEm()->getRepository($mapItem->getEntityClass())->find($this->request->getId());
+        $entityClass = $mapItem->getEntityClass();
 
+        if($entity instanceof $entityClass) {
+            $this->mapper->getEm()->remove($entity);
+            $this->mapper->getEm()->flush();
+        }
+
+        $this->setResponse('', array(), 204);
     }
 
     public function fetchResources()
@@ -92,8 +179,7 @@ class JsonApiResponse
 
         if(is_null($relationship)) {
             if($this->request->hasId()) {
-                $resource = $this->getEntityById($this->request->getId());
-                $document = new Document($resource);
+                $this->fetchSingleResourceById($this->request->getId());
             } else {
                 $collection = $this->getEntities();
                 $document = new Document($collection);
@@ -103,6 +189,13 @@ class JsonApiResponse
             $document = new Document($resource);
         }
 
+        $this->setResponse(json_encode($document));
+    }
+
+    public function fetchSingleResourceById($id)
+    {
+        $resource = $this->getEntityById($id);
+        $document = new Document($resource);
         $this->setResponse(json_encode($document));
     }
 

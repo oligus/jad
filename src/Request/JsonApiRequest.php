@@ -171,7 +171,7 @@ class JsonApiRequest
         $input = file_get_contents("php://input");
 
         if(empty($input)) {
-            throw new RequestException('Empty input on POST/PATCH');
+            throw new RequestException('Empty input on POST or PATCH');
         }
 
         $result = json_decode(file_get_contents("php://input"));
