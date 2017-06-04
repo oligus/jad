@@ -97,9 +97,9 @@ Result:
 
 ### Including resources
 
-To limit request you can include related resources. You can also include relations of relations by using dot notation.
+To limit requests you can include related resources. You can also include relations of relations by using dot notation.
 
-Example, yoy want playlist with id 2, you want all the tracks and you want the albums these tracks belong to:
+Example, you want playlist with id 2, you want all the tracks and you want the albums these tracks belong to:
 
 Request:
 ```GET /api/v1/jad/playlists/2?include=tracks,tracks.album```

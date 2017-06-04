@@ -31,5 +31,6 @@ $jad->jsonApiResult();
 
 [Fetching the resources](docs/fetch.md)
 
-[Invoking relations](docs/relations.md)
+[Fetching resources with relationships](docs/relations.md)
 
+[Creating a new resource](docs/create.md)

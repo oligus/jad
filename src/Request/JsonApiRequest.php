@@ -2,6 +2,7 @@
 
 namespace Jad\Request;
 
+use Jad\Configure;
 use Jad\Common\Text;
 use Jad\Common\Inflect;
 use Jad\Exceptions\RequestException;
@@ -172,11 +173,17 @@ class JsonApiRequest
     {
         $input = file_get_contents("php://input");
 
+        $testMode = Configure::getInstance()->getConfig('testMode');
+
+        if($testMode) {
+            $input = $this->request->request->get('input');
+        }
+
         if(empty($input)) {
             throw new RequestException('Empty input on POST or PATCH');
         }
 
-        $result = json_decode(file_get_contents("php://input"));
+        $result = json_decode($input);
 
         if(json_last_error() !== JSON_ERROR_NONE) {
             $msg = ucfirst(json_last_error_msg());

@@ -7,6 +7,7 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\AnnotationRegistry;
+use Doctrine\ORM\Query\ResultSetMapping;
 use Jad\Database\Manager;
 
 $paths = array(realpath(__DIR__ . '/Database/Entities' ));
@@ -27,3 +28,12 @@ $em = EntityManager::create($connectionParams, $config);
 
 $manager = Manager::getInstance();
 $manager->setEm($em);
+
+// Clear genres
+$rsm = new ResultSetMapping();
+
+$query = $em->createNativeQuery('delete from genres;', $rsm);
+$query->getResult();
+
+$query = $em->createNativeQuery(' delete from sqlite_sequence where name="genres"', $rsm);
+$query->getResult();

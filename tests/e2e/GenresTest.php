@@ -6,17 +6,29 @@ use Jad\Tests\TestCase;
 use Jad\Database\Manager;
 use Jad\Map\AnnotationsMapper;
 use Jad\Jad;
+use Jad\Configure;
 
 use PHPUnit\DbUnit\TestCaseTrait;
 use PHPUnit\DbUnit\DataSet\CsvDataSet;
+use Doctrine\ORM\Query\ResultSetMapping;
 
 class GenresTest extends TestCase
 {
     use TestCaseTrait;
 
+    /**
+     * delete from your_table;
+    delete from sqlite_sequence where name='your_table';
+     */
     public function setUp()
     {
         parent::setUp();
+        $this->databaseTester = null;
+
+        $this->getDatabaseTester()->setSetUpOperation($this->getSetUpOperation());
+        $this->getDatabaseTester()->setDataSet($this->getDataSet());
+        $this->getDatabaseTester()->onSetUp();
+
         $_GET = [];
     }
 
@@ -112,43 +124,61 @@ class GenresTest extends TestCase
         $this->expectOutputString($expected);
     }
 
-    public function xtestFetchCollectionItemsNoRelation()
+    public function testCreate()
     {
+        Configure::getInstance()->setConfig('testMode', true);
+
         $_SERVER = ['REQUEST_URI' => '/genres'];
+        $_SERVER['REQUEST_METHOD'] = 'POST';
+
+        $input = new \stdClass();
+        $input->data = new \stdClass();
+        $input->data->type = 'genre';
+        $input->data->attributes = new \stdClass();
+        $input->data->attributes->name = 'Created Genre';
+
+        $_POST = ['input' => json_encode($input)];
 
         $mapper = new AnnotationsMapper(Manager::getInstance()->getEm());
         $jad = new Jad($mapper);
 
-        $result = json_decode($jad->jsonApiResult());
-        $this->assertEquals(26, count($result->data));
-
-        $item = $result->data[0];
-        $this->assertEquals(15, $item->id);
-        $this->assertEquals('Go Down', $item->attributes->name);
-        $this->assertEquals('AC/DC', $item->attributes->composer);
-
-        $_GET = [
-            'page' => [
-                'offset' => 0,
-                'limit' => 5
-            ],
-
-            'sort' => '-name',
-            'fields' => [
-                'tracks' => 'composer'
-            ]
-
-        ];
-
-        $jad = new Jad($mapper);
-
-        $result = json_decode($jad->jsonApiResult());
-        $this->assertEquals(5, count($result->data));
-
-        $item = $result->data[0];
-        $this->assertEquals(2957, $item->id);
-        $this->assertEquals('U2', $item->attributes->composer);
-        $this->assertFalse(property_exists($item->attributes, 'name'));
+        $expected = '{"data":{"id":26,"type":"genre","attributes":{"name":"Created Genre"}},"links":{"self":"http:\/\/:\/genres"}}';
+        $jad->jsonApiResult();
+        $this->expectOutputString($expected);
     }
 
+    public function testUpdate()
+    {
+        Configure::getInstance()->setConfig('testMode', true);
+
+        $_SERVER = ['REQUEST_URI' => '/genres/26'];
+        $_SERVER['REQUEST_METHOD'] = 'PATCH';
+
+        $input = new \stdClass();
+        $input->data = new \stdClass();
+        $input->data->type = 'genre';
+        $input->data->id = '26';
+        $input->data->attributes = new \stdClass();
+        $input->data->attributes->name = 'Updated Genre';
+
+        $_POST = ['input' => json_encode($input)];
+
+        $mapper = new AnnotationsMapper(Manager::getInstance()->getEm());
+        $jad = new Jad($mapper);
+
+        $expected = '{"data":{"id":26,"type":"genre","attributes":{"name":"Updated Genre"}},"links":{"self":"http:\/\/:\/genres\/26"}}';
+        $jad->jsonApiResult();
+        $this->expectOutputString($expected);
+    }
+
+    public function testDelete()
+    {
+        $_SERVER = ['REQUEST_URI' => '/genres/26'];
+        $_SERVER['REQUEST_METHOD'] = 'DELETE';
+
+        $mapper = new AnnotationsMapper(Manager::getInstance()->getEm());
+        $jad = new Jad($mapper);
+        $jad->jsonApiResult();
+        $this->assertTrue(true);
+    }
 }

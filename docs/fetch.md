@@ -65,7 +65,7 @@ GET /api/v1/jad/genres?sort=-name
 Limit the number of fields in the results, get requested fields for inclusion, keyed by resource type.
 
 ```
-// GET /api/v1/jad/tracks?fields[track]=name
+GET /api/v1/jad/tracks?fields[track]=name
 ```
 
 #### Filter
@@ -73,7 +73,7 @@ Limit the number of fields in the results, get requested fields for inclusion, k
 At the moment only one type of filter is available, the equal `[eq]` filter
 
 ```
-// GET /api/v1/jad/tracks?filter[name][eq]=Go+Down
+GET /api/v1/jad/tracks?filter[name][eq]=Go+Down
 ```
 
 ```json
