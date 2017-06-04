@@ -28,12 +28,23 @@ class EntitySerializer extends AbstractSerializer
         foreach($associations as $association) {
             $assocName = Text::kebabify($association['fieldName']);
 
-            $relationships[$assocName] = array(
-                'links' => array(
-                    'self' => $this->request->getCurrentUrl() . '/relationship/' . $assocName,
-                    'related' => $this->request->getCurrentUrl() . '/' . $assocName
-                )
-            );
+            if($this->request->hasId()) {
+                $relationships[$assocName] = array(
+                    'links' => array(
+                        'self' => $this->request->getCurrentUrl() . '/relationship/' . $assocName,
+                        'related' => $this->request->getCurrentUrl() . '/' . $assocName
+                    )
+                );
+            } else {
+                $id = ClassHelper::getPropertyValue($entity, $this->getMapItem()->getIdField());
+                $relationships[$assocName] = array(
+                    'links' => array(
+                        'self' => $this->request->getCurrentUrl() . '/' . $id . '/relationship/' . $assocName,
+                        'related' => $this->request->getCurrentUrl() . '/' . $id . '/' . $assocName
+                    )
+                );
+            }
+
         }
 
         return $relationships;
