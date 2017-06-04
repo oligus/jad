@@ -33,6 +33,11 @@ class Parameters
      * @return array
      * @throws ParameterException
      */
+    /**
+     * @param array $available
+     * @return array
+     * @throws ParameterException
+     */
     public function getInclude(array $available = array())
     {
         $relationships = array();
@@ -40,13 +45,18 @@ class Parameters
         if ($include = $this->getInput('include')) {
             $includes = explode(',', $include);
 
+            $keys = array();
+
             foreach($includes as $include) {
-                $parts = explode('.', $include);
+                $tmpArray = array();
+                $parts = explode('.', trim($include));
                 $key = array_shift($parts);
-                $relationships[$key] = implode('.', $parts);
+                $keys[] = $key;
+                $tmpArray[$key] = implode('.', $parts);
+                $relationships[] = $tmpArray;
             }
 
-            $invalid = array_diff(array_keys($relationships), $available);
+            $invalid = array_diff(array_unique($keys), $available);
 
             if (count($invalid)) {
                 throw new ParameterException('Invalid includes ['.implode(',', $invalid).']');

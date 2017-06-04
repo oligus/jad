@@ -40,7 +40,7 @@ class PlaylistTest extends TestCase
         $mapper = new AnnotationsMapper(Manager::getInstance()->getEm());
         $jad = new Jad($mapper);
 
-        $expected = '{"data":[{"id":1,"type":"playlist","attributes":{"name":"All tracks"},"relationships":{"tracks":{"links":{"self":"http:\/\/:\/playlist\/relationship\/tracks","related":"http:\/\/:\/playlist\/tracks"}}}},{"id":2,"type":"playlist","attributes":{"name":"Some tracks"},"relationships":{"tracks":{"links":{"self":"http:\/\/:\/playlist\/relationship\/tracks","related":"http:\/\/:\/playlist\/tracks"}}}},{"id":3,"type":"playlist","attributes":{"name":"No tracks"},"relationships":{"tracks":{"links":{"self":"http:\/\/:\/playlist\/relationship\/tracks","related":"http:\/\/:\/playlist\/tracks"}}}}],"links":{"self":"http:\/\/:\/playlist"}}';
+        $expected = '{"data":[{"id":1,"type":"playlist","attributes":{"name":"All tracks"},"relationships":{"tracks":{"links":{"self":"http:\/\/:\/playlist\/1\/relationship\/tracks","related":"http:\/\/:\/playlist\/1\/tracks"}}}},{"id":2,"type":"playlist","attributes":{"name":"Some tracks"},"relationships":{"tracks":{"links":{"self":"http:\/\/:\/playlist\/2\/relationship\/tracks","related":"http:\/\/:\/playlist\/2\/tracks"}}}},{"id":3,"type":"playlist","attributes":{"name":"No tracks"},"relationships":{"tracks":{"links":{"self":"http:\/\/:\/playlist\/3\/relationship\/tracks","related":"http:\/\/:\/playlist\/3\/tracks"}}}}],"links":{"self":"http:\/\/:\/playlist"}}';
         $jad->jsonApiResult();
         $this->expectOutputString($expected);
     }
@@ -52,8 +52,8 @@ class PlaylistTest extends TestCase
 
         $mapper = new AnnotationsMapper(Manager::getInstance()->getEm());
         $jad = new Jad($mapper);
+        $expected = '{"data":[{"id":15,"type":"track","attributes":{"name":"Go Down"},"relationships":{"album":{"links":{"self":"http:\/\/:\/tracks\/15\/relationship\/album","related":"http:\/\/:\/tracks\/15\/album"}},"playlists":{"links":{"self":"http:\/\/:\/tracks\/15\/relationship\/playlists","related":"http:\/\/:\/tracks\/15\/playlists"}}}},{"id":43,"type":"track","attributes":{"name":"Forgiven"},"relationships":{"album":{"links":{"self":"http:\/\/:\/tracks\/43\/relationship\/album","related":"http:\/\/:\/tracks\/43\/album"}},"playlists":{"links":{"self":"http:\/\/:\/tracks\/43\/relationship\/playlists","related":"http:\/\/:\/tracks\/43\/playlists"}}}},{"id":77,"type":"track","attributes":{"name":"Enter Sandman"},"relationships":{"album":{"links":{"self":"http:\/\/:\/tracks\/77\/relationship\/album","related":"http:\/\/:\/tracks\/77\/album"}},"playlists":{"links":{"self":"http:\/\/:\/tracks\/77\/relationship\/playlists","related":"http:\/\/:\/tracks\/77\/playlists"}}}},{"id":117,"type":"track","attributes":{"name":"Rock \'N\' Roll Music"},"relationships":{"album":{"links":{"self":"http:\/\/:\/tracks\/117\/relationship\/album","related":"http:\/\/:\/tracks\/117\/album"}},"playlists":{"links":{"self":"http:\/\/:\/tracks\/117\/relationship\/playlists","related":"http:\/\/:\/tracks\/117\/playlists"}}}},{"id":351,"type":"track","attributes":{"name":"Debra Kadabra"},"relationships":{"album":{"links":{"self":"http:\/\/:\/tracks\/351\/relationship\/album","related":"http:\/\/:\/tracks\/351\/album"}},"playlists":{"links":{"self":"http:\/\/:\/tracks\/351\/relationship\/playlists","related":"http:\/\/:\/tracks\/351\/playlists"}}}}],"links":{"self":"http:\/\/:\/tracks"}}';
 
-        $expected = '{"data":[{"id":15,"type":"track","attributes":{"name":"Go Down"},"relationships":{"album":{"links":{"self":"http:\/\/:\/tracks\/relationship\/album","related":"http:\/\/:\/tracks\/album"}},"playlists":{"links":{"self":"http:\/\/:\/tracks\/relationship\/playlists","related":"http:\/\/:\/tracks\/playlists"}}}},{"id":43,"type":"track","attributes":{"name":"Forgiven"},"relationships":{"album":{"links":{"self":"http:\/\/:\/tracks\/relationship\/album","related":"http:\/\/:\/tracks\/album"}},"playlists":{"links":{"self":"http:\/\/:\/tracks\/relationship\/playlists","related":"http:\/\/:\/tracks\/playlists"}}}},{"id":77,"type":"track","attributes":{"name":"Enter Sandman"},"relationships":{"album":{"links":{"self":"http:\/\/:\/tracks\/relationship\/album","related":"http:\/\/:\/tracks\/album"}},"playlists":{"links":{"self":"http:\/\/:\/tracks\/relationship\/playlists","related":"http:\/\/:\/tracks\/playlists"}}}},{"id":117,"type":"track","attributes":{"name":"Rock \'N\' Roll Music"},"relationships":{"album":{"links":{"self":"http:\/\/:\/tracks\/relationship\/album","related":"http:\/\/:\/tracks\/album"}},"playlists":{"links":{"self":"http:\/\/:\/tracks\/relationship\/playlists","related":"http:\/\/:\/tracks\/playlists"}}}},{"id":351,"type":"track","attributes":{"name":"Debra Kadabra"},"relationships":{"album":{"links":{"self":"http:\/\/:\/tracks\/relationship\/album","related":"http:\/\/:\/tracks\/album"}},"playlists":{"links":{"self":"http:\/\/:\/tracks\/relationship\/playlists","related":"http:\/\/:\/tracks\/playlists"}}}}],"links":{"self":"http:\/\/:\/tracks"}}';
         $jad->jsonApiResult();
         $this->expectOutputString($expected);
     }
@@ -77,7 +77,7 @@ class PlaylistTest extends TestCase
         $mapper = new AnnotationsMapper(Manager::getInstance()->getEm());
         $jad = new Jad($mapper);
 
-        $expected = '{"data":[{"id":1,"type":"playlists","attributes":{"name":"All tracks"}},{"id":2,"type":"playlists","attributes":{"name":"Some tracks"}}],"links":{"self":"http:\/\/:\/tracks\/15\/playlists"}}';
+        $expected = '{"data":[{"id":1,"type":"playlist","attributes":{"name":"All tracks"}},{"id":2,"type":"playlist","attributes":{"name":"Some tracks"}}],"links":{"self":"http:\/\/:\/tracks\/15\/playlists"}}';
         $jad->jsonApiResult();
         $this->expectOutputString($expected);
     }
@@ -89,7 +89,7 @@ class PlaylistTest extends TestCase
         $mapper = new AnnotationsMapper(Manager::getInstance()->getEm());
         $jad = new Jad($mapper);
 
-        $expected = '{"data":[{"id":1,"type":"playlists"},{"id":2,"type":"playlists"}],"links":{"self":"http:\/\/:\/tracks\/15\/relationship\/playlists"}}';
+        $expected = '{"data":[{"id":1,"type":"playlist"},{"id":2,"type":"playlist"}],"links":{"self":"http:\/\/:\/tracks\/15\/relationship\/playlists"}}';
         $jad->jsonApiResult();
         $this->expectOutputString($expected);
     }

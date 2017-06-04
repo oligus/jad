@@ -83,7 +83,7 @@ class JsonApiRequestTest extends TestCase
 
     /**
      * @expectedException \Jad\Exceptions\RequestException
-     * @expectedExceptionMessage Relationship entity missing
+     * @expectedExceptionMessage Relationship resource type missing
      */
     public function testGetTypeException()
     {

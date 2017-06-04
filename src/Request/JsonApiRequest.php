@@ -121,16 +121,18 @@ class JsonApiRequest
         if(array_key_exists(2, $items)) {
             if($items[2] !== 'relationship') {
                 $relationships['view'] = 'full';
-                $relationships['type'] = Text::deKebabify($items[2]);
+                $type = Text::deKebabify($items[2]);
+                $relationships['type'] = Inflect::singularize($type);
                 return $relationships;
             }
 
             if(!array_key_exists(3, $items)) {
-                throw new RequestException('Relationship entity missing');
+                throw new RequestException('Relationship resource type missing');
             }
 
             $relationships['view'] = 'list';
-            $relationships['type'] = Text::deKebabify($items[3]);
+            $type = Text::deKebabify($items[3]);
+            $relationships['type'] = Inflect::singularize($type);
 
             return $relationships;
         }

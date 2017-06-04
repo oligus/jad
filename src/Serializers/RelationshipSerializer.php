@@ -2,6 +2,8 @@
 
 namespace Jad\Serializers;
 
+use Doctrine\DBAL\Schema\Index;
+use Jad\Common\Inflect;
 use Jad\Common\Text;
 use Jad\Map\MapItem;
 
@@ -83,7 +85,14 @@ class RelationshipSerializer extends AbstractSerializer implements Serializer
         /** @var \Jad\Map\MapItem $mapItem */
         $mapItem = $this->mapper->getMapItem($this->type);
 
-        $association = $mapItem->getClassMeta()->getAssociationMapping($this->relationship['type']);
+        $resourceType = $this->relationship['type'];
+
+        if(!$mapItem->getClassMeta()->hasAssociation($resourceType)) {
+            $resourceType = Inflect::pluralize($resourceType);
+        }
+
+        $association = $mapItem->getClassMeta()->getAssociationMapping($resourceType);
+
         $entityClass = $association['targetEntity'];
 
         $relatedMapItem = $this->mapper->getMapItemByClass($entityClass);

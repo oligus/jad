@@ -58,4 +58,25 @@ class ClassHelper
             }
         }
     }
+
+    /**
+     * @param $className
+     * @param $property
+     * @return bool
+     */
+    public static function hasPropertyValue($className, $property)
+    {
+        $methodName = 'set' . ucfirst($property);
+
+        if (method_exists($className, $methodName)) {
+            return true;
+        } else {
+            $reflection = new \ReflectionClass($className);
+            if ($reflection->hasProperty($property)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

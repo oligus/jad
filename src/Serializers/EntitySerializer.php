@@ -87,8 +87,7 @@ class EntitySerializer extends AbstractSerializer
         $resources = array();
 
         foreach ($entityCollection as $associatedEntity) {
-            $resource = new Resource($associatedEntity, new IncludedSerializer($this->mapper, $type, $this->request));
-            $resources[] = $resource->serialize();
+            $resources[] = new Resource($associatedEntity, new IncludedSerializer($this->mapper, $type, $this->request));
         }
         return $resources;
     }

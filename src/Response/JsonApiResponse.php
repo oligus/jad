@@ -2,6 +2,7 @@
 
 namespace Jad\Response;
 
+use Jad\Common\Inflect;
 use Jad\Map\Mapper;
 use Jad\Common\ClassHelper;
 use Jad\Document\Collection;
@@ -263,7 +264,13 @@ class JsonApiResponse
         $mapItem = $this->mapper->getMapItem($this->request->getType());
         $entity = $this->mapper->getEm()->getRepository($mapItem->getEntityClass())->find($this->request->getId());
 
-        $result = ClassHelper::getPropertyValue($entity, $relationship['type']);
+        $resourceType = $relationship['type'];
+
+        if(!ClassHelper::hasPropertyValue($entity, $resourceType)) {
+            $resourceType = Inflect::pluralize($resourceType);
+        }
+
+        $result = ClassHelper::getPropertyValue($entity, $resourceType);
 
         $serializer = new RelationshipSerializer($this->mapper, $this->request->getType(), $this->request);
         $serializer->setRelationship($relationship);
@@ -281,7 +288,7 @@ class JsonApiResponse
 
         $resource = new Resource($result, $serializer);
         $resource->setFields($this->request->getParameters()->getFields());
-
+        
         return $resource;
     }
 

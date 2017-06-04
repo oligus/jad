@@ -20,7 +20,7 @@ You need to have Doctrine installed and preferably setup before you can use Jad.
 
 ## Quick start
 ```
-$jad = new Jad(new Jad\Map\AutoMapper($em));
+$jad = new Jad(new Jad\Map\AnnotationMapper($em));
 $jad->setPathPrefix('/api/v1/jad');
 $jad->jsonApiResult();
 ```
@@ -31,63 +31,5 @@ $jad->jsonApiResult();
 
 [Fetching the resources](docs/fetch.md)
 
-## Usage
+[Invoking relations](docs/relations.md)
 
-Setup Jad in your middleware/plugin:
-
-```
-$jad = new Jad($mapper);
-$jad->setPathPrefix('/api/v1/jad');
-$jad->jsonApiResult();
-```
-
-#### Fetch single item
-
-```
-GET /api/v1/jad/articles/45
-```
-
-
-### Relationships
-Include relationship
-
-```
-// GET /api/jad/tracks/1?include=playlists
-```
-Will generate relationship. The relationship Entity must be specified in the mapper.
-
-#### Create
-
-```json
-{
-  "data": {
-    "type": "artists",
-    "attributes": {
-      "name": "Test artist"
-    }
-  }
-}
-```
-#### Update
-When updating an entity with relationship, you add
-
-```json
-{
-  "data": {
-    "type": "playlists",
-    "id": "17",
-    "relationship": {
-      "tracks": { "data": { "type": "tracks", "id": 44 } }
-    }
-  }
-}
-``` 
-
-
-#### Delete
-
-```
-DELETE /api/v1/jad/articles/45
-```
-
-### Doctrine setup
