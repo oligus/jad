@@ -34,3 +34,15 @@ $jad->jsonApiResult();
 [Fetching resources with relationships](docs/relations.md)
 
 [Creating a new resource](docs/create.md)
+
+## Contributing
+
+When contributing to this repository, please first discuss the change you wish to make via issue before making a pull request.
+
+## Authors
+
+* **Oli Gustafsson** - *Initial work* - [oligus](https://github.com/oligus)
+
+## License
+
+This project is licensed under the GPL v2 License - see the [LICENSE](LICENSE) file for details
