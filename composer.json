@@ -17,7 +17,6 @@
   ],
   "require": {
     "php": ">=7.0.0",
-    "tobscure/json-api": "^0.4.1",
     "symfony/http-foundation": "^3.2"
   },
   "require-dev": {

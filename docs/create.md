@@ -55,13 +55,15 @@ Request body:
       "name": "New Playlist"
     },
    "relationships": {
-    "tracks": [
-      { "type": "track", "id": 15 },
-      { "type": "track", "id": 43 },
-      { "type": "track", "id": 77 },
-      { "type": "track", "id": 117 },
-      { "type": "track", "id": 351 }
-    ]
+    "tracks": {
+      "data": [
+        { "type": "track", "id": 15 },
+        { "type": "track", "id": 43 },
+        { "type": "track", "id": 77 },
+        { "type": "track", "id": 117 },
+        { "type": "track", "id": 351 }
+      ]
+    }
    }
   }
 }
@@ -79,7 +81,7 @@ Response:
       "relationships":{
          "tracks":{
             "links":{
-               "self":"ttp://api/v1/jad/playlist/4/relationship/tracks",
+               "self":"http://api/v1/jad/playlist/4/relationship/tracks",
                "related":"http://api/v1/jad/playlist/4/tracks"
             }
          }
@@ -124,4 +126,4 @@ Response:
       "self":"/api/v1/jad/playlist/4/relationship/tracks"
    }
 }
-``
+```

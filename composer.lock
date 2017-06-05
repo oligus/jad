@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "9258cdecd03f9c609ab0a05e45d945e1",
+    "content-hash": "d45580337c2ce947c9bd45a3e927505a",
     "packages": [
         {
             "name": "symfony/http-foundation",
@@ -117,56 +117,6 @@
                 "shim"
             ],
             "time": "2016-11-14T01:06:16+00:00"
-        },
-        {
-            "name": "tobscure/json-api",
-            "version": "v0.4.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/tobscure/json-api.git",
-                "reference": "d4ba8437977c33a5189d95d9ffa751997f13b104"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/tobscure/json-api/zipball/d4ba8437977c33a5189d95d9ffa751997f13b104",
-                "reference": "d4ba8437977c33a5189d95d9ffa751997f13b104",
-                "shasum": ""
-            },
-            "require": {
-                "php": "^5.5.9 || ^7.0"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "^4.8 || ^5.0"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.0-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Tobscure\\JsonApi\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Toby Zerner",
-                    "email": "toby.zerner@gmail.com"
-                }
-            ],
-            "description": "JSON-API responses in PHP",
-            "keywords": [
-                "api",
-                "json",
-                "jsonapi",
-                "standard"
-            ],
-            "time": "2017-03-05T21:16:24+00:00"
         }
     ],
     "packages-dev": [

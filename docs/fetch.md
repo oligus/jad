@@ -13,7 +13,7 @@ GET /api/v1/jad/genres
 ```
 
 Result might be:
-```
+```json
 {
   "data": [
     {
@@ -22,8 +22,13 @@ Result might be:
       "attributes": {
         "name": "Rock"
       }
-    },{
-      ...
+    },
+    {
+      "id": 2,
+      "type": "genre",
+      "attributes": {
+        "name": "Punk"
+      }
     }
   ]
 }
@@ -84,7 +89,7 @@ GET /api/v1/jad/tracks?filter[name][eq]=Go+Down
       "type": "track",
       "attributes": {
         "name": "Go Down",
-        "composer": "AC\/DC",
+        "composer": "AC/DC",
         "price": "0.99"
       }
     }

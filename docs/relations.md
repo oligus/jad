@@ -23,14 +23,14 @@ Response:
     "relationships": {
       "tracks": {
         "links": {
-          "self": "http:\/\/localhost.dev:8080\/api\/jad\/playlists\/2\/relationship\/tracks",
-          "related": "http:\/\/localhost.dev:8080\/api\/jad\/playlists\/2\/tracks"
+          "self": "http://api/v1/jad/playlists/2/relationship/tracks",
+          "related": "http://api/v1/jad/playlists/2/tracks"
         }
       }
     }
   },
   "links": {
-    "self": "http:\/\/localhost.dev:8080\/api\/jad\/playlists\/2"
+    "self": "http://api/v1/jad/playlists/2"
   }
 }
 ```
@@ -56,7 +56,7 @@ Response:
     }
   ],
   "links": {
-    "self": "http:\/\/localhost.dev:8080\/api\/jad\/playlists\/2\/relationship\/tracks"
+    "self": "http://api/v1/jad/playlists/2/relationship/tracks"
   }
 }
 ```
@@ -90,7 +90,7 @@ Result:
     }
   ],
   "links": {
-    "self": "http:\/\/localhost.dev:8080\/api\/jad\/playlists\/2\/tracks"
+    "self": "http://api/v1/jad/playlists/2/tracks"
   }
 }
 ```
@@ -115,8 +115,8 @@ Request:
     "relationships": {
       "tracks": {
         "links": {
-          "self": "http:\/\/localhost.dev:8080\/api\/jad\/playlists\/2\/relationship\/tracks",
-          "related": "http:\/\/localhost.dev:8080\/api\/jad\/playlists\/2\/tracks"
+          "self": "http://api/v1/jad/playlists/2/relationship/tracks",
+          "related": "http://api/v1/jad/playlists/2/tracks"
         }
       }
     },
@@ -160,7 +160,7 @@ Request:
     ]
   },
   "links": {
-    "self": "http:\/\/localhost.dev:8080\/api\/jad\/playlists\/2"
+    "self": "http://api/v1/jad/playlists/2"
   }
 }
 ```

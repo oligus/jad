@@ -117,12 +117,13 @@ class PlaylistTest extends TestCase
         $input->data->attributes = new \stdClass();
         $input->data->attributes->name = 'New Playlist';
         $input->data->relationships = new \stdClass();
-        $input->data->relationships->tracks = [];
-        $input->data->relationships->tracks[] = [ 'type' => 'track', 'id' => 15];
-        $input->data->relationships->tracks[] = [ 'type' => 'track', 'id' => 43];
-        $input->data->relationships->tracks[] = [ 'type' => 'track', 'id' => 77];
-        $input->data->relationships->tracks[] = [ 'type' => 'track', 'id' => 117];
-        $input->data->relationships->tracks[] = [ 'type' => 'track', 'id' => 351];
+        $input->data->relationships->tracks = new \stdClass();
+        $input->data->relationships->tracks->data = [];
+        $input->data->relationships->tracks->data[] = [ 'type' => 'track', 'id' => 15];
+        $input->data->relationships->tracks->data[] = [ 'type' => 'track', 'id' => 43];
+        $input->data->relationships->tracks->data[] = [ 'type' => 'track', 'id' => 77];
+        $input->data->relationships->tracks->data[] = [ 'type' => 'track', 'id' => 117];
+        $input->data->relationships->tracks->data[] = [ 'type' => 'track', 'id' => 351];
 
         $_POST = ['input' => json_encode($input)];
 
@@ -146,6 +147,50 @@ class PlaylistTest extends TestCase
         $jad = new Jad($mapper);
 
         $expected = '{"data":[{"id":15,"type":"track"},{"id":43,"type":"track"},{"id":77,"type":"track"},{"id":117,"type":"track"},{"id":351,"type":"track"}],"links":{"self":"http:\/\/:\/playlist\/4\/relationship\/tracks"}}';
+        $jad->jsonApiResult();
+        $this->expectOutputString($expected);
+    }
+
+    /**
+     * @depends testCreateRelationship
+     */
+    public function testUpdateAddRelationship()
+    {
+        Configure::getInstance()->setConfig('testMode', true);
+        $_SERVER = ['REQUEST_URI' => '/playlist/4'];
+        $_SERVER['REQUEST_METHOD'] = 'PATCH';
+
+        $input = new \stdClass();
+        $input->data = new \stdClass();
+        $input->data->type = 'playlist';
+        $input->data->relationships = new \stdClass();
+        $input->data->relationships->tracks = new \stdClass();
+        $input->data->relationships->tracks->data = new \stdClass();
+        $input->data->relationships->tracks->data->type = 'track';
+        $input->data->relationships->tracks->data->id = 422;
+
+        $_POST = ['input' => json_encode($input)];
+
+        $mapper = new AnnotationsMapper(Manager::getInstance()->getEm());
+        $jad = new Jad($mapper);
+
+        $expected = '{"data":{"id":4,"type":"playlist","attributes":{"name":"New Playlist"},"relationships":{"tracks":{"links":{"self":"http:\/\/:\/playlist\/4\/relationship\/tracks","related":"http:\/\/:\/playlist\/4\/tracks"}}}},"links":{"self":"http:\/\/:\/playlist\/4"}}';
+        $jad->jsonApiResult();
+        $this->expectOutputString($expected);
+    }
+
+    /**
+     * @depends testUpdateAddRelationship
+     */
+    public function testUpdateAddRelationshipVerify()
+    {
+        $_SERVER = ['REQUEST_URI' => '/playlist/4/relationship/tracks'];
+        $_SERVER['REQUEST_METHOD'] = 'GET';
+
+        $mapper = new AnnotationsMapper(Manager::getInstance()->getEm());
+        $jad = new Jad($mapper);
+
+        $expected = '{"data":[{"id":15,"type":"track"},{"id":43,"type":"track"},{"id":77,"type":"track"},{"id":117,"type":"track"},{"id":351,"type":"track"},{"id":422,"type":"track"}],"links":{"self":"http:\/\/:\/playlist\/4\/relationship\/tracks"}}';
         $jad->jsonApiResult();
         $this->expectOutputString($expected);
     }

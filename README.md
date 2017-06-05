@@ -35,6 +35,8 @@ $jad->jsonApiResult();
 
 [Creating a new resource](docs/create.md)
 
+[Updating a new resource](docs/update.md)
+
 ## Contributing
 
 When contributing to this repository, please first discuss the change you wish to make via issue before making a pull request.

@@ -3,6 +3,7 @@
 namespace Jad\Response;
 
 use Jad\Common\Inflect;
+use Jad\Exceptions\ResourceNotFoundException;
 use Jad\Map\Mapper;
 use Jad\Common\ClassHelper;
 use Jad\Document\Collection;
@@ -77,44 +78,65 @@ class JsonApiResponse
     {
         $input = $this->request->getInputJson();
         $type = $input->data->type;
-        $id = $input->data->id;
+        $id = $this->request->getId();
 
         $attributes = isset($input->data->attributes) ? (array) $input->data->attributes : [];
         $mapItem = $this->mapper->getMapItem($type);
-
-        $entity = $this->mapper->getEm()->getRepository($mapItem->getEntityClass())->find($id);
         $entityClass = $mapItem->getEntityClass();
 
-        if($entity instanceof $entityClass) {
-            foreach($attributes as $attribute => $value) {
-                if($mapItem->getClassMeta()->hasField($attribute)) {
-                    ClassHelper::setPropertyValue($entity, $attribute, $value);
-                }
+        $entity = $this->mapper->getEm()->getRepository($mapItem->getEntityClass())->find($id);
+
+        if(!$entity instanceof $entityClass) {
+            throw new \Exception('Entity not found');
+        }
+
+        foreach($attributes as $attribute => $value) {
+            if($mapItem->getClassMeta()->hasField($attribute)) {
+                ClassHelper::setPropertyValue($entity, $attribute, $value);
             }
+        }
 
-            $relationships = isset($input->data->relationship) ? (array) $input->data->relationship : [];
 
-            foreach($relationships as $relationship) {
-                $type = $relationship->data->type;
-                $id = $relationship->data->id;
+        $relationships = isset($input->data->relationships) ? (array) $input->data->relationships : [];
 
+        foreach($relationships as $relatedType => $related) {
+            $relatedData = $related->data;
+            $related = is_array($relatedData) ? $relatedData : [$relatedData];
+            $relatedProperty = ClassHelper::getPropertyValue($entity, $relatedType);
+
+            foreach($related as $relationship) {
+                $type = $relationship->type;
+                $id = $relationship->id;
+                ;
                 $relationalMapItem = $this->mapper->getMapItem($type);
                 $relationalClass = $relationalMapItem->getEntityClass();
 
                 $reference = $this->mapper->getEm()->getReference($relationalClass, $id);
 
-                $method = 'add' . ucfirst($type);
+                if($relatedProperty instanceof \Doctrine\Common\Collections\Collection) {
+                    // First try entity add method, else add straight to collection
+                    $method1 = 'add' . ucfirst($type);
+                    $method2 = 'add' . ucfirst($relatedType);
+                    $method = method_exists($entity, $method1) ? $method1 : $method2;
 
-                if(method_exists($entity, $method)) {
-                    $entity->$method($reference);
+
+
+                    if(method_exists($entity, $method)) {
+                        $entity->$method($reference);
+                    } else {
+                        $relatedProperty->add($reference);
+                        echo "sdfsdf"; die;
+                    }
+                } else {
+                    ClassHelper::setPropertyValue($entity, $relatedProperty, $reference);
                 }
             }
-
-            $this->mapper->getEm()->persist($entity);
-            $this->mapper->getEm()->flush();
-
-            $this->fetchSingleResourceById($id);
         }
+
+        $this->mapper->getEm()->persist($entity);
+        $this->mapper->getEm()->flush();
+
+        $this->fetchSingleResourceById($this->request->getId());
     }
 
     public function createResource()
@@ -137,7 +159,8 @@ class JsonApiResponse
         $relationships = isset($input->data->relationships) ? (array) $input->data->relationships : [];
 
         foreach($relationships as $relatedType => $related) {
-            $related = is_array($related) ? $related : [$related];
+            $relatedData = $related->data;
+            $related = is_array($relatedData) ? $relatedData : [$relatedData];
             $relatedProperty = ClassHelper::getPropertyValue($entity, $relatedType);
 
             foreach($related as $relationship) {
@@ -275,6 +298,10 @@ class JsonApiResponse
         /** @var \Jad\Map\MapItem $mapItem */
         $mapItem = $this->mapper->getMapItem($this->request->getType());
         $entity = $this->mapper->getEm()->getRepository($mapItem->getEntityClass())->find($this->request->getId());
+
+        if(empty($entity)) {
+            throw new ResourceNotFoundException('Resource type not found [' . $this->request->getType() . '] with id [' . $this->request->getId() . ']');
+        }
 
         $resourceType = $relationship['type'];
 

@@ -11,14 +11,12 @@ use Jad\Exceptions\JadException;
 class ClassHelper
 {
     /**
-     * Get property from class
-     *
      * @param $className
-     * @param $property
+     * @param string $property
      * @return mixed
      * @throws JadException
      */
-    public static function getPropertyValue($className, $property)
+    public static function getPropertyValue($className, string $property)
     {
         $methodName = 'get' . ucfirst($property);
 
@@ -40,10 +38,10 @@ class ClassHelper
 
     /**
      * @param $className
-     * @param $property
+     * @param string $property
      * @param $value
      */
-    public static function setPropertyValue($className, $property, $value)
+    public static function setPropertyValue($className, string $property, $value)
     {
         $methodName = 'set' . ucfirst($property);
 
@@ -61,10 +59,10 @@ class ClassHelper
 
     /**
      * @param $className
-     * @param $property
+     * @param string $property
      * @return bool
      */
-    public static function hasPropertyValue($className, $property)
+    public static function hasPropertyValue($className, string $property): bool
     {
         $methodName = 'set' . ucfirst($property);
 
@@ -72,6 +70,7 @@ class ClassHelper
             return true;
         } else {
             $reflection = new \ReflectionClass($className);
+
             if ($reflection->hasProperty($property)) {
                 return true;
             }
