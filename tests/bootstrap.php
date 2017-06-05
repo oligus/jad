@@ -29,11 +29,20 @@ $em = EntityManager::create($connectionParams, $config);
 $manager = Manager::getInstance();
 $manager->setEm($em);
 
-// Clear genres
+// Clear tables
 $rsm = new ResultSetMapping();
 
 $query = $em->createNativeQuery('delete from genres;', $rsm);
 $query->getResult();
 
 $query = $em->createNativeQuery(' delete from sqlite_sequence where name="genres"', $rsm);
+$query->getResult();
+
+$query = $em->createNativeQuery('delete from playlists;', $rsm);
+$query->getResult();
+
+$query = $em->createNativeQuery('delete from playlist_track;', $rsm);
+$query->getResult();
+
+$query = $em->createNativeQuery(' delete from sqlite_sequence where name in ("playlists", "playlist_track")', $rsm);
 $query->getResult();

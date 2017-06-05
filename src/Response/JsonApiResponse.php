@@ -134,21 +134,33 @@ class JsonApiResponse
             }
         }
 
-        $relationships = isset($input->data->relationship) ? (array) $input->data->relationship : [];
+        $relationships = isset($input->data->relationships) ? (array) $input->data->relationships : [];
 
-        foreach($relationships as $relationship) {
-            $type = $relationship->data->type;
-            $id = $relationship->data->id;
+        foreach($relationships as $relatedType => $related) {
+            $related = is_array($related) ? $related : [$related];
+            $relatedProperty = ClassHelper::getPropertyValue($entity, $relatedType);
 
-            $relationalMapItem = $this->mapper->getMapItem($type);
-            $relationalClass = $relationalMapItem->getEntityClass();
+            foreach($related as $relationship) {
+                $type = $relationship->type;
+                $id = $relationship->id;
 
-            $reference = $this->mapper->getEm()->getReference($relationalClass, $id);
+                $relationalMapItem = $this->mapper->getMapItem($type);
+                $relationalClass = $relationalMapItem->getEntityClass();
 
-            $method = 'add' . ucfirst($type);
+                $reference = $this->mapper->getEm()->getReference($relationalClass, $id);
 
-            if(method_exists($entity, $method)) {
-                $entity->$method($reference);
+                if($relatedProperty instanceof \Doctrine\Common\Collections\Collection) {
+
+                    // First try entity add method, else add straight to collection
+                    $method = 'add' . ucfirst($type);
+                    if(method_exists($entity, $method)) {
+                        $entity->$method($reference);
+                    } else {
+                        $relatedProperty->add($reference);
+                    }
+                } else {
+                    ClassHelper::setPropertyValue($entity, $relatedProperty, $reference);
+                }
             }
         }
 
@@ -288,7 +300,7 @@ class JsonApiResponse
 
         $resource = new Resource($result, $serializer);
         $resource->setFields($this->request->getParameters()->getFields());
-        
+
         return $resource;
     }
 

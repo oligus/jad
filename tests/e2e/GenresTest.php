@@ -10,7 +10,6 @@ use Jad\Configure;
 
 use PHPUnit\DbUnit\TestCaseTrait;
 use PHPUnit\DbUnit\DataSet\CsvDataSet;
-use Doctrine\ORM\Query\ResultSetMapping;
 
 class GenresTest extends TestCase
 {
