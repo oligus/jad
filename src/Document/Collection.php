@@ -17,9 +17,9 @@ class Collection implements \JsonSerializable
     private $resources = array();
 
     /**
-     * @param Resource $resource
+     * @param \Jad\Document\Resource $resource
      */
-    public function add(Resource $resource)
+    public function add(\Jad\Document\Resource $resource)
     {
         $this->resources[] = $resource;
     }

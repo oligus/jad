@@ -189,7 +189,7 @@ class GenresTest extends TestCase
         $mapper = new AnnotationsMapper(Manager::getInstance()->getEm());
         $jad = new Jad($mapper);
 
-        $expected = '{"errors":[{"status":404,"title":"Jad error","detail":"Resource of type [genre] with id [26] could not be found."}]}';
+        $expected = '{"errors":[{"status":404,"title":"Resource Not Found error","detail":"Resource of type [genre] with id [26] could not be found."}]}';
         $jad->jsonApiResult();
         $this->expectOutputString($expected);
     }

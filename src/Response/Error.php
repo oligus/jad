@@ -34,7 +34,7 @@ class Error
 
         $response = new Response();
         $response->setContent(json_encode($document));
-        $response->headers->set('Content-Type', 'application/vnd.api+json; charset=UTF-8');
+        $response->headers->set('Content-Type', 'application/vnd.api+json');
         $response->setStatusCode(500);
         //$response->sendHeaders();
         $response->sendContent();

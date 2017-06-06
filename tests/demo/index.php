@@ -4,7 +4,7 @@ use Jad\Jad;
 use Jad\Map\AnnotationsMapper;
 use Jad\Database\Manager;
 
-require '../bootstrap.php';
+require './bootstrap.php';
 
 $em = Manager::getInstance()->getEm();
 
