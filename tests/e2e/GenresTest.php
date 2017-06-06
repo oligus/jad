@@ -180,4 +180,17 @@ class GenresTest extends TestCase
         $jad->jsonApiResult();
         $this->assertTrue(true);
     }
+
+    public function testDeleteVerify()
+    {
+        $_SERVER = ['REQUEST_URI' => '/genres/26'];
+        $_SERVER['REQUEST_METHOD'] = 'GET';
+
+        $mapper = new AnnotationsMapper(Manager::getInstance()->getEm());
+        $jad = new Jad($mapper);
+
+        $expected = '{"errors":[{"status":404,"title":"Jad error","detail":"Resource of type [genre] with id [26] could not be found."}]}';
+        $jad->jsonApiResult();
+        $this->expectOutputString($expected);
+    }
 }

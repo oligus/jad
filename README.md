@@ -35,7 +35,9 @@ $jad->jsonApiResult();
 
 [Creating a new resource](docs/create.md)
 
-[Updating a new resource](docs/update.md)
+[Updating a resource](docs/update.md)
+
+[Deleting resources / relationships](docs/delete.md)
 
 ## Contributing
 
