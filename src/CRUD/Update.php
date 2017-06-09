@@ -52,13 +52,10 @@ class Update extends AbstractCRUD
                     $method2 = 'add' . ucfirst($relatedType);
                     $method = method_exists($entity, $method1) ? $method1 : $method2;
 
-
-
                     if(method_exists($entity, $method)) {
                         $entity->$method($reference);
                     } else {
                         $relatedProperty->add($reference);
-                        echo "sdfsdf"; die;
                     }
                 } else {
                     ClassHelper::setPropertyValue($entity, $relatedProperty, $reference);

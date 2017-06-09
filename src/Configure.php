@@ -17,7 +17,8 @@ class Configure
      * @var array
      */
     private $config = [
-        'testMode' => false
+        'testMode'  => false,
+        'debug'     => false
     ];
 
     /**

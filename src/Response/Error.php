@@ -33,10 +33,15 @@ class Error
         $document->errors[] = $error;
 
         $response = new Response();
+        $headers['Content-Type'] = 'application/vnd.api+json';
+
+        foreach($headers as $key => $value) {
+            $response->headers->set($key, $value);
+        }
+
         $response->setContent(json_encode($document));
-        $response->headers->set('Content-Type', 'application/vnd.api+json');
         $response->setStatusCode(500);
-        //$response->sendHeaders();
+        $response->sendHeaders();
         $response->sendContent();
     }
 

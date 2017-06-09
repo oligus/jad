@@ -3,6 +3,7 @@
 namespace Jad\Response;
 
 use Jad\Common\Inflect;
+use Jad\Configure;
 use Jad\Exceptions\ResourceNotFoundException;
 use Jad\Map\Mapper;
 use Jad\Common\ClassHelper;
@@ -102,12 +103,15 @@ class JsonApiResponse
 
     public function getRelationship($relationship)
     {
+        $id = $this->request->getId();
+        $type = $this->request->getType();
+
         /** @var \Jad\Map\MapItem $mapItem */
-        $mapItem = $this->mapper->getMapItem($this->request->getType());
-        $entity = $this->mapper->getEm()->getRepository($mapItem->getEntityClass())->find($this->request->getId());
+        $mapItem = $this->mapper->getMapItem($type);
+        $entity = $this->mapper->getEm()->getRepository($mapItem->getEntityClass())->find($id);
 
         if(empty($entity)) {
-            throw new ResourceNotFoundException('Resource type not found [' . $this->request->getType() . '] with id [' . $this->request->getId() . ']');
+            throw new ResourceNotFoundException('Resource type not found [' . $type . '] with id [' . $id . ']');
         }
 
         $resourceType = $relationship['type'];
@@ -117,6 +121,10 @@ class JsonApiResponse
         }
 
         $result = ClassHelper::getPropertyValue($entity, $resourceType);
+
+        if(is_null($result)) {
+            throw new ResourceNotFoundException('Related resource type not found [' . $resourceType . '] derived from [' . $type . ']');
+        }
 
         $serializer = new RelationshipSerializer($this->mapper, $this->request->getType(), $this->request);
         $serializer->setRelationship($relationship);
@@ -149,7 +157,12 @@ class JsonApiResponse
         $links->setSelf($this->request->getCurrentUrl());
         $document->addLinks($links);
 
-        $this->setResponse(json_encode($document));
+        if(Configure::getInstance()->getConfig('debug')) {
+            $this->setResponse(json_encode($document, JSON_PRETTY_PRINT));
+        } else {
+            $this->setResponse(json_encode($document));
+        }
+
     }
     /**
      * @param $content
