@@ -44,15 +44,15 @@ class JsonApiRequestTest extends TestCase
         // GET Types
         // /articles                            => get all
         // /articles/1                          => get id
-        // /articles/1/author                   => get author relationships
-        // /articles/1/relationships/author     => same as above
+        // /articles/1/authors                  => get author relationships
+        // /articles/1/relationships/authors    => same as above
         // /articles/1/relationships/comments   => get comments relationships
 
         $_SERVER = ['REQUEST_URI' => '/api/jad/articles'];
         $request = new JsonApiRequest();
         $request->setPathPrefix('api/jad');
 
-        $this->assertEquals($request->getType(), 'article');
+        $this->assertEquals($request->getResourceType(), 'articles');
         $this->assertEquals($request->getId(), null);
         $this->assertEquals($request->getRelationship(), null);
 
@@ -60,7 +60,7 @@ class JsonApiRequestTest extends TestCase
         $request = new JsonApiRequest();
         $request->setPathPrefix('api/jad');
 
-        $this->assertEquals($request->getType(), 'article');
+        $this->assertEquals($request->getResourceType(), 'articles');
         $this->assertEquals($request->getId(), 1);
         $this->assertEquals($request->getRelationship(), null);
 
@@ -68,17 +68,17 @@ class JsonApiRequestTest extends TestCase
         $request = new JsonApiRequest();
         $request->setPathPrefix('api/jad');
 
-        $this->assertEquals($request->getType(), 'article');
+        $this->assertEquals($request->getResourceType(), 'articles');
         $this->assertEquals($request->getId(), 1);
         $this->assertEquals($request->getRelationship(), ['view' => 'full', 'type' => 'author']);
 
-        $_SERVER = ['REQUEST_URI' => '/api/jad/articles/1/relationship/author'];
+        $_SERVER = ['REQUEST_URI' => '/api/jad/articles/1/relationships/authors'];
         $request = new JsonApiRequest();
         $request->setPathPrefix('api/jad');
 
-        $this->assertEquals($request->getType(), 'article');
+        $this->assertEquals($request->getResourceType(), 'articles');
         $this->assertEquals($request->getId(), 1);
-        $this->assertEquals($request->getRelationship(), ['view' => 'list', 'type' => 'author']);
+        $this->assertEquals($request->getRelationship(), ['view' => 'list', 'type' => 'authors']);
     }
 
     /**
@@ -87,11 +87,11 @@ class JsonApiRequestTest extends TestCase
      */
     public function testGetTypeException()
     {
-        $_SERVER = ['REQUEST_URI' => '/api/jad/articles/1/relationship'];
+        $_SERVER = ['REQUEST_URI' => '/api/jad/articles/1/relationships'];
         $request = new JsonApiRequest();
         $request->setPathPrefix('api/jad');
 
-        $this->assertEquals($request->getType(), 'article');
+        $this->assertEquals($request->getResourceType(), 'articles');
         $this->assertEquals($request->getId(), 1);
         $request->getRelationship(); // Exception
     }

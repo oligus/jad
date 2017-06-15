@@ -6,7 +6,7 @@ class Delete extends AbstractCRUD
 {
     public function deleteResource()
     {
-        $mapItem = $this->mapper->getMapItem($this->request->getType());
+        $mapItem = $this->mapper->getMapItem($this->request->getResourceType());
         $entity = $this->mapper->getEm()->getRepository($mapItem->getEntityClass())->find($this->request->getId());
         $entityClass = $mapItem->getEntityClass();
 
