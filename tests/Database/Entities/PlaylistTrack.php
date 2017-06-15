@@ -9,7 +9,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 /**
  * @ORM\Entity(repositoryClass="Jad\Database\Repositories\PlaylistTrackRepository")
  * @ORM\Table(name="playlist_track")
- * @Jad\Map\Annotations(type="playlist_track")
+ * @Jad\Map\Annotations(type="playlist-track")
  */
 class PlaylistTrack
 {

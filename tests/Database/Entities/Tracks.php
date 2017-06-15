@@ -25,10 +25,22 @@ class Tracks
     protected $name;
 
     /**
-     * @ORM\OneToOne(targetEntity="Albums")
+     * @ORM\OneToOne(targetEntity="Albums", fetch="EAGER")
      * @ORM\JoinColumn(name="AlbumId", referencedColumnName="AlbumId")
      */
     protected $album;
+
+    /**
+     * @ORM\OneToOne(targetEntity="MediaTypes", fetch="EAGER")
+     * @ORM\JoinColumn(name="MediaTypeId", referencedColumnName="MediaTypeId")
+     */
+    protected $mediaType;
+
+    /**
+     * @ORM\OneToOne(targetEntity="Genres", fetch="EAGER")
+     * @ORM\JoinColumn(name="GenreId", referencedColumnName="GenreId")
+     */
+    protected $genre;
 
     /**
      * @ORM\Column(name="Composer", type="string", length=220)
