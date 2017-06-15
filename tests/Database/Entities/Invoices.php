@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity(repositoryClass="Doctrine\ORM\EntityRepository")
  * @ORM\Table(name="invoices")
- * @Jad\Map\Annotations(type="invoice")
+ * @Jad\Map\Annotations(type="invoices")
  */
 class Invoices
 {

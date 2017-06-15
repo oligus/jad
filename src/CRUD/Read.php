@@ -20,17 +20,19 @@ class Read extends AbstractCRUD
      */
     public function getResourceById($id)
     {
+        $type = $this->request->getResourceType();
+
         /** @var \Jad\Map\MapItem $mapItem */
-        $mapItem = $this->mapper->getMapItem($this->request->getType());
+        $mapItem = $this->mapper->getMapItem($type);
         $entity = $this->mapper->getEm()->getRepository($mapItem->getEntityClass())->find($id);
 
         if(is_null($entity)) {
             throw new ResourceNotFoundException(
-                'Resource of type [' . $this->request->getType() . '] with id [' . $id . '] could not be found.'
+                'Resource of type [' . $type . '] with id [' . $id . '] could not be found.'
             );
         }
 
-        $resource = new Resource($entity, new EntitySerializer($this->mapper, $this->request->getType(), $this->request));
+        $resource = new Resource($entity, new EntitySerializer($this->mapper, $type, $this->request));
         $resource->setFields($this->request->getParameters()->getFields());
         $resource->setIncluded($this->request->getParameters()->getInclude($mapItem->getClassMeta()->getAssociationNames()));
 
@@ -39,11 +41,13 @@ class Read extends AbstractCRUD
 
     public function getResources()
     {
-        $mapItem = $this->mapper->getMapItem($this->request->getType());
+        $type = $this->request->getResourceType();
+
+        $mapItem = $this->mapper->getMapItem($type);
 
         $limit = $this->request->getParameters()->getLimit(25);
         $offset = $this->request->getParameters()->getOffset(25);
-        $filter = $this->request->getParameters()->getFilter($this->request->getType());
+        $filter = $this->request->getParameters()->getFilter($type);
 
         $criteria = array();
 
@@ -59,12 +63,12 @@ class Read extends AbstractCRUD
         }
 
         $entities = $this->mapper->getEm()->getRepository($mapItem->getEntityClass())
-            ->findBy($criteria, $this->getOrderBy($this->request->getType()), $limit, $offset);
+            ->findBy($criteria, $this->getOrderBy($type), $limit, $offset);
 
         $collection = new Collection();
 
         foreach($entities as $entity) {
-            $resource = new Resource($entity, new EntitySerializer($this->mapper, $this->request->getType(), $this->request));
+            $resource = new Resource($entity, new EntitySerializer($this->mapper, $type, $this->request));
             $resource->setFields($this->request->getParameters()->getFields());
             $collection->add($resource);
         }

@@ -4,7 +4,6 @@ namespace Jad\Serializers;
 
 use Jad\Document\Resource;
 use Jad\Common\Text;
-use Jad\Common\Inflect;
 use Jad\Common\ClassHelper;
 use Jad\Exceptions\SerializerException;
 use Doctrine\ORM\PersistentCollection;
@@ -62,13 +61,11 @@ class EntitySerializer extends AbstractSerializer
             return null;
         }
 
-        $pluralType = Inflect::pluralize($type);
-
-        if (!$this->getMapItem()->getClassMeta()->hasAssociation($pluralType)) {
-            throw new SerializerException('Cannot find relationship ' . $pluralType . ' for inclusion');
+        if (!$this->getMapItem()->getClassMeta()->hasAssociation($type)) {
+            throw new SerializerException('Cannot find relationship ' . $type . ' for inclusion');
         }
 
-        $result = ClassHelper::getPropertyValue($entity, $pluralType);
+        $result = ClassHelper::getPropertyValue($entity, $type);
 
         if($result instanceof PersistentCollection) {
             return $this->getIncludedResources($type, $result);

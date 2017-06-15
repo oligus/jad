@@ -4,7 +4,6 @@ namespace Jad\Request;
 
 use Jad\Configure;
 use Jad\Common\Text;
-use Jad\Common\Inflect;
 use Jad\Exceptions\RequestException;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -73,22 +72,14 @@ class JsonApiRequest
         $path = preg_replace('!/?' . $prefix . '/?!', '', $currentPath);
         return explode('/', $path);
     }
-    /**
-     * @return string
-     */
-    public function getPath()
-    {
-        $items = $this->getItems();
-        return $items[0];
-    }
 
     /**
      * @return string
      */
-    public function getType()
+    public function getResourceType()
     {
-        $path = $this->getPath();
-        return Inflect::singularize($path);
+        $items = $this->getItems();
+        return $items[0];
     }
 
     /**
@@ -120,10 +111,9 @@ class JsonApiRequest
         $relationships = [];
 
         if(array_key_exists(2, $items)) {
-            if($items[2] !== 'relationship') {
+            if($items[2] !== 'relationships') {
                 $relationships['view'] = 'full';
-                $type = Text::deKebabify($items[2]);
-                $relationships['type'] = Inflect::singularize($type);
+                $relationships['type'] = Text::deKebabify($items[2]);
                 return $relationships;
             }
 
@@ -132,8 +122,7 @@ class JsonApiRequest
             }
 
             $relationships['view'] = 'list';
-            $type = Text::deKebabify($items[3]);
-            $relationships['type'] = Inflect::singularize($type);
+            $relationships['type'] = Text::deKebabify($items[3]);
 
             return $relationships;
         }

@@ -4,7 +4,7 @@ namespace Jad\Document;
 
 use Jad\Serializers\RelationshipSerializer;
 use Jad\Serializers\Serializer;
-use Jad\Common\Inflect;
+use Jad\Common\Text;
 use Jad\Common\ClassHelper;
 
 use Doctrine\ORM\PersistentCollection;
@@ -115,13 +115,12 @@ class Resource implements \JsonSerializable
         foreach ($this->included as $includes) {
             foreach ($includes as $includedType => $relation) {
                 if (empty($relation)) {
-                    $originalType = Inflect::singularize($includedType);
-                    $included[] = $this->serializer->getIncluded($originalType, $this->entity);
+                    $included[] = $this->serializer->getIncluded($includedType, $this->entity);
                 } else {
                     $path = explode('.', $relation);
                     array_unshift($path, $includedType);
                     $result = $this->crawlRelations($this->entity, $path);
-                    $included[] = $this->serializer->getIncludedResources(Inflect::singularize($result['type']), $result['collection']);
+                    $included[] = $this->serializer->getIncludedResources($result['type'], $result['collection']);
                 }
             }
         }
@@ -143,10 +142,10 @@ class Resource implements \JsonSerializable
 
         while($relation = array_shift($relations)) {
             $newCollection = array();
+            $property = Text::deKebabify($relation);
 
             foreach($collection as $entity) {
-                $result = ClassHelper::getPropertyValue($entity, $relation);
-
+                $result = ClassHelper::getPropertyValue($entity, $property);
 
                 if($result instanceof PersistentCollection) {
                     $newCollection = array_merge($newCollection, $result->toArray());

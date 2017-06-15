@@ -10,7 +10,7 @@ use Jad\Database\Entities\Tracks;
 /**
  * @ORM\Entity(repositoryClass="Jad\Database\Repositories\PlaylistsRepository")
  * @ORM\Table(name="media_types")
- * @Jad\Map\Annotations(type="media-type")
+ * @Jad\Map\Annotations(type="media-types")
  */
 class MediaTypes
 {

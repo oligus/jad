@@ -2,7 +2,6 @@
 
 namespace Jad\Request;
 
-use Jad\Common\Inflect;
 use Jad\Common\Text;
 use Jad\Exceptions\ParameterException;
 
@@ -188,8 +187,6 @@ class Parameters
         $input = $this->getInput('filter');
 
         if($type) {
-            $type = Inflect::pluralize($type);
-
             if(is_array($input) && array_key_exists($type, $input)) {
                 return $input[$type];
             }

@@ -8,7 +8,7 @@ use Jad\Map\Annotations;
 /**
  * @ORM\Entity(repositoryClass="Jad\Database\Repositories\AlbumRepository")
  * @ORM\Table(name="albums")
- * @Jad\Map\Annotations(type="album")
+ * @Jad\Map\Annotations(type="albums")
  */
 class Albums
 {

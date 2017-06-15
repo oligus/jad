@@ -2,7 +2,6 @@
 
 namespace Jad\Response;
 
-use Jad\Common\Inflect;
 use Jad\Configure;
 use Jad\Exceptions\ResourceNotFoundException;
 use Jad\Map\Mapper;
@@ -104,7 +103,7 @@ class JsonApiResponse
     public function getRelationship($relationship)
     {
         $id = $this->request->getId();
-        $type = $this->request->getType();
+        $type = $this->request->getResourceType();
 
         /** @var \Jad\Map\MapItem $mapItem */
         $mapItem = $this->mapper->getMapItem($type);
@@ -114,19 +113,15 @@ class JsonApiResponse
             throw new ResourceNotFoundException('Resource type not found [' . $type . '] with id [' . $id . ']');
         }
 
-        $resourceType = $relationship['type'];
+        $relatedType = $relationship['type'];
 
-        if(!ClassHelper::hasPropertyValue($entity, $resourceType)) {
-            $resourceType = Inflect::pluralize($resourceType);
-        }
-
-        $result = ClassHelper::getPropertyValue($entity, $resourceType);
+        $result = ClassHelper::getPropertyValue($entity, $relatedType);
 
         if(is_null($result)) {
-            throw new ResourceNotFoundException('Related resource type not found [' . $resourceType . '] derived from [' . $type . ']');
+            throw new ResourceNotFoundException('Related resource type not found [' . $relatedType . '] derived from [' . $type . ']');
         }
 
-        $serializer = new RelationshipSerializer($this->mapper, $this->request->getType(), $this->request);
+        $serializer = new RelationshipSerializer($this->mapper, $this->request->getResourceType(), $this->request);
         $serializer->setRelationship($relationship);
 
         if($result instanceof PersistentCollection) {
