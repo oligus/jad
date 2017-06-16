@@ -3,14 +3,14 @@
 namespace Jad\Database\Entities;
 
 use Doctrine\ORM\Mapping as ORM;
-use Jad\Map\Annotations;
+use Jad\Map\Annotations as JAD;
 use Doctrine\Common\Collections\ArrayCollection;
 use Jad\Database\Entities\Tracks;
 
 /**
  * @ORM\Entity(repositoryClass="Jad\Database\Repositories\PlaylistsRepository")
  * @ORM\Table(name="media_types")
- * @Jad\Map\Annotations(type="media-types")
+ * @JAD\Head(type="media-types")
  */
 class MediaTypes
 {

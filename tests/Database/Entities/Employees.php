@@ -3,12 +3,12 @@
 namespace Jad\Database\Entities;
 
 use Doctrine\ORM\Mapping as ORM;
-use Jad\Map\Annotations;
+use Jad\Map\Annotations as JAD;
 
 /**
  * @ORM\Entity(repositoryClass="Jad\Database\Repositories\AlbumRepository")
  * @ORM\Table(name="employees")
- * @Jad\Map\Annotations(type="employees")
+ * @JAD\Head(type="employees")
  */
 class Employees
 {

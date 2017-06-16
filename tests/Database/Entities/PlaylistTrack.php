@@ -3,13 +3,13 @@
 namespace Jad\Database\Entities;
 
 use Doctrine\ORM\Mapping as ORM;
-use Jad\Map\Annotations;
+use Jad\Map\Annotations as JAD;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity(repositoryClass="Jad\Database\Repositories\PlaylistTrackRepository")
  * @ORM\Table(name="playlist_track")
- * @Jad\Map\Annotations(type="playlist-tracks")
+ * @JAD\Head(type="playlist-tracks")
  */
 class PlaylistTrack
 {

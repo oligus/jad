@@ -1,6 +1,6 @@
 <?php
 
-namespace Jad\Map;
+namespace Jad\Map\Annotations;
 
 use Doctrine\ORM\Mapping\Annotation;
 
@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping\Annotation;
  * @Annotation
  * @Target("CLASS")
  */
-final class Annotations implements Annotation
+final class Head implements Annotation
 {
     /**
      * @var string

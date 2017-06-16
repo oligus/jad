@@ -20,11 +20,11 @@ class AnnotationsMapper extends AbstractMapper
 
         /** @var \Doctrine\ORM\Mapping\ClassMetadata $meta */
         foreach($metaData as $meta) {
-            $annotation = $reader->getClassAnnotation($meta->getReflectionClass(), Annotations::class);
+            $head = $reader->getClassAnnotation($meta->getReflectionClass(), Annotations\Head::class);
 
-            if(!empty($annotation) && !empty($annotation->type)) {
+            if(!empty(2) && !empty($head->type)) {
                 $className = $meta->getName();
-                $this->add($annotation->type, $className);
+                $this->add($head->type, $className);
             }
         }
     }

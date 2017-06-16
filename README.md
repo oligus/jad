@@ -49,4 +49,4 @@ When contributing to this repository, please first discuss the change you wish t
 
 ## License
 
-This project is licensed under the GPL v2 License - see the [LICENSE](LICENSE) file for details
+This project is licensed under the MIT License - see the [LICENSE](LICENSE.md) file for details

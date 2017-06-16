@@ -3,11 +3,12 @@
 namespace Jad\Database\Entities;
 
 use Doctrine\ORM\Mapping as ORM;
+use Jad\Map\Annotations as JAD;
 
 /**
  * @ORM\Entity(repositoryClass="Doctrine\ORM\EntityRepository")
  * @ORM\Table(name="invoice_items")
- * @Jad\Map\Annotations(type="invoice-items")
+ * @JAD\Head(type="invoice-items")
  */
 class InvoiceItems
 {
