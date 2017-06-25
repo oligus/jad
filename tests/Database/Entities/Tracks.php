@@ -9,7 +9,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 /**
  * @ORM\Entity(repositoryClass="Jad\Database\Repositories\TracksRepository")
  * @ORM\Table(name="tracks")
- * @JAD\Head(type="tracks")
+ * @JAD\Head(type="tracks", paginate=true)
  */
 class Tracks
 {

@@ -23,13 +23,20 @@ class MapItem
     private $classMeta;
 
     /**
-     * EntityMapItem constructor.
+     * @var bool
+     */
+    private $paginate = false;
+
+    /**
+     * MapItem constructor.
      * @param $type
      * @param $params
+     * @param bool $paginate
      */
-    public function __construct($type, $params)
+    public function __construct($type, $params, $paginate = false)
     {
         $this->setType($type);
+        $this->paginate = $paginate;
 
         if(is_string($params)) {
             $this->setEntityClass($params);
@@ -123,4 +130,11 @@ class MapItem
         return $this;
     }
 
+    /**
+     * @return bool
+     */
+    public function isPaginate(): bool
+    {
+        return $this->paginate;
+    }
 }

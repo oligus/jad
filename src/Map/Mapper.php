@@ -13,7 +13,7 @@ interface Mapper
 
     /**
      * @param $type
-     * @return mixed
+     * @return MapItem
      */
     public function getMapItem($type);
 

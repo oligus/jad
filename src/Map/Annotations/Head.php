@@ -14,4 +14,9 @@ final class Head implements Annotation
      * @var string
      */
     public $type;
+
+    /**
+     * @var bool
+     */
+    public $paginate;
 }

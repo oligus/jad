@@ -192,7 +192,7 @@ class Parameters
             }
         }
 
-        return $input;
+        return is_array($input) ? $input : [];
     }
 
     /**

@@ -4,8 +4,12 @@ namespace Jad\CRUD;
 
 use Jad\Document\Resource;
 use Jad\Document\Collection;
+use Jad\Exceptions\JadException;
 use Jad\Serializers\EntitySerializer;
 use Jad\Exceptions\ResourceNotFoundException;
+use Jad\Query\Paginator;
+use Jad\Query\Filter;
+use Doctrine\ORM\QueryBuilder;
 
 /**
  * Class Read
@@ -42,28 +46,33 @@ class Read extends AbstractCRUD
     public function getResources()
     {
         $type = $this->request->getResourceType();
-
         $mapItem = $this->mapper->getMapItem($type);
 
-        $limit = $this->request->getParameters()->getLimit(25);
-        $offset = $this->request->getParameters()->getOffset(25);
-        $filter = $this->request->getParameters()->getFilter($type);
+        $qb = new QueryBuilder($this->mapper->getEm());
 
-        $criteria = array();
+        $qb->select('t');
+        $qb->from($mapItem->getEntityClass(), 't');
 
+        $filterParams = $this->request->getParameters()->getFilter($type);
+        $filter = new Filter($filterParams, $qb);
+        $filter->process();
 
-        if(!is_null($filter)) {
-            // TODO full criteria support
-            //$criteria = new \Doctrine\Common\Collections\Criteria();
-            //$criteria->where($criteria->expr()->gt('prize', 200));
+        $paginator = new Paginator($this->request->getParameters());
+        $limit = $paginator->getLimit();
+        $offset = $paginator->getOffset();
 
-            foreach($filter as $field => $values) {
-                $criteria[$field] = $values['eq'];
+        $qb = $filter->getQb();
+        $qb->setMaxResults($limit);
+        $qb->setFirstResult($offset);
+
+        $sort = $this->getOrderBy($type);
+        if(!empty($sort)) {
+            foreach($sort as $property => $direction) {
+                $qb->orderBy('t.' . $property, $direction);
             }
         }
 
-        $entities = $this->mapper->getEm()->getRepository($mapItem->getEntityClass())
-            ->findBy($criteria, $this->getOrderBy($type), $limit, $offset);
+        $entities = $qb->getQuery()->getResult();
 
         $collection = new Collection();
 

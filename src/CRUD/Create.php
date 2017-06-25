@@ -3,6 +3,7 @@
 namespace Jad\CRUD;
 
 use Jad\Common\ClassHelper;
+use Jad\Common\Text;
 use Doctrine\Common\Collections\Collection as DoctrineCollection;
 
 /**
@@ -25,7 +26,8 @@ class Create extends AbstractCRUD
 
         $entity = new $entityClass;
 
-        foreach($attributes as $attribute => $value) {
+        foreach($attributes as $attr => $value) {
+            $attribute = Text::deKebabify($attr);
             if($mapItem->getClassMeta()->hasField($attribute)) {
                 ClassHelper::setPropertyValue($entity, $attribute, $value);
             }

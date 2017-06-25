@@ -46,10 +46,11 @@ abstract class AbstractMapper implements Mapper
     /**
      * @param $type
      * @param $values
+     * @param bool $paginate
      */
-    public function add($type, $values)
+    public function add($type, $values, $paginate = false)
     {
-        $mapItem = new MapItem($type, $values);
+        $mapItem = new MapItem($type, $values, $paginate);
 
         $entityClass = $mapItem->getEntityClass();
         $mapItem->setClassMeta($this->em->getClassMetadata($entityClass));
