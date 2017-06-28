@@ -97,7 +97,7 @@ GET /api/v1/jad/tracks?filter[price][lte]=1
 ```
 
 
-Fetch all tracks where `(price > 0 AND price < 2) OR genre = 2`
+Fetch all tracks where `(price > 0 AND price < 2) OR genre = 5`
 ```
 GET /api/jad/tracks?filter[tracks][and][price][gt]=0&filter[tracks][and][price][lt]=2&filter[tracks][or][genre][eq]=5
 ```
