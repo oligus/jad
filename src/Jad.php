@@ -6,6 +6,7 @@ use Jad\Map\Mapper;
 use Jad\Response\JsonApiResponse;
 use Jad\Response\Error;
 use Jad\Request\JsonApiRequest;
+use Jad\Exceptions\ResourceNotFoundException;
 
 /**
  * Class Jad
@@ -54,12 +55,23 @@ class Jad
      */
     public function jsonApiResult()
     {
+        $success = true;
+
         try {
             $response = new JsonApiResponse($this->jsonApiRequest, $this->mapper);
             $response->render();
+        } catch (ResourceNotFoundException $exception) {
+            if(Configure::getInstance()->getConfig('strict')) {
+                $success = false;
+                $error = new Error($exception);
+                $error->render();
+            }
         } catch (\Exception $exception) {
+            $success = false;
             $error = new Error($exception);
             $error->render();
         }
+
+        return $success;
     }
 }
