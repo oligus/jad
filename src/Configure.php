@@ -18,7 +18,8 @@ class Configure
      */
     private $config = [
         'testMode'  => false,
-        'debug'     => false
+        'debug'     => false,
+        'strict'    => false,
     ];
 
     /**
