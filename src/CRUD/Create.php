@@ -3,8 +3,10 @@
 namespace Jad\CRUD;
 
 use Jad\Common\ClassHelper;
+use Jad\Map\Annotations\Header;
 use Jad\Common\Text;
 use Doctrine\Common\Collections\Collection as DoctrineCollection;
+use Doctrine\Common\Annotations\AnnotationReader;
 
 /**
  * Class Create
@@ -14,23 +16,56 @@ class Create extends AbstractCRUD
 {
     /**
      * @return mixed
+     * @throws \Exception
      */
     public function createResource()
     {
-        $input = $this->request->getInputJson();
-        $type = $input->data->type;
+        $input          = $this->request->getInputJson();
+        $type           = $input->data->type;
+        $attributes     = isset($input->data->attributes) ? (array) $input->data->attributes : [];
+        $mapItem        = $this->mapper->getMapItem($type);
+        $entityClass    = $mapItem->getEntityClass();
+        $reader         = new AnnotationReader();
+        $reflection     = new \ReflectionClass($mapItem->getEntityClass());
+        $entity         = new $entityClass;
 
-        $attributes = isset($input->data->attributes) ? (array) $input->data->attributes : [];
-        $mapItem = $this->mapper->getMapItem($type);
-        $entityClass = $mapItem->getEntityClass();
+        $header = $reader->getClassAnnotation($reflection, Header::class);
 
-        $entity = new $entityClass;
+        if(!is_null($header)) {
+            if(property_exists($header, 'readOnly')) {
+                $readOnly = is_null($header->readOnly) ? false : (bool) $header->readOnly;
 
-        foreach($attributes as $attr => $value) {
-            $attribute = Text::deKebabify($attr);
-            if($mapItem->getClassMeta()->hasField($attribute)) {
-                ClassHelper::setPropertyValue($entity, $attribute, $value);
+                if($readOnly) {
+                    return;
+                }
             }
+        }
+
+        foreach($attributes as $attribute => $value) {
+
+            //  $attribute = Text::deKebabify($attribute);
+
+            if(!$mapItem->getClassMeta()->hasField($attribute)) {
+                continue;
+            }
+
+            $jadAnnotation = $reader->getPropertyAnnotation(
+                $reflection->getProperty($attribute),
+                'Jad\Map\Annotations\Attribute'
+            );
+
+            if(!is_null($jadAnnotation)) {
+                if(property_exists($jadAnnotation, 'readOnly')) {
+                    $readOnly = is_null($jadAnnotation->readOnly) ? true : (bool) $jadAnnotation->readOnly;
+
+                    if($readOnly) {
+                        continue;
+                    }
+                }
+            }
+
+            // Update value
+            ClassHelper::setPropertyValue($entity, $attribute, $value);
         }
 
         $relationships = isset($input->data->relationships) ? (array) $input->data->relationships : [];

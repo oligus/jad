@@ -106,14 +106,15 @@ abstract class AbstractSerializer implements Serializer
 
             if(!is_null($jadAnnotation)) {
                 if(property_exists($jadAnnotation, 'visible')) {
-                    if(!$jadAnnotation->visible) {
+                    $visible = is_null($jadAnnotation->visible) ? true : (bool) $jadAnnotation->visible;
+
+                    if(!$visible) {
                         continue;
                     }
                 }
             }
 
             $fieldValue = ClassHelper::getPropertyValue($entity, $field);
-
             $value = $fieldValue;
 
             $annotation = $reader->getPropertyAnnotation(
@@ -133,12 +134,13 @@ abstract class AbstractSerializer implements Serializer
 
     /**
      * @param \DateTime $value
-     * @param string $type
+     * @param string $dateType
      * @return string
      */
-    protected function getDateTime(\DateTime $value, $type = 'datetime')
+    protected function getDateTime(\DateTime $value, $dateType = 'datetime')
     {
-        switch($type) {
+        switch($dateType)
+        {
             case 'date':
                 return $value->format(self::DATE_FORMAT);
 

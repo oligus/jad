@@ -33,10 +33,12 @@ class Albums
 #### Header
 
 * Resource type name `@JAD\Header(type="albums")`
+* Readonly entities `@JAD\Header(readOnly=true)`
 
 #### Attributes
 
-* Attribute visibility `@JAD\Attribute(visible=false)`
+* Visibility `@JAD\Attribute(visible=true)`
+* Readonly `@JAD\Attribute(readOnly=true)`
 
 After your entities have been annotated, simply create annotations mapper to inject to Jad:
 

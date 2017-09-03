@@ -16,6 +16,11 @@ final class Header implements Annotation
     public $type;
 
     /**
+     * @var boolean
+     */
+    public $readOnly;
+
+    /**
      * @var bool
      */
     public $paginate;
