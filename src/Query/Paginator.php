@@ -10,8 +10,8 @@ use Jad\Request\Parameters;
  */
 class Paginator
 {
-    public const DEFAULT_LIMIT = 25;
-    public const DEFAULT_PER_PAGE = 25;
+    const DEFAULT_LIMIT = 25;
+    const DEFAULT_PER_PAGE = 25;
 
     /**
      * @var Parameters

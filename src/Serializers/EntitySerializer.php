@@ -15,12 +15,17 @@ use Doctrine\ORM\PersistentCollection;
 class EntitySerializer extends AbstractSerializer
 {
     /**
+     * @var array
+     */
+    private $includeMeta = [];
+    
+    /**
      * @param $entity
      * @return array
      */
     public function getRelationships($entity)
     {
-        $relationships = array();
+        $relationships = [];
 
         $associations = $this->getMapItem()->getClassMeta()->getAssociationMappings();
 
@@ -35,13 +40,26 @@ class EntitySerializer extends AbstractSerializer
                     )
                 );
             } else {
-                $id = ClassHelper::getPropertyValue($entity, $this->getMapItem()->getIdField());
+                $id = method_exists($entity, 'get' .  ucfirst($this->getMapItem()->getIdField()))
+                    ? $entity->getId()
+                    : ClassHelper::getPropertyValue($entity,  $this->getMapItem()->getIdField());
+
                 $relationships[$assocName] = array(
                     'links' => array(
                         'self' => $this->request->getCurrentUrl() . '/' . $id . '/relationship/' . $assocName,
                         'related' => $this->request->getCurrentUrl() . '/' . $id . '/' . $assocName
                     )
                 );
+            }
+
+            if(array_key_exists($assocName, $this->includeMeta)) {
+                $relationships[$assocName]['data'] = array();
+                foreach($this->includeMeta[$assocName] as $id) {
+                    $relationships[$assocName]['data'][] = array(
+                        'type' => $assocName,
+                        'id' => $id
+                    );
+                }
             }
 
         }
@@ -61,16 +79,16 @@ class EntitySerializer extends AbstractSerializer
             return null;
         }
 
-        if (!$this->getMapItem()->getClassMeta()->hasAssociation($type)) {
-            throw new SerializerException('Cannot find relationship ' . $type . ' for inclusion');
+        if (!$this->getMapItem()->getClassMeta()->hasAssociation(Text::deKebabify($type))) {
+            throw new SerializerException('Cannot find relationship resource [' . $type . '] for inclusion.');
         }
 
-        $result = ClassHelper::getPropertyValue($entity, $type);
+        $result = ClassHelper::getPropertyValue($entity, Text::deKebabify($type));
 
         if($result instanceof PersistentCollection) {
             return $this->getIncludedResources($type, $result);
         } else {
-            throw new SerializerException('Singular not implemented.');
+            return $this->getIncludedResources($type, [$result]);
         }
     }
 
@@ -81,11 +99,15 @@ class EntitySerializer extends AbstractSerializer
      */
     public function getIncludedResources($type, $entityCollection)
     {
-        $resources = array();
+        $resources = [];
+
+        $this->includeMeta[$type] = [];
 
         foreach ($entityCollection as $associatedEntity) {
             $resources[] = new Resource($associatedEntity, new IncludedSerializer($this->mapper, $type, $this->request));
+            $this->includeMeta[$type][] = ClassHelper::getPropertyValue($associatedEntity, 'id');
         }
+
         return $resources;
     }
 

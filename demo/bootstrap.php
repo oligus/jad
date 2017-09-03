@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__.'/../../vendor/autoload.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 
 use Doctrine\ORM\Tools\Setup;
 use Doctrine\ORM\EntityManager;
@@ -9,12 +9,12 @@ use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\AnnotationRegistry;
 use Jad\Database\Manager;
 
-$paths = array(realpath(__DIR__ . '/../Database/Entities' ));
+$paths = array(realpath(__DIR__ . '/../tests/Database/Entities'));
 
 $isDevMode = true;
 
 $connectionParams = array(
-    'url' => 'sqlite:///' . realpath(__DIR__ . '/../../tests/demo' ) .'/chinook.db'
+    'url' => 'sqlite:///' . realpath(__DIR__ . '/../demo') .'/chinook.db'
 );
 
 $config = Setup::createConfiguration($isDevMode);

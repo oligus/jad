@@ -28,7 +28,7 @@ class Albums
      * @ORM\ManyToOne(targetEntity="Artists")
      * @ORM\JoinColumn(name="ArtistId", referencedColumnName="ArtistId")
      */
-    protected $artist;
+    protected $artists;
 
     /**
      * @return mixed
@@ -69,18 +69,18 @@ class Albums
     /**
      * @return mixed
      */
-    public function getArtist()
+    public function getArtists()
     {
-        return $this->artist;
+        return $this->artists;
     }
 
     /**
-     * @param mixed $artist
+     * @param mixed $artists
      * @return Albums
      */
-    public function setArtist($artist)
+    public function setArtists($artists)
     {
-        $this->artist = $artist;
+        $this->artists = $artists;
         return $this;
     }
 

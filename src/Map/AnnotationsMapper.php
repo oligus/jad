@@ -4,6 +4,7 @@ namespace Jad\Map;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Common\Annotations\AnnotationReader;
+use Doctrine\Common\Annotations\AnnotationRegistry;
 
 class AnnotationsMapper extends AbstractMapper
 {
@@ -14,6 +15,8 @@ class AnnotationsMapper extends AbstractMapper
     public function __construct(EntityManagerInterface $em)
     {
         parent::__construct($em);
+
+        AnnotationRegistry::registerLoader('class_exists');
 
         $reader = new AnnotationReader();
         $metaData = $em->getMetadataFactory()->getAllMetadata();

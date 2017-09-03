@@ -36,6 +36,11 @@ class Resource implements \JsonSerializable
     private $included = null;
 
     /**
+     * @var null
+     */
+    private $includedParams = null;
+
+    /**
      * Resource constructor.
      * @param $entity
      * @param Serializer $serializer
@@ -63,11 +68,28 @@ class Resource implements \JsonSerializable
     }
 
     /**
+     * @return bool
+     */
+    public function hasIncluded()
+    {
+        return !empty($this->includedParams);
+    }
+
+    /**
+     * @param null $includedParams
+     */
+    public function setIncludedParams($includedParams)
+    {
+        $this->includedParams = $includedParams;
+    }
+
+    /**
      * @return \stdClass
      */
     public function jsonSerialize()
     {
         $resource = new \stdClass();
+        $included = null;
 
         $entity = $this->entity;
         $type = $this->serializer->getType($entity);
@@ -98,29 +120,27 @@ class Resource implements \JsonSerializable
             }
         }
 
-        if(!empty($this->included)) {
-            $resource->included = $this->getIncluded();
-        }
-
         return $resource;
     }
 
     /**
      * @return array
      */
-    protected function getIncluded()
+    public function getIncluded()
     {
-        $included = array();
+        $included = [];
 
-        foreach ($this->included as $includes) {
+        foreach ($this->includedParams as $includes) {
             foreach ($includes as $includedType => $relation) {
                 if (empty($relation)) {
-                    $included[] = $this->serializer->getIncluded($includedType, $this->entity);
+                    $include = $this->serializer->getIncluded($includedType, $this->entity);
+                    $included = array_merge($included, $include);
                 } else {
                     $path = explode('.', $relation);
                     array_unshift($path, $includedType);
                     $result = $this->crawlRelations($this->entity, $path);
-                    $included[] = $this->serializer->getIncludedResources($result['type'], $result['collection']);
+                    $include = $this->serializer->getIncludedResources($result['type'], $result['collection']);
+                    $included = array_merge($included, $include);
                 }
             }
         }
@@ -141,14 +161,14 @@ class Resource implements \JsonSerializable
         $type = end($relations);
 
         while($relation = array_shift($relations)) {
-            $newCollection = array();
+            $newCollection = [];
             $property = Text::deKebabify($relation);
 
             foreach($collection as $entity) {
                 $result = ClassHelper::getPropertyValue($entity, $property);
 
                 if($result instanceof PersistentCollection) {
-                    $newCollection = array_merge($newCollection, $result->toArray());
+                    $newCollection = array_merge($newCollection, $result->to[]);
                 } else {
                     $newCollection =  array_merge($newCollection, array($result));
                 }

@@ -81,7 +81,7 @@ class Customers
     protected $supportRep;
 
     /**
-     * @ORM\OneToMany(targetEntity="Invoices", mappedBy="customer")
+     * @ORM\OneToMany(targetEntity="Invoices", mappedBy="customers")
      */
     protected $invoices;
 }

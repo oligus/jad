@@ -11,6 +11,17 @@ namespace Jad\Document;
  */
 class Collection implements \JsonSerializable
 {
+
+    /**
+     * @var bool
+     */
+    private $included = false;
+
+    /**
+     * @var array
+     */
+    private $includes = [];
+
     /**
      * @var array
      */
@@ -25,16 +36,43 @@ class Collection implements \JsonSerializable
     }
 
     /**
+     * @return bool
+     */
+    public function hasIncluded(): bool
+    {
+        return $this->included;
+    }
+
+    /**
+     * @param bool $included
+     */
+    private function setIncluded(bool $included)
+    {
+        $this->included = $included;
+    }
+
+    public function getIncluded()
+    {
+        return $this->includes;
+    }
+
+    public function loadIncludes()
+    {
+        /** @var \Jad\Document\Resource $resource */
+        foreach($this->resources as $resource) {
+            if($resource->hasIncluded()) {
+                $this->setIncluded(true);
+                $included = $resource->getIncluded();
+                $this->includes = array_merge($this->includes, $included);
+            }
+        }
+    }
+
+    /**
      * @return array
      */
     public function jsonSerialize()
     {
-        $data = [];
-
-        foreach($this->resources as $resource) {
-            $data[] = $resource;
-        }
-
-        return $data;
+        return $this->resources;
     }
 }

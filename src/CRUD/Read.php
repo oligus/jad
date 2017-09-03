@@ -38,7 +38,7 @@ class Read extends AbstractCRUD
 
         $resource = new Resource($entity, new EntitySerializer($this->mapper, $type, $this->request));
         $resource->setFields($this->request->getParameters()->getFields());
-        $resource->setIncluded($this->request->getParameters()->getInclude($mapItem->getClassMeta()->getAssociationNames()));
+        $resource->setIncludedParams($this->request->getParameters()->getInclude($mapItem->getClassMeta()->getAssociationNames()));
 
         return $resource;
     }
@@ -73,12 +73,12 @@ class Read extends AbstractCRUD
         }
 
         $entities = $qb->getQuery()->getResult();
-
         $collection = new Collection();
 
         foreach($entities as $entity) {
             $resource = new Resource($entity, new EntitySerializer($this->mapper, $type, $this->request));
             $resource->setFields($this->request->getParameters()->getFields());
+            $resource->setIncludedParams($this->request->getParameters()->getInclude($mapItem->getClassMeta()->getAssociationNames()));
             $collection->add($resource);
         }
 

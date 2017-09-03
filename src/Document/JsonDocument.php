@@ -37,11 +37,22 @@ class JsonDocument implements \JsonSerializable
     public function jsonSerialize()
     {
         $document = new \stdClass();
-        $document->data = $this->element;
+
+        if($this->element instanceof Collection) {
+            $document->data = $this->element;
+            $this->element->loadIncludes();
+        } else {
+            $document->data = [$this->element];
+        }
+
+        if($this->element->hasIncluded()) {
+            $document->included = $this->element->getIncluded();
+        }
 
         if(!is_null($this->links)) {
             $document->links = $this->links;
         }
+
         return $document;
     }
 }

@@ -23,7 +23,7 @@ class Invoices
      * @ORM\ManyToOne(targetEntity="Customers", fetch="EAGER")
      * @ORM\JoinColumn(name="CustomerId", referencedColumnName="CustomerId")
      */
-    protected $customer;
+    protected $customers;
 
     /**
      * @ORM\Column(name="InvoiceDate", type="datetime")

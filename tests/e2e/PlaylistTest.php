@@ -75,7 +75,7 @@ class PlaylistTest extends TestCase
 
         $mapper = new AnnotationsMapper(Manager::getInstance()->getEm());
         $jad = new Jad($mapper);
-        $expected = '{"data":{"id":15,"type":"tracks","attributes":{"name":"Go Down","composer":"AC\/DC","price":"0.99"},"relationships":{"album":{"links":{"self":"http:\/\/:\/tracks\/15\/relationship\/album","related":"http:\/\/:\/tracks\/15\/album"}},"media-type":{"links":{"self":"http:\/\/:\/tracks\/15\/relationship\/media-type","related":"http:\/\/:\/tracks\/15\/media-type"}},"genre":{"links":{"self":"http:\/\/:\/tracks\/15\/relationship\/genre","related":"http:\/\/:\/tracks\/15\/genre"}},"playlists":{"links":{"self":"http:\/\/:\/tracks\/15\/relationship\/playlists","related":"http:\/\/:\/tracks\/15\/playlists"}}}},"links":{"self":"http:\/\/:\/tracks\/15"}}';
+        $expected = '{"data":[{"id":15,"type":"tracks","attributes":{"name":"Go Down","composer":"AC\/DC","price":"0.99"},"relationships":{"album":{"links":{"self":"http:\/\/:\/tracks\/15\/relationship\/album","related":"http:\/\/:\/tracks\/15\/album"}},"media-type":{"links":{"self":"http:\/\/:\/tracks\/15\/relationship\/media-type","related":"http:\/\/:\/tracks\/15\/media-type"}},"genre":{"links":{"self":"http:\/\/:\/tracks\/15\/relationship\/genre","related":"http:\/\/:\/tracks\/15\/genre"}},"playlists":{"links":{"self":"http:\/\/:\/tracks\/15\/relationship\/playlists","related":"http:\/\/:\/tracks\/15\/playlists"}}}}],"links":{"self":"http:\/\/:\/tracks\/15"}}';
 
         $jad->jsonApiResult();
         $this->expectOutputString($expected);
@@ -130,7 +130,7 @@ class PlaylistTest extends TestCase
         $mapper = new AnnotationsMapper(Manager::getInstance()->getEm());
         $jad = new Jad($mapper);
 
-        $expected = '{"data":{"id":4,"type":"playlists","attributes":{"name":"New Playlist"},"relationships":{"tracks":{"links":{"self":"http:\/\/:\/playlists\/4\/relationship\/tracks","related":"http:\/\/:\/playlists\/4\/tracks"}}}},"links":{"self":"http:\/\/:\/playlists"}}';
+        $expected = '{"data":[{"id":4,"type":"playlists","attributes":{"name":"New Playlist"},"relationships":{"tracks":{"links":{"self":"http:\/\/:\/playlists\/4\/relationship\/tracks","related":"http:\/\/:\/playlists\/4\/tracks"}}}}],"links":{"self":"http:\/\/:\/playlists"}}';
         $jad->jsonApiResult();
         $this->expectOutputString($expected);
     }
@@ -174,7 +174,7 @@ class PlaylistTest extends TestCase
         $mapper = new AnnotationsMapper(Manager::getInstance()->getEm());
         $jad = new Jad($mapper);
 
-        $expected = '{"data":{"id":4,"type":"playlists","attributes":{"name":"New Playlist"},"relationships":{"tracks":{"links":{"self":"http:\/\/:\/playlists\/4\/relationship\/tracks","related":"http:\/\/:\/playlists\/4\/tracks"}}}},"links":{"self":"http:\/\/:\/playlists\/4"}}';
+        $expected = '{"data":[{"id":4,"type":"playlists","attributes":{"name":"New Playlist"},"relationships":{"tracks":{"links":{"self":"http:\/\/:\/playlists\/4\/relationship\/tracks","related":"http:\/\/:\/playlists\/4\/tracks"}}}}],"links":{"self":"http:\/\/:\/playlists\/4"}}';
         $jad->jsonApiResult();
         $this->expectOutputString($expected);
     }

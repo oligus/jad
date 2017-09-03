@@ -37,20 +37,20 @@ class Parameters
      * @return array
      * @throws ParameterException
      */
-    public function getInclude(array $available = array())
+    public function getInclude(array $available = [])
     {
-        $relationships = array();
+        $relationships = [];
 
         if ($include = $this->getInput('include')) {
             $includes = explode(',', $include);
 
-            $keys = array();
+            $keys = [];
 
             foreach($includes as $include) {
-                $tmpArray = array();
+                $tmpArray = [];
                 $parts = explode('.', trim($include));
                 $key = array_shift($parts);
-                $keys[] = $key;
+                $keys[] = Text::deKebabify($key);
                 $tmpArray[$key] = implode('.', $parts);
                 $relationships[] = $tmpArray;
             }
@@ -58,7 +58,21 @@ class Parameters
             $invalid = array_diff(array_unique($keys), $available);
 
             if (count($invalid)) {
-                throw new ParameterException('Invalid includes ['.implode(',', $invalid).']');
+                $resourceTypes = array_map(function($resourceType) {
+                    return Text::kebabify($resourceType);
+                }, $available);
+
+                $invalidTypes = array_map(function($resourceType) {
+                    return Text::kebabify($resourceType);
+                }, $invalid);
+
+                $resourceTypes = implode(', ', $resourceTypes);
+                $invalidTypes = implode(', ', $invalidTypes);
+
+                $message = 'Resource to include not found [' . $invalidTypes . ']';
+                $message .= ', available resources [' . $resourceTypes . ']';
+
+                throw new ParameterException($message, 404);
             }
         }
 
@@ -127,9 +141,9 @@ class Parameters
      * @return array
      * @throws ParameterException
      */
-    public function getSort(array $available = array())
+    public function getSort(array $available = [])
     {
-        $sort = array();
+        $sort = [];
 
         if ($input = $this->getInput('sort')) {
             $fields = explode(',', $input);
