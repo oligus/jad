@@ -8,7 +8,7 @@ use Jad\Map\Annotations as JAD;
 /**
  * @ORM\Entity(repositoryClass="Jad\Database\Repositories\AlbumRepository")
  * @ORM\Table(name="employees")
- * @JAD\Head(type="employees")
+ * @JAD\Header(type="employees")
  */
 class Employees
 {
@@ -82,6 +82,7 @@ class Employees
 
     /**
      * @ORM\Column(name="Fax", type="string", length=24)
+     * @JAD\Attribute(visible=false)
      */
     protected $fax;
 

@@ -8,7 +8,7 @@ use Jad\Map\Annotations as JAD;
 /**
  * @ORM\Entity(repositoryClass="Doctrine\ORM\EntityRepository")
  * @ORM\Table(name="customers")
- * @JAD\Head(type="customers")
+ * @JAD\Header(type="customers")
  */
 class Customers
 {

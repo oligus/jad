@@ -19,7 +19,6 @@ abstract class AbstractSerializer implements Serializer
     const DATE_FORMAT = 'Y-m-d';
     const TIME_FORMAT = 'H:i:s';
     const DATE_TIME_FORMAT =  'Y-m-d H:i:s';
-    const DELETED_FIELD =  'deleted';
 
     /**
      * @var Mapper $mapper
@@ -95,24 +94,19 @@ abstract class AbstractSerializer implements Serializer
                 continue;
             }
 
-            // Do not display deleted field
-            if($field === self::DELETED_FIELD) {
-                continue;
-            }
-
             // If filtered fields, only show selected fields
             if(!empty($fields) && !in_array($field, $fields)) {
                 continue;
             }
 
-            $crmAnnotation = $reader->getPropertyAnnotation(
+            $jadAnnotation = $reader->getPropertyAnnotation(
                 $reflection->getProperty($field),
-                'Jad\Map\Annotations\Column'
+                'Jad\Map\Annotations\Attribute'
             );
 
-            if(!is_null($crmAnnotation)) {
-                if(property_exists($crmAnnotation, 'visible')) {
-                    if(!$crmAnnotation->visible) {
+            if(!is_null($jadAnnotation)) {
+                if(property_exists($jadAnnotation, 'visible')) {
+                    if(!$jadAnnotation->visible) {
                         continue;
                     }
                 }

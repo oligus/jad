@@ -23,9 +23,9 @@ class AnnotationsMapper extends AbstractMapper
 
         /** @var \Doctrine\ORM\Mapping\ClassMetadata $meta */
         foreach($metaData as $meta) {
-            $head = $reader->getClassAnnotation($meta->getReflectionClass(), Annotations\Head::class);
+            $head = $reader->getClassAnnotation($meta->getReflectionClass(), Annotations\Header::class);
 
-            if(!empty(2) && !empty($head->type)) {
+            if(!empty($head) && !empty($head->type)) {
                 $className = $meta->getName();
                 $paginate = !!$head->paginate;
                 $this->add($head->type, $className, $paginate);
