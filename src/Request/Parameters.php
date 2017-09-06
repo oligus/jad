@@ -46,7 +46,7 @@ class Parameters
 
             $keys = [];
 
-            foreach($includes as $include) {
+            foreach ($includes as $include) {
                 $tmpArray = [];
                 $parts = explode('.', trim($include));
                 $key = array_shift($parts);
@@ -58,11 +58,11 @@ class Parameters
             $invalid = array_diff(array_unique($keys), $available);
 
             if (count($invalid)) {
-                $resourceTypes = array_map(function($resourceType) {
+                $resourceTypes = array_map(function ($resourceType) {
                     return Text::kebabify($resourceType);
                 }, $available);
 
-                $invalidTypes = array_map(function($resourceType) {
+                $invalidTypes = array_map(function ($resourceType) {
                     return Text::kebabify($resourceType);
                 }, $invalid);
 
@@ -90,10 +90,10 @@ class Parameters
             return $offset;
         }
 
-        $offset = (int) $this->getPage('offset');
+        $offset = (int)$this->getPage('offset');
 
         if ($offset < 0) {
-            throw new ParameterException('page[offset] must be >=0', 2, null, 'page[offset]');
+            throw new ParameterException('page[offset] must be >=0', 2);
         }
 
         return $offset;
@@ -105,7 +105,7 @@ class Parameters
      */
     protected function getOffsetFromNumber($perPage)
     {
-        $page = (int) $this->getPage('number');
+        $page = (int)$this->getPage('number');
 
         if ($page <= 1) {
             return 0;
@@ -116,16 +116,17 @@ class Parameters
 
     /**
      * @param null $max
+     * @param int $default
      * @return mixed|null
      */
-    public function getLimit($max = null)
+    public function getLimit($max = null, $default = 25)
     {
-        $limit = $this->getPage('limit') ? : null;
-        $size = $this->getPage('size') ? : null;
+        $limit = $this->getPage('limit') ?: null;
+        $size = $this->getPage('size') ?: $default;
 
         $limit = max($limit, $size);
 
-        if(is_null($limit)) {
+        if (is_null($limit)) {
             $limit = $max;
         }
 
@@ -163,7 +164,7 @@ class Parameters
             $invalid = array_diff(array_keys($sort), $available);
 
             if (count($invalid)) {
-                throw new ParameterException('Invalid sort fields ['.implode(',', $invalid).']', 3);
+                throw new ParameterException('Invalid sort fields [' . implode(',', $invalid) . ']', 3);
             }
         }
 
@@ -184,7 +185,7 @@ class Parameters
         }
 
         return array_map(function ($fields) {
-            $fieldsArray =  explode(',', $fields);
+            $fieldsArray = explode(',', $fields);
 
             return array_map(function ($field) {
                 return trim($field);
@@ -200,8 +201,8 @@ class Parameters
     {
         $input = $this->getInput('filter');
 
-        if($type) {
-            if(is_array($input) && array_key_exists($type, $input)) {
+        if ($type) {
+            if (is_array($input) && array_key_exists($type, $input)) {
                 return $input[$type];
             }
         }
@@ -235,4 +236,11 @@ class Parameters
 
         return isset($page[$key]) ? $page[$key] : '';
     }
+
+    public function getSize($default = 25)
+    {
+        return $this->getPage('size') ?: $default;
+
+    }
+
 }

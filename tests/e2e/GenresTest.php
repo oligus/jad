@@ -66,7 +66,8 @@ class GenresTest extends TestCase
         $mapper = new AnnotationsMapper(Manager::getInstance()->getEm());
         $jad = new Jad($mapper);
 
-        $expected = '{"data":[{"id":1,"type":"genres","attributes":{"name":"Rock"}},{"id":2,"type":"genres","attributes":{"name":"Jazz"}},{"id":3,"type":"genres","attributes":{"name":"Metal"}},{"id":4,"type":"genres","attributes":{"name":"Alternative & Punk"}},{"id":5,"type":"genres","attributes":{"name":"Rock And Roll"}},{"id":6,"type":"genres","attributes":{"name":"Blues"}},{"id":7,"type":"genres","attributes":{"name":"Latin"}},{"id":8,"type":"genres","attributes":{"name":"Reggae"}},{"id":9,"type":"genres","attributes":{"name":"Pop"}},{"id":10,"type":"genres","attributes":{"name":"Soundtrack"}},{"id":11,"type":"genres","attributes":{"name":"Bossa Nova"}},{"id":12,"type":"genres","attributes":{"name":"Easy Listening"}},{"id":13,"type":"genres","attributes":{"name":"Heavy Metal"}},{"id":14,"type":"genres","attributes":{"name":"R&B\/Soul"}},{"id":15,"type":"genres","attributes":{"name":"Electronica\/Dance"}},{"id":16,"type":"genres","attributes":{"name":"World"}},{"id":17,"type":"genres","attributes":{"name":"Hip Hop\/Rap"}},{"id":18,"type":"genres","attributes":{"name":"Science Fiction"}},{"id":19,"type":"genres","attributes":{"name":"TV Shows"}},{"id":20,"type":"genres","attributes":{"name":"Sci Fi & Fantasy"}},{"id":21,"type":"genres","attributes":{"name":"Drama"}},{"id":22,"type":"genres","attributes":{"name":"Comedy"}},{"id":23,"type":"genres","attributes":{"name":"Alternative"}},{"id":24,"type":"genres","attributes":{"name":"Classical"}},{"id":25,"type":"genres","attributes":{"name":"Opera"}}],"links":{"self":"http:\/\/:\/genres"}}';
+        $expected = '{"data":[{"id":1,"type":"genres","attributes":{"name":"Rock"}},{"id":2,"type":"genres","attributes":{"name":"Jazz"}},{"id":3,"type":"genres","attributes":{"name":"Metal"}},{"id":4,"type":"genres","attributes":{"name":"Alternative & Punk"}},{"id":5,"type":"genres","attributes":{"name":"Rock And Roll"}},{"id":6,"type":"genres","attributes":{"name":"Blues"}},{"id":7,"type":"genres","attributes":{"name":"Latin"}},{"id":8,"type":"genres","attributes":{"name":"Reggae"}},{"id":9,"type":"genres","attributes":{"name":"Pop"}},{"id":10,"type":"genres","attributes":{"name":"Soundtrack"}},{"id":11,"type":"genres","attributes":{"name":"Bossa Nova"}},{"id":12,"type":"genres","attributes":{"name":"Easy Listening"}},{"id":13,"type":"genres","attributes":{"name":"Heavy Metal"}},{"id":14,"type":"genres","attributes":{"name":"R&B\/Soul"}},{"id":15,"type":"genres","attributes":{"name":"Electronica\/Dance"}},{"id":16,"type":"genres","attributes":{"name":"World"}},{"id":17,"type":"genres","attributes":{"name":"Hip Hop\/Rap"}},{"id":18,"type":"genres","attributes":{"name":"Science Fiction"}},{"id":19,"type":"genres","attributes":{"name":"TV Shows"}},{"id":20,"type":"genres","attributes":{"name":"Sci Fi & Fantasy"}},{"id":21,"type":"genres","attributes":{"name":"Drama"}},{"id":22,"type":"genres","attributes":{"name":"Comedy"}},{"id":23,"type":"genres","attributes":{"name":"Alternative"}},{"id":24,"type":"genres","attributes":{"name":"Classical"}},{"id":25,"type":"genres","attributes":{"name":"Opera"}}],"links":{"self":"http:\/\/:\/genres?page[size]=25&page[number]=1","first":"http:\/\/:\/genres?page[size]=25&page[number]=1","last":"http:\/\/:\/genres?page[size]=25&page[number]=1"}}';
+
         $jad->jsonApiResult();
         $this->expectOutputString($expected);
     }
@@ -80,7 +81,7 @@ class GenresTest extends TestCase
         $mapper = new AnnotationsMapper(Manager::getInstance()->getEm());
         $jad = new Jad($mapper);
 
-        $expected = '{"data":[{"id":1,"type":"genres","attributes":{"name":"Rock"}},{"id":2,"type":"genres","attributes":{"name":"Jazz"}},{"id":3,"type":"genres","attributes":{"name":"Metal"}},{"id":4,"type":"genres","attributes":{"name":"Alternative & Punk"}},{"id":5,"type":"genres","attributes":{"name":"Rock And Roll"}}],"links":{"self":"http:\/\/:\/genres"}}';
+        $expected = '{"data":[{"id":1,"type":"genres","attributes":{"name":"Rock"}},{"id":2,"type":"genres","attributes":{"name":"Jazz"}},{"id":3,"type":"genres","attributes":{"name":"Metal"}},{"id":4,"type":"genres","attributes":{"name":"Alternative & Punk"}},{"id":5,"type":"genres","attributes":{"name":"Rock And Roll"}},{"id":6,"type":"genres","attributes":{"name":"Blues"}},{"id":7,"type":"genres","attributes":{"name":"Latin"}},{"id":8,"type":"genres","attributes":{"name":"Reggae"}},{"id":9,"type":"genres","attributes":{"name":"Pop"}},{"id":10,"type":"genres","attributes":{"name":"Soundtrack"}},{"id":11,"type":"genres","attributes":{"name":"Bossa Nova"}},{"id":12,"type":"genres","attributes":{"name":"Easy Listening"}},{"id":13,"type":"genres","attributes":{"name":"Heavy Metal"}},{"id":14,"type":"genres","attributes":{"name":"R&B\/Soul"}},{"id":15,"type":"genres","attributes":{"name":"Electronica\/Dance"}},{"id":16,"type":"genres","attributes":{"name":"World"}},{"id":17,"type":"genres","attributes":{"name":"Hip Hop\/Rap"}},{"id":18,"type":"genres","attributes":{"name":"Science Fiction"}},{"id":19,"type":"genres","attributes":{"name":"TV Shows"}},{"id":20,"type":"genres","attributes":{"name":"Sci Fi & Fantasy"}},{"id":21,"type":"genres","attributes":{"name":"Drama"}},{"id":22,"type":"genres","attributes":{"name":"Comedy"}},{"id":23,"type":"genres","attributes":{"name":"Alternative"}},{"id":24,"type":"genres","attributes":{"name":"Classical"}},{"id":25,"type":"genres","attributes":{"name":"Opera"}}],"links":{"self":"http:\/\/:\/genres?page[size]=25&page[number]=1","first":"http:\/\/:\/genres?page[size]=25&page[number]=1","last":"http:\/\/:\/genres?page[size]=25&page[number]=1"}}';
         $jad->jsonApiResult();
         $this->expectOutputString($expected);
     }
@@ -88,12 +89,13 @@ class GenresTest extends TestCase
     public function testOffset()
     {
         $_SERVER = ['REQUEST_URI' => '/genres'];
-        $_GET = ['page' => ['offset' => 10, 'limit' => 5]];
+        $_GET = ['page' => ['page' => 10, 'size' => 5]];
 
         $mapper = new AnnotationsMapper(Manager::getInstance()->getEm());
         $jad = new Jad($mapper);
 
-        $expected = '{"data":[{"id":11,"type":"genres","attributes":{"name":"Bossa Nova"}},{"id":12,"type":"genres","attributes":{"name":"Easy Listening"}},{"id":13,"type":"genres","attributes":{"name":"Heavy Metal"}},{"id":14,"type":"genres","attributes":{"name":"R&B\/Soul"}},{"id":15,"type":"genres","attributes":{"name":"Electronica\/Dance"}}],"links":{"self":"http:\/\/:\/genres"}}';
+        $expected = '{"data":[{"id":1,"type":"genres","attributes":{"name":"Rock"}},{"id":2,"type":"genres","attributes":{"name":"Jazz"}},{"id":3,"type":"genres","attributes":{"name":"Metal"}},{"id":4,"type":"genres","attributes":{"name":"Alternative & Punk"}},{"id":5,"type":"genres","attributes":{"name":"Rock And Roll"}}],"links":{"self":"http:\/\/:\/genres?page[size]=5&page[number]=1","first":"http:\/\/:\/genres?page[size]=5&page[number]=1","last":"http:\/\/:\/genres?page[size]=5&page[number]=5","next":"http:\/\/:\/genres?page[size]=5&page[number]=2"}}';
+
         $jad->jsonApiResult();
         $this->expectOutputString($expected);
     }
@@ -101,12 +103,13 @@ class GenresTest extends TestCase
     public function testSortAsc()
     {
         $_SERVER = ['REQUEST_URI' => '/genres'];
-        $_GET = ['page' => ['offset' => 0, 'limit' => 10], 'sort' => 'name',];
+        $_GET = ['page' => ['number' => 0, 'size' => 10], 'sort' => 'name',];
 
         $mapper = new AnnotationsMapper(Manager::getInstance()->getEm());
         $jad = new Jad($mapper);
 
-        $expected = '{"data":[{"id":23,"type":"genres","attributes":{"name":"Alternative"}},{"id":4,"type":"genres","attributes":{"name":"Alternative & Punk"}},{"id":6,"type":"genres","attributes":{"name":"Blues"}},{"id":11,"type":"genres","attributes":{"name":"Bossa Nova"}},{"id":24,"type":"genres","attributes":{"name":"Classical"}},{"id":22,"type":"genres","attributes":{"name":"Comedy"}},{"id":21,"type":"genres","attributes":{"name":"Drama"}},{"id":12,"type":"genres","attributes":{"name":"Easy Listening"}},{"id":15,"type":"genres","attributes":{"name":"Electronica\/Dance"}},{"id":13,"type":"genres","attributes":{"name":"Heavy Metal"}}],"links":{"self":"http:\/\/:\/genres"}}';
+        $expected = '{"data":[{"id":23,"type":"genres","attributes":{"name":"Alternative"}},{"id":4,"type":"genres","attributes":{"name":"Alternative & Punk"}},{"id":6,"type":"genres","attributes":{"name":"Blues"}},{"id":11,"type":"genres","attributes":{"name":"Bossa Nova"}},{"id":24,"type":"genres","attributes":{"name":"Classical"}},{"id":22,"type":"genres","attributes":{"name":"Comedy"}},{"id":21,"type":"genres","attributes":{"name":"Drama"}},{"id":12,"type":"genres","attributes":{"name":"Easy Listening"}},{"id":15,"type":"genres","attributes":{"name":"Electronica\/Dance"}},{"id":13,"type":"genres","attributes":{"name":"Heavy Metal"}}],"links":{"self":"http:\/\/:\/genres?page[size]=10&page[number]=1","first":"http:\/\/:\/genres?page[size]=10&page[number]=1","last":"http:\/\/:\/genres?page[size]=10&page[number]=3","next":"http:\/\/:\/genres?page[size]=10&page[number]=2"}}';
+
         $jad->jsonApiResult();
         $this->expectOutputString($expected);
     }
@@ -114,12 +117,13 @@ class GenresTest extends TestCase
     public function testSortDesc()
     {
         $_SERVER = ['REQUEST_URI' => '/genres'];
-        $_GET = ['page' => ['offset' => 0, 'limit' => 10], 'sort' => '-name',];
+        $_GET = ['page' => ['number' => 0, 'size' => 10], 'sort' => '-name',];
 
         $mapper = new AnnotationsMapper(Manager::getInstance()->getEm());
         $jad = new Jad($mapper);
 
-        $expected = '{"data":[{"id":16,"type":"genres","attributes":{"name":"World"}},{"id":19,"type":"genres","attributes":{"name":"TV Shows"}},{"id":10,"type":"genres","attributes":{"name":"Soundtrack"}},{"id":18,"type":"genres","attributes":{"name":"Science Fiction"}},{"id":20,"type":"genres","attributes":{"name":"Sci Fi & Fantasy"}},{"id":5,"type":"genres","attributes":{"name":"Rock And Roll"}},{"id":1,"type":"genres","attributes":{"name":"Rock"}},{"id":8,"type":"genres","attributes":{"name":"Reggae"}},{"id":14,"type":"genres","attributes":{"name":"R&B\/Soul"}},{"id":9,"type":"genres","attributes":{"name":"Pop"}}],"links":{"self":"http:\/\/:\/genres"}}';
+        $expected = '{"data":[{"id":16,"type":"genres","attributes":{"name":"World"}},{"id":19,"type":"genres","attributes":{"name":"TV Shows"}},{"id":10,"type":"genres","attributes":{"name":"Soundtrack"}},{"id":18,"type":"genres","attributes":{"name":"Science Fiction"}},{"id":20,"type":"genres","attributes":{"name":"Sci Fi & Fantasy"}},{"id":5,"type":"genres","attributes":{"name":"Rock And Roll"}},{"id":1,"type":"genres","attributes":{"name":"Rock"}},{"id":8,"type":"genres","attributes":{"name":"Reggae"}},{"id":14,"type":"genres","attributes":{"name":"R&B\/Soul"}},{"id":9,"type":"genres","attributes":{"name":"Pop"}}],"links":{"self":"http:\/\/:\/genres?page[size]=10&page[number]=1","first":"http:\/\/:\/genres?page[size]=10&page[number]=1","last":"http:\/\/:\/genres?page[size]=10&page[number]=3","next":"http:\/\/:\/genres?page[size]=10&page[number]=2"}}';
+
         $jad->jsonApiResult();
         $this->expectOutputString($expected);
     }

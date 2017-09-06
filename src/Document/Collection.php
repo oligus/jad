@@ -2,6 +2,8 @@
 
 namespace Jad\Document;
 
+use Jad\Query\Paginator;
+
 /**
  * Class Collection
  *
@@ -11,7 +13,6 @@ namespace Jad\Document;
  */
 class Collection implements \JsonSerializable
 {
-
     /**
      * @var bool
      */
@@ -26,6 +27,11 @@ class Collection implements \JsonSerializable
      * @var array
      */
     private $resources = array();
+
+    /**
+     * @var Paginator
+     */
+    private $paginator;
 
     /**
      * @param \Jad\Document\Resource $resource
@@ -66,6 +72,22 @@ class Collection implements \JsonSerializable
                 $this->includes = array_merge($this->includes, $included);
             }
         }
+    }
+
+    /**
+     * @return Paginator|null
+     */
+    public function getPaginator()
+    {
+        return $this->paginator;
+    }
+
+    /**
+     * @param Paginator $paginator
+     */
+    public function setPaginator(Paginator $paginator)
+    {
+        $this->paginator = $paginator;
     }
 
     /**

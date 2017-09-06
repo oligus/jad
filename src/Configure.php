@@ -17,9 +17,10 @@ class Configure
      * @var array
      */
     private $config = [
-        'testMode'  => false,
-        'debug'     => false,
-        'strict'    => false,
+        'testMode'          => false,
+        'debug'             => false,
+        'strict'            => false,
+        'max_page_size'     => 25,
     ];
 
     /**

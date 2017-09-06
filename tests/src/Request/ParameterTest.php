@@ -22,6 +22,30 @@ class ParameterTest extends TestCase
 }
      */
 
+    public function testGetOffset()
+    {
+        $parameters = new Parameters([
+            'page' => [
+                'number' => 2,
+                'size' => 5,
+            ]
+        ]);
+
+        $this->assertEquals(25, $parameters->getOffset(25));
+    }
+
+    public function testGetSize()
+    {
+        $parameters = new Parameters([
+            'page' => [
+                'number' => 2,
+                'size' => 5,
+            ]
+        ]);
+
+        $this->assertEquals(5, $parameters->getSize(25));
+    }
+
     public function testGetFields()
     {
         $parameters = new Parameters([

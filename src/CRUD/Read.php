@@ -57,9 +57,19 @@ class Read extends AbstractCRUD
         $filter = new Filter($filterParams, $qb);
         $filter->process();
 
-        $paginator = new Paginator($this->request->getParameters());
+        $paginator = new Paginator($this->request);
+        $paginator->setActive($mapItem->isPaginate());
         $limit = $paginator->getLimit();
         $offset = $paginator->getOffset();
+
+
+        if($paginator->isActive()) {
+            $sql = 'SELECT COUNT(t.' . $mapItem->getIdField() .') FROM ' . $mapItem->getEntityClass() . ' t';
+            $query = $this->mapper->getEm()->createQuery($sql);
+            $count = $query->getSingleScalarResult();
+            $paginator->setCount($count);
+
+        }
 
         $qb = $filter->getQb();
         $qb->setMaxResults($limit);
@@ -74,6 +84,7 @@ class Read extends AbstractCRUD
 
         $entities = $qb->getQuery()->getResult();
         $collection = new Collection();
+        $collection->setPaginator($paginator);
 
         foreach($entities as $entity) {
             $resource = new Resource($entity, new EntitySerializer($this->mapper, $type, $this->request));

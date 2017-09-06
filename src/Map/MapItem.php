@@ -36,7 +36,7 @@ class MapItem
     public function __construct($type, $params, $paginate = false)
     {
         $this->setType($type);
-        $this->paginate = $paginate;
+        $this->setPaginate($paginate);
 
         if(is_string($params)) {
             $this->setEntityClass($params);
@@ -136,5 +136,13 @@ class MapItem
     public function isPaginate(): bool
     {
         return $this->paginate;
+    }
+
+    /**
+     * @param $paginate
+     */
+    public function setPaginate($paginate)
+    {
+        $this->paginate = $paginate;
     }
 }

@@ -2,6 +2,8 @@
 
 namespace Jad\Document;
 
+use Jad\Query\Paginator;
+
 class JsonDocument implements \JsonSerializable
 {
     /**
@@ -53,6 +55,46 @@ class JsonDocument implements \JsonSerializable
             $document->links = $this->links;
         }
 
+        if($this->hasPagination($this->element)) {
+            /** @var Paginator $paginator */
+            $paginator = $this->element->getPaginator();
+
+            $document->links->setSelf($paginator->getCurrent());
+            $document->links->setFirst($paginator->getFirst());
+            $document->links->setLast($paginator->getLast());
+
+            if($paginator->hasNext()) {
+                $document->links->setNext($paginator->getNext());
+            }
+
+            if($paginator->hasPrevious()) {
+                $document->links->setPrevious($paginator->getPrevious());
+            }
+        }
+
         return $document;
+    }
+
+    /**
+     * @param $element
+     * @return bool
+     */
+    private function hasPagination($element)
+    {
+        if(!$element instanceof Collection) {
+            return false;
+        }
+
+        $paginator = $element->getPaginator();
+
+        if($paginator === null) {
+            return false;
+        }
+
+        if(!$paginator instanceof Paginator) {
+            return false;
+        }
+
+        return $paginator->isActive();
     }
 }
