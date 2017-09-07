@@ -33,6 +33,8 @@ $jad->jsonApiResult();
 
 [Pagination](docs/pagination.md)
 
+[Ordering](docs/ordering.md)
+
 [Fetching resources with relationships](docs/relations.md)
 
 [Creating a new resource](docs/create.md)

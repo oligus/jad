@@ -24,19 +24,17 @@ class Read extends AbstractCRUD
      */
     public function getResourceById($id)
     {
-        $type = $this->request->getResourceType();
-
         /** @var \Jad\Map\MapItem $mapItem */
-        $mapItem = $this->mapper->getMapItem($type);
+        $mapItem = $this->mapper->getMapItem($this->request->getResourceType());
         $entity = $this->mapper->getEm()->getRepository($mapItem->getEntityClass())->find($id);
 
         if(is_null($entity)) {
             throw new ResourceNotFoundException(
-                'Resource of type [' . $type . '] with id [' . $id . '] could not be found.'
+                'Resource of type [' . $this->request->getResourceType() . '] with id [' . $id . '] could not be found.'
             );
         }
 
-        $resource = new Resource($entity, new EntitySerializer($this->mapper, $type, $this->request));
+        $resource = new Resource($entity, new EntitySerializer($this->mapper, $this->request->getResourceType(), $this->request));
         $resource->setFields($this->request->getParameters()->getFields());
         $resource->setIncludedParams($this->request->getParameters()->getInclude($mapItem->getClassMeta()->getAssociationNames()));
 
@@ -45,15 +43,14 @@ class Read extends AbstractCRUD
 
     public function getResources()
     {
-        $type = $this->request->getResourceType();
-        $mapItem = $this->mapper->getMapItem($type);
+        $mapItem = $this->mapper->getMapItem($this->request->getResourceType());
 
         $qb = new QueryBuilder($this->mapper->getEm());
 
         $qb->select('t');
         $qb->from($mapItem->getEntityClass(), 't');
 
-        $filterParams = $this->request->getParameters()->getFilter($type);
+        $filterParams = $this->request->getParameters()->getFilter($this->request->getResourceType());
         $filter = new Filter($filterParams, $qb);
         $filter->process();
 
@@ -75,10 +72,11 @@ class Read extends AbstractCRUD
         $qb->setMaxResults($limit);
         $qb->setFirstResult($offset);
 
-        $sort = $this->getOrderBy($type);
+        $sort = $this->getOrderBy($this->request->getResourceType());
+
         if(!empty($sort)) {
             foreach($sort as $property => $direction) {
-                $qb->orderBy('t.' . $property, $direction);
+                $qb->addOrderBy('t.' . $property, $direction);
             }
         }
 
@@ -87,7 +85,7 @@ class Read extends AbstractCRUD
         $collection->setPaginator($paginator);
 
         foreach($entities as $entity) {
-            $resource = new Resource($entity, new EntitySerializer($this->mapper, $type, $this->request));
+            $resource = new Resource($entity, new EntitySerializer($this->mapper, $this->request->getResourceType(), $this->request));
             $resource->setFields($this->request->getParameters()->getFields());
             $resource->setIncludedParams($this->request->getParameters()->getInclude($mapItem->getClassMeta()->getAssociationNames()));
             $collection->add($resource);

@@ -10,7 +10,10 @@ To enable pagination on a specific entity, simply set the annotation attribute `
 * @JAD\Header(type="tracks", paginate=true)
 ```
 
-_Note: Adding pagination might be expensive depending on table structure, indexes and number of records. When a table is paginated it will always make two db queries, one for count and one for the selection._
+This will ad pagination links to the resource in question, however this might be expensive depending on your setup.
+When a table is paginated it will always make two db queries, one for count and one for the selection.
+
+Pagination will still work without the count query but paging links cannot be calculated.
 
 ### Parameters
 
