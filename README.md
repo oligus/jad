@@ -3,12 +3,13 @@
 JSON Api :heart: Doctrine ORM
 
 [![Build Status](https://travis-ci.org/oligus/jad.svg?branch=master)](https://travis-ci.org/oligus/jad)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-Jad is a library that turns doctrine entities ([doctrine/doctrine2](https://github.com/doctrine/doctrine2)) to a
-json api resource, or collection of resources automagically.
+JAD is a library created for rapid development of [JSON API](http://jsonapi.org) backend REST implementation. You can
+run JAD as a standalone server with php -S (see [demo](demo/README.md)), or you can use it as a middleware in your framework.
 
-You preferably use Jad in a middleware or plugin where Jad will capture the request by itself and return a json response
-if it can correctly find the mapping.
+It turns doctrine entities ([doctrine/doctrine2](https://github.com/doctrine/doctrine2)) to a JSON API resource, or 
+collection of resources automagically.
 
 ## Requirements
 
