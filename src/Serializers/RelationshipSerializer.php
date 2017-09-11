@@ -102,7 +102,7 @@ class RelationshipSerializer extends AbstractSerializer implements Serializer
 
     }
 
-    public function getIncluded($type, $entity)
+    public function getIncluded($type, $entity, $fields)
     {
         // TODO: Implement getIncluded() method.
     }

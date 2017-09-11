@@ -133,7 +133,7 @@ class Resource implements \JsonSerializable
         foreach ($this->includedParams as $includes) {
             foreach ($includes as $includedType => $relation) {
                 if (empty($relation)) {
-                    $include = $this->serializer->getIncluded($includedType, $this->entity);
+                    $include = $this->serializer->getIncluded($includedType, $this->entity, $this->fields);
                     $included = array_merge($included, $include);
                 } else {
                     $path = explode('.', $relation);

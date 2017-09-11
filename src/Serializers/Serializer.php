@@ -54,11 +54,12 @@ interface Serializer
     public function getRelationships($entity);
 
     /**
-     * @param $entity
      * @param $type
+     * @param $entity
+     * @param $fields
      * @return mixed
      */
-    public function getIncluded($type, $entity);
+    public function getIncluded($type, $entity, $fields);
 
     /**
      * @param $type

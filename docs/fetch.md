@@ -46,14 +46,6 @@ GET /api/v1/jad/genres/12
 {"data":{"id":12,"type":"genre","attributes":{"name":"Easy Listening"}}}
 ```
 
-#### Fields
-
-Limit the number of fields in the results, get requested fields for inclusion, keyed by resource type.
-
-```
-GET /api/v1/jad/tracks?fields[track]=name
-```
-
 #### Filtering
 
 Two types of filter are available, simple `single` filter that filters on one property.

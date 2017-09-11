@@ -76,6 +76,12 @@ abstract class AbstractSerializer implements Serializer
         $reader         = new AnnotationReader();
         $attributes     = array();
 
+        if(is_array($fields)) {
+            $fields = array_map(function($field) {
+                return Text::deKebabify($field);
+            }, $fields);
+        }
+
         $metaFields = $this->getMapItem()->getClassMeta()->getFieldNames();
         $reflection = new \ReflectionClass($this->getMapItem()->getEntityClass());
         $classFields = array_keys($reflection->getDefaultProperties());

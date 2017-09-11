@@ -41,10 +41,10 @@ For all resources that have pagination activated, pager links will be provided i
 
 ```json
 "links": {
-  "self": "http:\/\/localhost\/api\/jad\/tracks?page[size]=25&page[number]=1",
-  "first": "http:\/\/localhost\/api\/jad\/tracks?page[size]=25&page[number]=1",
-  "last": "http:\/\/localhost\/api\/jad\/tracks?page[size]=25&page[number]=141",
-  "next": "http:\/\/localhost\/api\/jad\/tracks?page[size]=25&page[number]=2",
-  "previous": "http:\/\/localhost\/api\/jad\/tracks?page[size]=25&page[number]=2"
+  "self": "http://localhost/api/jad/tracks?page[size]=25&page[number]=1",
+  "first": "http://localhost/api/jad/tracks?page[size]=25&page[number]=1",
+  "last": "http://localhost/api/jad/tracks?page[size]=25&page[number]=141",
+  "next": "http://localhost/api/jad/tracks?page[size]=25&page[number]=2",
+  "previous": "http://localhost/api/jad/tracks?page[size]=25&page[number]=2"
   }
 ```

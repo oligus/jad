@@ -70,10 +70,11 @@ class EntitySerializer extends AbstractSerializer
     /**
      * @param $type
      * @param $entity
+     * @param array $fields
      * @return array|null
      * @throws SerializerException
      */
-    public function getIncluded($type, $entity)
+    public function getIncluded($type, $entity, $fields)
     {
         if(!$this->mapper->hasMapItem($type)) {
             return null;
@@ -86,25 +87,28 @@ class EntitySerializer extends AbstractSerializer
         $result = ClassHelper::getPropertyValue($entity, Text::deKebabify($type));
 
         if($result instanceof PersistentCollection) {
-            return $this->getIncludedResources($type, $result);
+            return $this->getIncludedResources($type, $result, $fields);
         } else {
-            return $this->getIncludedResources($type, [$result]);
+            return $this->getIncludedResources($type, [$result], $fields);
         }
     }
 
     /**
      * @param $type
      * @param $entityCollection
+     * @param $fields
      * @return array
      */
-    public function getIncludedResources($type, $entityCollection)
+    public function getIncludedResources($type, $entityCollection, $fields = [])
     {
         $resources = [];
 
         $this->includeMeta[$type] = [];
 
         foreach ($entityCollection as $associatedEntity) {
-            $resources[] = new Resource($associatedEntity, new IncludedSerializer($this->mapper, $type, $this->request));
+            $resource = new Resource($associatedEntity, new IncludedSerializer($this->mapper, $type, $this->request));
+            $resource->setFields($fields);
+            $resources[] = $resource;
             $this->includeMeta[$type][] = ClassHelper::getPropertyValue($associatedEntity, 'id');
         }
 

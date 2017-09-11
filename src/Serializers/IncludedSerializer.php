@@ -25,7 +25,7 @@ class IncludedSerializer extends AbstractSerializer implements Serializer
      * @return array|null
      * @throws SerializerException
      */
-    public function getIncluded($type, $entity)
+    public function getIncluded($type, $entity, $fields)
     {
         return array();
     }
