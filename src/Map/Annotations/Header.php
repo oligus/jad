@@ -24,4 +24,9 @@ final class Header implements Annotation
      * @var bool
      */
     public $paginate;
+
+    /**
+     * @var string
+     */
+    public $aliases;
 }

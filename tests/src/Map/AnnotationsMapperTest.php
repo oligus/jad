@@ -15,6 +15,8 @@ class AnnotationsMapperTest extends TestCase
         $this->assertFalse($mapper->hasMapItem('moo'));
         $this->assertTrue($mapper->hasMapItem('albums'));
         $this->assertTrue($mapper->hasMapItem('artists'));
+        $this->assertTrue($mapper->hasMapItem('test-alias'));
+        $this->assertTrue($mapper->hasMapItem('mee'));
     }
 
     /**

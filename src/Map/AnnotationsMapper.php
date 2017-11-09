@@ -29,6 +29,14 @@ class AnnotationsMapper extends AbstractMapper
                 $className = $meta->getName();
                 $paginate = !!$head->paginate;
                 $this->add($head->type, $className, $paginate);
+
+                if(!empty($head->aliases)) {
+                    $aliases = explode(',', $head->aliases);
+
+                    foreach ($aliases as $type) {
+                        $this->add($type, $className, $paginate);
+                    }
+                }
             }
         }
     }

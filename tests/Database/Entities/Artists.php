@@ -8,7 +8,7 @@ use Jad\Map\Annotations as JAD;
 /**
  * @ORM\Entity(repositoryClass="Jad\Database\Repositories\ArtistsRepository")
  * @ORM\Table(name="artists")
- * @JAD\Header(type="artists")
+ * @JAD\Header(type="artists", paginate=true, aliases="test-alias,mee")
  */
 class Artists
 {
@@ -23,6 +23,11 @@ class Artists
      * @ORM\Column(name="Name", type="string", length=120)
      */
     protected $name;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Albums", mappedBy="artists")
+     */
+    protected $albums;
 
     /**
      * @return mixed
