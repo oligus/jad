@@ -33,7 +33,8 @@ class Albums
 #### Header
 
 * Resource type name `@JAD\Header(type="albums")`
-* Readonly entities `@JAD\Header(readOnly=true)`
+* Readonly entities `@JAD\Header(type="albums", readOnly=true)`
+* Aliases  `@JAD\Header(type="albums", aliases="records,recordings")`
 
 #### Attributes
 
