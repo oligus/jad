@@ -6,8 +6,7 @@ use Jad\Serializers\RelationshipSerializer;
 use Jad\Serializers\Serializer;
 use Jad\Common\Text;
 use Jad\Common\ClassHelper;
-
-use Doctrine\ORM\PersistentCollection;
+use Doctrine\Common\Collections\Collection;
 
 /**
  * Class Resource
@@ -166,9 +165,8 @@ class Resource implements \JsonSerializable
 
             foreach($collection as $entity) {
                 $result = ClassHelper::getPropertyValue($entity, $property);
-
-                if($result instanceof PersistentCollection) {
-                    $newCollection = array_merge($newCollection, $result->to[]);
+                if($result instanceof Collection) {
+                    $newCollection = array_merge($newCollection, $result->toArray());
                 } else {
                     $newCollection =  array_merge($newCollection, array($result));
                 }
