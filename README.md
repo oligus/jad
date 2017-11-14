@@ -24,8 +24,6 @@ You need to have Doctrine installed and preferably setup before you can use Jad.
 1. Annotate your entities that you want to expose to JSON-API:
 
 ```php
-use Jad\Map\Annotations as JAD;
-
 /**
  * @ORM\Entity
  * @ORM\Table(name="albums")

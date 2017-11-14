@@ -2,9 +2,9 @@
 
 [<< Back](../README.md)
 
-## Fetching resources
+# Fetching resources
 
-#### Fetch a collection of items
+## Fetch a collection of items
 
 A simple get without any parameters will fetch a collection
  
@@ -31,7 +31,7 @@ Result might be:
 ]}
 ```
 
-#### Fetch single item
+## Fetch single item
 
 Fetch a single item by id
 
@@ -43,13 +43,13 @@ GET /api/v1/jad/genres/12
 {"data":{"id":12,"type":"genre","attributes":{"name":"Easy Listening"}}}
 ```
 
-#### Sparse fieldset
+## Sparse fieldset
 
 Return only specific fields in the response on a per-type basis by including a fields[TYPE] parameter.
 
 The value of the fields parameter is a comma-separated list that refers to the name(s) of the fields to be returned.
 
-##### Examples:
+### Examples:
 
 Only fetch fields city, country and email
 ```
@@ -61,12 +61,12 @@ As above but include invoices and only fetch invoice-data and total from related
 GET /api/jad/customers?include=invoices?fields[customers]=city,country,email&fields[invoices]=invoice-date,total
 ```
 
-#### Sorting
+## Sorting
 
 The sorting parameter consist of two parts, sorting field and direction.
 Direction defaults to ASC, putting a hyphen `-` in front of the field indicates DESC ordering.
 
-##### Examples:
+#### Examples:
 
 Order records by first name ascending:
 ```
@@ -88,7 +88,7 @@ Order records by first city ascending, country descending
 GET /api/v1/jad/customers?sort=city,-country
 ```
 
-#### Pagination
+## Pagination
 
 To enable pagination on a specific entity, simply set the annotation attribute `paginate` to `true`in your entity:
 
@@ -101,7 +101,7 @@ When a table is paginated it will always make two db queries, one for count and 
 
 Pagination will still work without the count query but paging links cannot be calculated.
 
-##### Parameters
+#### Parameters
 
 Pagination uses the page strategy and consists of two parameters, size and number.
 
@@ -124,7 +124,7 @@ GET /api/jad/tracks?page[size]=25&page[number]=2
 
 If `size` is omitted, the default page size of `25` is used.
 
-##### Pager links
+#### Pager links
 
 For all resources that have pagination activated, pager links will be provided in the result:
 
@@ -138,7 +138,7 @@ For all resources that have pagination activated, pager links will be provided i
   }
 ```
 
-#### Filtering
+## Filtering
 
 Two types of filter are available, simple `single` filter that filters on one property.
 Or a column wide `conditional` filter that spans over multiple columns.
@@ -154,7 +154,7 @@ Filter conditionals available:
 | gte         | greater than or equal to | 
 
 
-##### Examples:
+#### Examples:
 
 Fetch all tracks where price is less than 1:
 ```
@@ -173,5 +173,3 @@ filter[tracks][and][price][gt]=0
 filter[tracks][and][price][lt]=2
 filter[tracks][or][genre][eq]=5
 ```
-
-
