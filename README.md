@@ -20,21 +20,41 @@ You need to have Doctrine installed and preferably setup before you can use Jad.
 `composer require oligus/jad`
 
 ## Quick start
+
+1. Annotate your entities that you want to expose to JSON-API:
+
+```php
+use Jad\Map\Annotations as JAD;
+
+/**
+ * @ORM\Entity
+ * @ORM\Table(name="albums")
+ * @Jad\Map\Annotations\Header(type="albums")
+ */
+class Albums
+{
+...
 ```
+
+2. Setup JAD using current entity manager. 
+
+```php
 $jad = new Jad(new Jad\Map\AnnotationMapper($em));
 $jad->setPathPrefix('/api/v1/jad');
 $jad->jsonApiResult();
 ```
+
+3. Fetch results
+
+``` 
+GET /api/v1/jad/albums
+``` 
 
 ## Contents
 
 [Mapping your entities](docs/mapping.md)
 
 [Fetching the resources](docs/fetch.md)
-
-[Pagination](docs/pagination.md)
-
-[Ordering](docs/ordering.md)
 
 [Fetching resources with relationships](docs/relations.md)
 
