@@ -43,7 +43,7 @@ class Create extends AbstractCRUD
 
         foreach($attributes as $attribute => $value) {
 
-            //  $attribute = Text::deKebabify($attribute);
+            $attribute = Text::deKebabify($attribute);
 
             if(!$mapItem->getClassMeta()->hasField($attribute)) {
                 continue;
