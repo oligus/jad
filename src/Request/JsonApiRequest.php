@@ -172,6 +172,8 @@ class JsonApiRequest
             throw new RequestException('Empty input on POST or PATCH');
         }
 
+        $input = preg_replace('/,\s*([\]}])/m', '$1', $input);
+
         $result = json_decode($input);
 
         if(json_last_error() !== JSON_ERROR_NONE) {

@@ -17,7 +17,7 @@ interface Serializer
 
     /**
      * @param $entity
-     * @return mixed
+     * @return string
      */
     public function getId($entity);
 

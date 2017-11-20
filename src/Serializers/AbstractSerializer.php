@@ -50,11 +50,11 @@ abstract class AbstractSerializer implements Serializer
 
     /**
      * @param $entity
-     * @return mixed
+     * @return string
      */
     public function getId($entity)
     {
-        return ClassHelper::getPropertyValue($entity, $this->getMapItem()->getIdField());
+        return (string) ClassHelper::getPropertyValue($entity, $this->getMapItem()->getIdField());
     }
 
     /**

@@ -57,7 +57,7 @@ class EntitySerializer extends AbstractSerializer
                 foreach($this->includeMeta[$assocName] as $id) {
                     $relationships[$assocName]['data'][] = array(
                         'type' => $assocName,
-                        'id' => $id
+                        'id' => (string) $id
                     );
                 }
             }
