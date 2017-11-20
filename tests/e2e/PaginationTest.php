@@ -52,7 +52,7 @@ class PaginationTest extends TestCase
         $mapper = new AnnotationsMapper(Manager::getInstance()->getEm());
         $jad = new Jad($mapper);
 
-        $expected = '{"data":[{"id":1,"type":"genres","attributes":{"name":"Rock"}},{"id":2,"type":"genres","attributes":{"name":"Jazz"}},{"id":3,"type":"genres","attributes":{"name":"Metal"}},{"id":4,"type":"genres","attributes":{"name":"Alternative & Punk"}},{"id":5,"type":"genres","attributes":{"name":"Rock And Roll"}}],"links":{"self":"http:\/\/:\/genres?page[size]=5&page[number]=1","first":"http:\/\/:\/genres?page[size]=5&page[number]=1","last":"http:\/\/:\/genres?page[size]=5&page[number]=5","next":"http:\/\/:\/genres?page[size]=5&page[number]=2"}}';
+        $expected = '{"data":[{"id":"1","type":"genres","attributes":{"name":"Rock"}},{"id":"2","type":"genres","attributes":{"name":"Jazz"}},{"id":"3","type":"genres","attributes":{"name":"Metal"}},{"id":"4","type":"genres","attributes":{"name":"Alternative & Punk"}},{"id":"5","type":"genres","attributes":{"name":"Rock And Roll"}}],"links":{"self":"http:\/\/:\/genres?page[size]=5&page[number]=1","first":"http:\/\/:\/genres?page[size]=5&page[number]=1","last":"http:\/\/:\/genres?page[size]=5&page[number]=5","next":"http:\/\/:\/genres?page[size]=5&page[number]=2"}}';
 
         $jad->jsonApiResult();
         $this->expectOutputString($expected);
@@ -66,7 +66,7 @@ class PaginationTest extends TestCase
         $mapper = new AnnotationsMapper(Manager::getInstance()->getEm());
         $jad = new Jad($mapper);
 
-        $expected = '{"data":[{"id":6,"type":"genres","attributes":{"name":"Blues"}},{"id":7,"type":"genres","attributes":{"name":"Latin"}},{"id":8,"type":"genres","attributes":{"name":"Reggae"}},{"id":9,"type":"genres","attributes":{"name":"Pop"}},{"id":10,"type":"genres","attributes":{"name":"Soundtrack"}}],"links":{"self":"http:\/\/:\/genres?page[size]=5&page[number]=2","first":"http:\/\/:\/genres?page[size]=5&page[number]=1","last":"http:\/\/:\/genres?page[size]=5&page[number]=5","next":"http:\/\/:\/genres?page[size]=5&page[number]=3","previous":"http:\/\/:\/genres?page[size]=5&page[number]=1"}}';
+        $expected = '{"data":[{"id":"6","type":"genres","attributes":{"name":"Blues"}},{"id":"7","type":"genres","attributes":{"name":"Latin"}},{"id":"8","type":"genres","attributes":{"name":"Reggae"}},{"id":"9","type":"genres","attributes":{"name":"Pop"}},{"id":"10","type":"genres","attributes":{"name":"Soundtrack"}}],"links":{"self":"http:\/\/:\/genres?page[size]=5&page[number]=2","first":"http:\/\/:\/genres?page[size]=5&page[number]=1","last":"http:\/\/:\/genres?page[size]=5&page[number]=5","next":"http:\/\/:\/genres?page[size]=5&page[number]=3","previous":"http:\/\/:\/genres?page[size]=5&page[number]=1"}}';
         $jad->jsonApiResult();
         $this->expectOutputString($expected);
     }
@@ -79,7 +79,7 @@ class PaginationTest extends TestCase
         $mapper = new AnnotationsMapper(Manager::getInstance()->getEm());
         $jad = new Jad($mapper);
 
-        $expected = '{"data":[{"id":25,"type":"genres","attributes":{"name":"Opera"}}],"links":{"self":"http:\/\/:\/genres?page[size]=3&page[number]=9","first":"http:\/\/:\/genres?page[size]=3&page[number]=1","last":"http:\/\/:\/genres?page[size]=3&page[number]=9","previous":"http:\/\/:\/genres?page[size]=3&page[number]=8"}}';
+        $expected = '{"data":[{"id":"25","type":"genres","attributes":{"name":"Opera"}}],"links":{"self":"http:\/\/:\/genres?page[size]=3&page[number]=9","first":"http:\/\/:\/genres?page[size]=3&page[number]=1","last":"http:\/\/:\/genres?page[size]=3&page[number]=9","previous":"http:\/\/:\/genres?page[size]=3&page[number]=8"}}';
 
         $jad->jsonApiResult();
         $this->expectOutputString($expected);
