@@ -7,6 +7,8 @@ use Jad\Map\Annotations\Header;
 use Jad\Common\Text;
 use Doctrine\Common\Collections\Collection as DoctrineCollection;
 use Doctrine\Common\Annotations\AnnotationReader;
+use Symfony\Component\Validator\Exception\ValidatorException;
+use Symfony\Component\Validator\Validation;
 
 /**
  * Class Create
@@ -66,6 +68,11 @@ class Create extends AbstractCRUD
 
             // Update value
             ClassHelper::setPropertyValue($entity, $attribute, $value);
+        }
+        $validator = Validation::createValidatorBuilder()->enableAnnotationMapping()->getValidator();
+        $errors = $validator->validate($entity);
+        if (count($errors) > 0) {
+            throw new ValidatorException($errors[0]->getMessage() . " Attribute: " . $errors[0]->getPropertyPath());
         }
 
         $relationships = isset($input->data->relationships) ? (array) $input->data->relationships : [];
