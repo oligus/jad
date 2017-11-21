@@ -62,6 +62,8 @@ GET /api/v1/jad/albums
 
 [Deleting resources / relationships](docs/delete.md)
 
+[Validation](docs/validation.md)
+
 ## Contributing
 
 When contributing to this repository, please first discuss the change you wish to make via issue before making a pull request.

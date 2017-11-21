@@ -4,6 +4,7 @@ namespace Jad\Database\Entities;
 
 use Doctrine\ORM\Mapping as ORM;
 use Jad\Map\Annotations as JAD;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="Doctrine\ORM\EntityRepository")
@@ -21,11 +22,13 @@ class Customers
 
     /**
      * @ORM\Column(name="FirstName", type="string", length=40)
+     * @Assert\NotBlank()
      */
     protected $firstName;
 
     /**
      * @ORM\Column(name="LastName", type="string", length=20)
+     * @Assert\NotBlank()
      */
     protected $lastName;
 
@@ -71,6 +74,7 @@ class Customers
 
     /**
      * @ORM\Column(name="Email", type="string", length=60, nullable=false)
+     * @Assert\Email(message="Invalid email")
      */
     protected $email;
 

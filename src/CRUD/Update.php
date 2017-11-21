@@ -3,12 +3,22 @@
 namespace Jad\CRUD;
 
 use Jad\Common\ClassHelper;
+use Jad\Common\Text;
 use Jad\Map\Annotations\Header;
+use Jad\Response\ValidationErrors;
 use Doctrine\Common\Collections\Collection as DoctrineCollection;
 use Doctrine\Common\Annotations\AnnotationReader;
+use Symfony\Component\Validator\Validation;
 
+/**
+ * Class Update
+ * @package Jad\CRUD
+ */
 class Update extends AbstractCRUD
 {
+    /**
+     * @throws \Exception
+     */
     public function updateResource()
     {
         $input          = $this->request->getInputJson();
@@ -38,6 +48,8 @@ class Update extends AbstractCRUD
         }
 
         foreach($attributes as $attribute => $value) {
+            $attribute = Text::deKebabify($attribute);
+
             if(!$mapItem->getClassMeta()->hasField($attribute)) {
                 continue;
             }
@@ -59,6 +71,18 @@ class Update extends AbstractCRUD
 
             // Update value
             ClassHelper::setPropertyValue($entity, $attribute, $value);
+        }
+
+        /**
+         * Validate input
+         */
+        $validator = Validation::createValidatorBuilder()->enableAnnotationMapping()->getValidator();
+        $errors = $validator->validate($entity);
+
+        if (count($errors) > 0) {
+            $error = new ValidationErrors($errors);
+            $error->render();
+            exit(1);
         }
 
         $relationships = isset($input->data->relationships) ? (array) $input->data->relationships : [];
@@ -94,7 +118,6 @@ class Update extends AbstractCRUD
             }
         }
 
-        $this->mapper->getEm()->persist($entity);
         $this->mapper->getEm()->flush();
     }
 }

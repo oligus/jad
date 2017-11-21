@@ -5,9 +5,9 @@ namespace Jad\CRUD;
 use Jad\Common\ClassHelper;
 use Jad\Map\Annotations\Header;
 use Jad\Common\Text;
+use Jad\Response\ValidationErrors;
 use Doctrine\Common\Collections\Collection as DoctrineCollection;
 use Doctrine\Common\Annotations\AnnotationReader;
-use Symfony\Component\Validator\Exception\ValidatorException;
 use Symfony\Component\Validator\Validation;
 
 /**
@@ -38,13 +38,12 @@ class Create extends AbstractCRUD
                 $readOnly = is_null($header->readOnly) ? false : (bool) $header->readOnly;
 
                 if($readOnly) {
-                    return;
+                    return null;
                 }
             }
         }
 
         foreach($attributes as $attribute => $value) {
-
             $attribute = Text::deKebabify($attribute);
 
             if(!$mapItem->getClassMeta()->hasField($attribute)) {
@@ -69,10 +68,17 @@ class Create extends AbstractCRUD
             // Update value
             ClassHelper::setPropertyValue($entity, $attribute, $value);
         }
+
+        /**
+         * Validate input
+         */
         $validator = Validation::createValidatorBuilder()->enableAnnotationMapping()->getValidator();
         $errors = $validator->validate($entity);
+
         if (count($errors) > 0) {
-            throw new ValidatorException($errors[0]->getMessage() . " Attribute: " . $errors[0]->getPropertyPath());
+            $error = new ValidationErrors($errors);
+            $error->render();
+            exit(1);
         }
 
         $relationships = isset($input->data->relationships) ? (array) $input->data->relationships : [];
@@ -94,7 +100,10 @@ class Create extends AbstractCRUD
                 if($relatedProperty instanceof DoctrineCollection) {
 
                     // First try entity add method, else add straight to collection
-                    $method = 'add' . ucfirst($type);
+                    $method1 = 'add' . ucfirst($type);
+                    $method2 = 'add' . ucfirst($relatedType);
+                    $method = method_exists($entity, $method1) ? $method1 : $method2;
+
                     if(method_exists($entity, $method)) {
                         $entity->$method($reference);
                     } else {
