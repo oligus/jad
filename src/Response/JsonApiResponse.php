@@ -177,6 +177,10 @@ class JsonApiResponse
         $response = new Response();
         $headers['Content-Type'] = 'application/vnd.api+json';
 
+        if(Configure::getInstance()->getConfig('cors')) {
+            $headers['Access-Control-Allow-Origin'] = '*';
+        }
+
         foreach($headers as $key => $value) {
             $response->headers->set($key, $value);
         }

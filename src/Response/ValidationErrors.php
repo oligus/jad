@@ -37,7 +37,7 @@ class ValidationErrors
             $attribute = Text::kebabify($validationError->getPropertyPath());
             // $value = $validationError->getInvalidValue();
 
-            $error->status = 500;
+            $error->status = "500";
             $error->detail = $validationError->getMessage() . ' [' . $attribute . ']';
             $error->title = 'Validation Error';
             $document->errors[] = $error;

@@ -17,9 +17,17 @@ class Configure
      * @var array
      */
     private $config = [
+        // Used for unit tests
         'testMode'          => false,
+
+        // Pretty print JSON
         'debug'             => false,
+
         'strict'            => false,
+
+        // Allow cors
+        'cors'              => false,
+
         'max_page_size'     => 25,
     ];
 

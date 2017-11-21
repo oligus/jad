@@ -14,8 +14,8 @@ try {
 
     $config = Configure::getInstance();
     $config->setConfig('debug', true);
+    $config->setConfig('cors', true);
     $config->setConfig('max_page_size', 100);
-    $config->setConfig('validation', true);
 
     $jad = new Jad($mapper);
     $jad->setPathPrefix('/api/jad');

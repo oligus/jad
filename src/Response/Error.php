@@ -26,7 +26,7 @@ class Error
         $document->errors = array();
 
         $error = new \stdClass();
-        $error->status = $this->exception->getCode();
+        $error->status = (string) $this->exception->getCode();
         $error->title = $this->getTitle($this->exception) . ' error';
         $error->detail = $this->exception->getMessage();
 

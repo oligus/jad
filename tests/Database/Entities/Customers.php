@@ -9,7 +9,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Entity(repositoryClass="Doctrine\ORM\EntityRepository")
  * @ORM\Table(name="customers")
- * @JAD\Header(type="customers")
+ * @JAD\Header(type="customers", paginate=true)
  */
 class Customers
 {
