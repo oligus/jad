@@ -43,11 +43,5 @@ class InvoiceItems
      * @ORM\ManyToOne(targetEntity="Invoices", fetch="EAGER")
      * @ORM\JoinColumn(name="InvoiceId", referencedColumnName="InvoiceId")
      */
-    protected $invoice;
-
-    /**
-    FOREIGN KEY ([TrackId]) REFERENCES "tracks" ([TrackId])
-    ON DELETE NO ACTION ON UPDATE NO ACTION
-
-     */
+    protected $invoices;
 }

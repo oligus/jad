@@ -5,6 +5,7 @@ namespace Jad\Map;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\AnnotationRegistry;
+use Jad\Common\Text;
 
 class AnnotationsMapper extends AbstractMapper
 {
@@ -35,6 +36,21 @@ class AnnotationsMapper extends AbstractMapper
 
                     foreach ($aliases as $type) {
                         $this->add($type, $className, $paginate);
+                    }
+                }
+
+                //Set auto aliases for relationship mappings that do not
+                foreach($meta->getAssociationMappings() as $associatedType => $associatedData) {
+                    $targetType = $associatedData['targetEntity'];
+                    $targetType = preg_replace('/.*\\\(.+?)/', '$1', $targetType);
+                    $associatedType = ucfirst($associatedType);
+
+                    if($targetType !== $associatedType) {
+                        $this->add(
+                            Text::kebabify($associatedType),
+                            $associatedData['targetEntity'],
+                            $paginate
+                        );
                     }
                 }
             }

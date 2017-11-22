@@ -23,7 +23,8 @@
   "require-dev": {
     "phpunit/phpunit": "^6.1",
     "doctrine/orm": "^2.5",
-    "phpunit/dbunit": "^3.0"
+    "phpunit/dbunit": "^3.0",
+    "kint-php/kint": "^2.2"
   },
   "autoload": {
     "psr-4": {
