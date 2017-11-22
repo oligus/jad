@@ -6,8 +6,6 @@ use Jad\Tests\TestCase;
 use Jad\Database\Manager;
 use Jad\Map\AnnotationsMapper;
 use Jad\Jad;
-use Jad\Configure;
-
 use PHPUnit\DbUnit\TestCaseTrait;
 use PHPUnit\DbUnit\DataSet\CsvDataSet;
 
@@ -46,7 +44,7 @@ class PaginationTest extends TestCase
 
     public function testSize()
     {
-        $_SERVER = ['REQUEST_URI' => '/genres'];
+        $_SERVER['REQUEST_URI']  = '/genres';
         $_GET = ['page' => ['page' => 1, 'size' => 5]];
 
         $mapper = new AnnotationsMapper(Manager::getInstance()->getEm());
@@ -60,7 +58,7 @@ class PaginationTest extends TestCase
 
     public function testNumber()
     {
-        $_SERVER = ['REQUEST_URI' => '/genres'];
+        $_SERVER['REQUEST_URI']  = '/genres';
         $_GET = ['page' => ['number' => 2, 'size' => 5]];
 
         $mapper = new AnnotationsMapper(Manager::getInstance()->getEm());
@@ -73,7 +71,7 @@ class PaginationTest extends TestCase
 
     public function testLast()
     {
-        $_SERVER = ['REQUEST_URI' => '/genres'];
+        $_SERVER['REQUEST_URI']  = '/genres';
         $_GET = ['page' => ['number' => 9, 'size' => 3]];
 
         $mapper = new AnnotationsMapper(Manager::getInstance()->getEm());

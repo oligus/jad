@@ -46,7 +46,7 @@ class PlaylistTest extends TestCase
 
     public function testFetchCollection()
     {
-        $_SERVER = ['REQUEST_URI' => '/playlists'];
+        $_SERVER['REQUEST_URI']  = '/playlists';
 
         $mapper = new AnnotationsMapper(Manager::getInstance()->getEm());
         $jad = new Jad($mapper);
@@ -58,7 +58,7 @@ class PlaylistTest extends TestCase
 
     public function testFetchCollectionFields()
     {
-        $_SERVER = ['REQUEST_URI' => '/tracks'];
+        $_SERVER['REQUEST_URI']  = '/tracks';
         $_GET = ['page' => ['offset' => 0, 'limit' => 5], 'fields' => [ 'tracks' => 'name']];
 
         $mapper = new AnnotationsMapper(Manager::getInstance()->getEm());
@@ -71,7 +71,7 @@ class PlaylistTest extends TestCase
 
     public function testGetTracks()
     {
-        $_SERVER = ['REQUEST_URI' => '/tracks/15'];
+        $_SERVER['REQUEST_URI']  = '/tracks/15';
 
         $mapper = new AnnotationsMapper(Manager::getInstance()->getEm());
         $jad = new Jad($mapper);
@@ -83,7 +83,7 @@ class PlaylistTest extends TestCase
 
     public function testGetRelationshipFull()
     {
-        $_SERVER = ['REQUEST_URI' => '/tracks/15/playlists'];
+        $_SERVER['REQUEST_URI']  = '/tracks/15/playlists';
 
         $mapper = new AnnotationsMapper(Manager::getInstance()->getEm());
         $jad = new Jad($mapper);
@@ -95,7 +95,7 @@ class PlaylistTest extends TestCase
 
     public function testGetRelationshipList()
     {
-        $_SERVER = ['REQUEST_URI' => '/tracks/15/relationships/playlists'];
+        $_SERVER['REQUEST_URI']  = '/tracks/15/relationships/playlists';
 
         $mapper = new AnnotationsMapper(Manager::getInstance()->getEm());
         $jad = new Jad($mapper);
@@ -108,7 +108,7 @@ class PlaylistTest extends TestCase
     public function testCreateRelationship()
     {
         Configure::getInstance()->setConfig('testMode', true);
-        $_SERVER = ['REQUEST_URI' => '/playlists'];
+        $_SERVER['REQUEST_URI']  = '/playlists';
         $_SERVER['REQUEST_METHOD'] = 'POST';
 
         $input = new \stdClass();
@@ -140,7 +140,7 @@ class PlaylistTest extends TestCase
      */
     public function testCreateRelationshipVerify()
     {
-        $_SERVER = ['REQUEST_URI' => '/playlists/4/relationships/tracks'];
+        $_SERVER['REQUEST_URI']  = '/playlists/4/relationships/tracks';
         $_SERVER['REQUEST_METHOD'] = 'GET';
 
         $mapper = new AnnotationsMapper(Manager::getInstance()->getEm());
@@ -157,7 +157,7 @@ class PlaylistTest extends TestCase
     public function testUpdateAddRelationship()
     {
         Configure::getInstance()->setConfig('testMode', true);
-        $_SERVER = ['REQUEST_URI' => '/playlists/4'];
+        $_SERVER['REQUEST_URI']  = '/playlists/4';
         $_SERVER['REQUEST_METHOD'] = 'PATCH';
 
         $input = new \stdClass();
@@ -184,7 +184,7 @@ class PlaylistTest extends TestCase
      */
     public function testUpdateAddRelationshipVerify()
     {
-        $_SERVER = ['REQUEST_URI' => '/playlists/4/relationships/tracks'];
+        $_SERVER['REQUEST_URI']  = '/playlists/4/relationships/tracks';
         $_SERVER['REQUEST_METHOD'] = 'GET';
 
         $mapper = new AnnotationsMapper(Manager::getInstance()->getEm());

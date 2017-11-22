@@ -48,7 +48,7 @@ class GenresTest extends TestCase
     public function testResourceNotFoundException()
     {
         Configure::getInstance()->setConfig('strict', true);
-        $_SERVER = ['REQUEST_URI' => '/notfound'];
+        $_SERVER['REQUEST_URI']  = '/notfound';
 
         $mapper = new AnnotationsMapper(Manager::getInstance()->getEm());
         $jad = new Jad($mapper);
@@ -61,7 +61,7 @@ class GenresTest extends TestCase
 
     public function testFetchCollection()
     {
-        $_SERVER = ['REQUEST_URI' => '/genres'];
+        $_SERVER['REQUEST_URI']  = '/genres';
 
         $mapper = new AnnotationsMapper(Manager::getInstance()->getEm());
         $jad = new Jad($mapper);
@@ -74,7 +74,7 @@ class GenresTest extends TestCase
 
     public function testLimit()
     {
-        $_SERVER = ['REQUEST_URI' => '/genres'];
+        $_SERVER['REQUEST_URI']  = '/genres';
 
         $_GET = ['page' => ['offset' => 0, 'limit' => 5]];
 
@@ -88,7 +88,7 @@ class GenresTest extends TestCase
 
     public function testOffset()
     {
-        $_SERVER = ['REQUEST_URI' => '/genres'];
+        $_SERVER['REQUEST_URI']  = '/genres';
         $_GET = ['page' => ['page' => 10, 'size' => 5]];
 
         $mapper = new AnnotationsMapper(Manager::getInstance()->getEm());
@@ -102,7 +102,7 @@ class GenresTest extends TestCase
 
     public function testSortAsc()
     {
-        $_SERVER = ['REQUEST_URI' => '/genres'];
+        $_SERVER['REQUEST_URI']  = '/genres';
         $_GET = ['page' => ['number' => 0, 'size' => 10], 'sort' => 'name',];
 
         $mapper = new AnnotationsMapper(Manager::getInstance()->getEm());
@@ -116,7 +116,7 @@ class GenresTest extends TestCase
 
     public function testSortDesc()
     {
-        $_SERVER = ['REQUEST_URI' => '/genres'];
+        $_SERVER['REQUEST_URI']  = '/genres';
         $_GET = ['page' => ['number' => 0, 'size' => 10], 'sort' => '-name',];
 
         $mapper = new AnnotationsMapper(Manager::getInstance()->getEm());
@@ -132,7 +132,7 @@ class GenresTest extends TestCase
     {
         Configure::getInstance()->setConfig('testMode', true);
 
-        $_SERVER = ['REQUEST_URI' => '/genres'];
+        $_SERVER['REQUEST_URI']  = '/genres';
         $_SERVER['REQUEST_METHOD'] = 'POST';
 
         $input = new \stdClass();
@@ -155,7 +155,7 @@ class GenresTest extends TestCase
     {
         Configure::getInstance()->setConfig('testMode', true);
 
-        $_SERVER = ['REQUEST_URI' => '/genres/26'];
+        $_SERVER['REQUEST_URI']  = '/genres/26';
         $_SERVER['REQUEST_METHOD'] = 'PATCH';
 
         $input = new \stdClass();
@@ -177,7 +177,7 @@ class GenresTest extends TestCase
 
     public function testDelete()
     {
-        $_SERVER = ['REQUEST_URI' => '/genres/26'];
+        $_SERVER['REQUEST_URI']  = '/genres/26';
         $_SERVER['REQUEST_METHOD'] = 'DELETE';
 
         $mapper = new AnnotationsMapper(Manager::getInstance()->getEm());
@@ -191,7 +191,7 @@ class GenresTest extends TestCase
      */
     public function testDeleteVerify()
     {
-        $_SERVER = ['REQUEST_URI' => '/genres/26'];
+        $_SERVER['REQUEST_URI']  = '/genres/26';
         $_SERVER['REQUEST_METHOD'] = 'GET';
 
         $mapper = new AnnotationsMapper(Manager::getInstance()->getEm());
