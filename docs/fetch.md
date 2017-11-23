@@ -152,7 +152,8 @@ Filter conditionals available:
 | lte         | less than or equal to    | 
 | gt          | greater than             | 
 | gte         | greater than or equal to | 
-
+| like        | LIKE %value%             | 
+| notLike     | NOT LIKE %value%         | 
 
 #### Examples:
 
@@ -173,3 +174,5 @@ filter[tracks][and][price][gt]=0
 filter[tracks][and][price][lt]=2
 filter[tracks][or][genre][eq]=5
 ```
+
+

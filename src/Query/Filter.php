@@ -105,6 +105,10 @@ class Filter
 
         $whereCondition = $where === 'and' ? 'andWhere' : 'orWhere';
 
+        if(in_array($condition, ['like', 'notLike'])) {
+            $value = '%' . $value . '%';
+        }
+
         $this->qb->$whereCondition($this->qb->expr()->$condition('t.' . $field, ':' . $fieldName));
         $this->qb->setParameter($fieldName, $value);
     }
