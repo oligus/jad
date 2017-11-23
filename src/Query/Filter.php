@@ -96,6 +96,8 @@ class Filter
      */
     private function addFilter($property, $condition, $value, $where = 'and')
     {
+        $value = urldecode($value);
+
         if(!method_exists('Doctrine\ORM\Query\Expr', $condition)) {
             throw new JadException('Filter condition [' . $condition . '] not available.');
         }
