@@ -40,7 +40,6 @@ Result might be:
         "name": "Punk"
       }
     }
-    ...
 ]}
 ```
 
@@ -130,6 +129,7 @@ If `size` is omitted, the default page size of `25` is used.
 For all resources that have pagination activated, pager links will be provided in the result:
 
 ```json
+{
 "links": {
   "self": "http://localhost/api/jad/tracks?page[size]=25&page[number]=1",
   "first": "http://localhost/api/jad/tracks?page[size]=25&page[number]=1",
@@ -137,6 +137,7 @@ For all resources that have pagination activated, pager links will be provided i
   "next": "http://localhost/api/jad/tracks?page[size]=25&page[number]=2",
   "previous": "http://localhost/api/jad/tracks?page[size]=25&page[number]=2"
   }
+}
 ```
 
 ## Filtering
@@ -166,27 +167,27 @@ Filter conditions used from [Doctrine Expr class](http://docs.doctrine-project.o
 
 #### Examples:
 
-Fetch tracks where price is less than 1:
+Fetch `tracks` where `price` is less than `1`:
 ```
 GET /api/v1/jad/tracks?filter[price][lte]=1
 ```
 
-Fetch tracks where price is between 1.5 and 2:
+Fetch `tracks` where `price` is between `1.5` and `2`:
 ```
 GET /api/v1/jad/tracks?filter[price][between]=1.5,2
 ```
 
-Fetch tracks where name is like %and%
+Fetch `tracks` where `name` is like `%and%`
 ```
 GET /api/v1/jad/tracks?filter[price][like]=and
 ```
 
-Fetch all tracks with id 1, 2, 3 and 4
+Fetch `tracks` with `id` `1`, `2`, `3` and `4`
 ```
 GET /api/v1/jad/tracks?filter[id][in]=1,2,3,4
 ```
 
-Fetch all tracks where `(price > 0 AND price < 2) OR genre = 5`
+Fetch `tracks` where `(price > 0 AND price < 2) OR genre = 5`
 ```
 GET /api/jad/tracks?filter[tracks][and][price][gt]=0&filter[tracks][and][price][lt]=2&filter[tracks][or][genre][eq]=5
 ```
@@ -202,12 +203,12 @@ filter[tracks][or][genre][eq]=5
 
 _Note! Filtering with relationships will join in the related table_
 
-Only fetch tracks which albums name is like %and%
+Only fetch `tracks` which `albums` `name` is like `%and%`
 ```
 GET /api/v1/jad/tracks?filter[tracks.albums][name][like]=and
 ```
 
-Only fetch tracks which albums name is like %taste% AND track price is less than 1
+Only fetch `tracks` which `albums` `name` is like `%taste%` AND `tracks` `price` is less than `1`
 ```
 GET /api/v1/jad/tracks?filter[tracks.albums][and][name][like]=taste&filter[tracks][and][price][lte]=1
 ```

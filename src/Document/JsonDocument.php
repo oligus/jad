@@ -44,7 +44,7 @@ class JsonDocument implements \JsonSerializable
             $document->data = $this->element;
             $this->element->loadIncludes();
         } else {
-            $document->data = [$this->element];
+            $document->data = $this->element;
         }
 
         if($this->element->hasIncluded()) {

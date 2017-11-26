@@ -146,7 +146,7 @@ class GenresTest extends TestCase
         $mapper = new AnnotationsMapper(Manager::getInstance()->getEm());
         $jad = new Jad($mapper);
 
-        $expected = '{"data":[{"id":"26","type":"genres","attributes":{"name":"Created Genre"}}],"links":{"self":"http:\/\/:\/genres"}}';
+        $expected = '{"data":{"id":"26","type":"genres","attributes":{"name":"Created Genre"}},"links":{"self":"http:\/\/:\/genres"}}';
         $jad->jsonApiResult();
         $this->expectOutputString($expected);
     }
@@ -170,7 +170,7 @@ class GenresTest extends TestCase
         $mapper = new AnnotationsMapper(Manager::getInstance()->getEm());
         $jad = new Jad($mapper);
 
-        $expected = '{"data":[{"id":"26","type":"genres","attributes":{"name":"Updated Genre"}}],"links":{"self":"http:\/\/:\/genres\/26"}}';
+        $expected = '{"data":{"id":"26","type":"genres","attributes":{"name":"Updated Genre"}},"links":{"self":"http:\/\/:\/genres\/26"}}';
         $jad->jsonApiResult();
         $this->expectOutputString($expected);
     }
