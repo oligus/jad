@@ -2,12 +2,24 @@
 
 [<< Back](../README.md)
 
-# Fetching resources
-
-## Fetch a collection of items
-
-A simple get without any parameters will fetch a collection
+## Fetching resources
  
+Data, including resources and relationships, can be fetched by sending a GET request to an endpoint.
+
+#### Examples:
+
+Fetch a single item by id
+
+```
+GET /api/v1/jad/genres/12
+```
+
+```json
+{"data":{"id":12,"type":"genre","attributes":{"name":"Easy Listening"}}}
+```
+
+Fetch a collection of items
+
 ```
 GET /api/v1/jad/genres
 ```
@@ -28,19 +40,8 @@ Result might be:
         "name": "Punk"
       }
     }
+    ...
 ]}
-```
-
-## Fetch single item
-
-Fetch a single item by id
-
-```
-GET /api/v1/jad/genres/12
-```
-
-```json
-{"data":{"id":12,"type":"genre","attributes":{"name":"Easy Listening"}}}
 ```
 
 ## Sparse fieldset
@@ -49,7 +50,7 @@ Return only specific fields in the response on a per-type basis by including a f
 
 The value of the fields parameter is a comma-separated list that refers to the name(s) of the fields to be returned.
 
-### Examples:
+#### Examples:
 
 Only fetch fields city, country and email
 ```
@@ -143,25 +144,47 @@ For all resources that have pagination activated, pager links will be provided i
 Two types of filter are available, simple `single` filter that filters on one property.
 Or a column wide `conditional` filter that spans over multiple columns.
 
+Filters are also available on relations, that is, you can fetch a resource if its relations match certain conditions.
+
 Filter conditionals available:
 
-| Conditional |                          |
-| ----------- |------------------------- |
-| eq          | equal                    | 
-| lt          | less than                | 
-| lte         | less than or equal to    | 
-| gt          | greater than             | 
-| gte         | greater than or equal to | 
-| like        | LIKE %value%             | 
-| notLike     | NOT LIKE %value%         | 
+| Conditional |                          | SQL equivalent       |
+| ----------- |------------------------- | -----------------    |
+| eq          | equal                    | = VALUE              | 
+| neq         | not equal                | <> VALUE                | 
+| lt          | less than                | < VALUE                 | 
+| lte         | less than or equal to    | <= VALUE                | 
+| gt          | greater than             | > VALUE                      | 
+| gte         | greater than or equal to | >= VALUE                  | 
+| in          | list                     | IN (VALUE1, VALUE2, ...)     | 
+| notIn       | !list                    | NOT IN (VALUE1, VALUE2, ...) | 
+| like        | like %value%             | LIKE VALUE              |
+| notLike     | !like %value%            | NOT LIKE VALUE          | 
+| between     | between values           | BETWEEN VALUE1 AND VALUE1    | 
+
+Filter conditions used from [Doctrine Expr class](http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/reference/query-builder.html#the-expr-class)
 
 #### Examples:
 
-Fetch all tracks where price is less than 1:
+Fetch tracks where price is less than 1:
 ```
 GET /api/v1/jad/tracks?filter[price][lte]=1
 ```
 
+Fetch tracks where price is between 1.5 and 2:
+```
+GET /api/v1/jad/tracks?filter[price][between]=1.5,2
+```
+
+Fetch tracks where name is like %and%
+```
+GET /api/v1/jad/tracks?filter[price][like]=and
+```
+
+Fetch all tracks with id 1, 2, 3 and 4
+```
+GET /api/v1/jad/tracks?filter[id][in]=1,2,3,4
+```
 
 Fetch all tracks where `(price > 0 AND price < 2) OR genre = 5`
 ```
@@ -175,4 +198,22 @@ filter[tracks][and][price][lt]=2
 filter[tracks][or][genre][eq]=5
 ```
 
+##### Filtering by relationships:
 
+_Note! Filtering with relationships will join in the related table_
+
+Only fetch tracks which albums name is like %and%
+```
+GET /api/v1/jad/tracks?filter[tracks.albums][name][like]=and
+```
+
+Only fetch tracks which albums name is like %taste% AND track price is less than 1
+```
+GET /api/v1/jad/tracks?filter[tracks.albums][and][name][like]=taste&filter[tracks][and][price][lte]=1
+```
+
+Filters:
+```
+filter[tracks.albums][and][name][like]=taste
+filter[tracks][and][price][lte]=1
+```

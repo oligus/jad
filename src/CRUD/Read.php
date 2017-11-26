@@ -4,7 +4,6 @@ namespace Jad\CRUD;
 
 use Jad\Document\Resource;
 use Jad\Document\Collection;
-use Jad\Exceptions\JadException;
 use Jad\Serializers\EntitySerializer;
 use Jad\Exceptions\ResourceNotFoundException;
 use Jad\Query\Paginator;
@@ -47,11 +46,13 @@ class Read extends AbstractCRUD
 
         $qb = new QueryBuilder($this->mapper->getEm());
 
-        $qb->select('t');
-        $qb->from($mapItem->getEntityClass(), 't');
+        $filterParams = $this->request->getParameters()->getFilter();
+        $filter = new Filter($filterParams, $mapItem->getType());
 
-        $filterParams = $this->request->getParameters()->getFilter($this->request->getResourceType());
-        $filter = new Filter($filterParams, $qb);
+        $qb->select($filter->getAliases());
+        $qb->from($mapItem->getEntityClass(), $filter->getRootAlias());
+
+        $filter->setQb($qb);
         $filter->process();
 
         $paginator = new Paginator($this->request);
@@ -59,13 +60,11 @@ class Read extends AbstractCRUD
         $limit = $paginator->getLimit();
         $offset = $paginator->getOffset();
 
-
         if($paginator->isActive()) {
-            $sql = 'SELECT COUNT(t.' . $mapItem->getIdField() .') FROM ' . $mapItem->getEntityClass() . ' t';
-            $query = $this->mapper->getEm()->createQuery($sql);
+            $dql = 'SELECT COUNT(t.' . $mapItem->getIdField() .') FROM ' . $mapItem->getEntityClass() . ' t';
+            $query = $this->mapper->getEm()->createQuery($dql);
             $count = $query->getSingleScalarResult();
             $paginator->setCount($count);
-
         }
 
         $qb = $filter->getQb();
@@ -76,7 +75,7 @@ class Read extends AbstractCRUD
 
         if(!empty($sort)) {
             foreach($sort as $property => $direction) {
-                $qb->addOrderBy('t.' . $property, $direction);
+                $qb->addOrderBy($filter->getRootAlias() . '.' . $property, $direction);
             }
         }
 

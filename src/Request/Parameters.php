@@ -194,18 +194,11 @@ class Parameters
     }
 
     /**
-     * @param null $type
-     * @return mixed
+     * @return array|mixed
      */
-    public function getFilter($type = null)
+    public function getFilter()
     {
         $input = $this->getInput('filter');
-
-        if ($type) {
-            if (is_array($input) && array_key_exists($type, $input)) {
-                return $input[$type];
-            }
-        }
 
         return is_array($input) ? $input : [];
     }

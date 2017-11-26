@@ -22,44 +22,142 @@ class Filter
      */
     private $filter;
 
-    public function __construct(array $filter, QueryBuilder $qb)
+    /**
+     * @var string
+     */
+    private $path;
+
+    /**
+     * @var array
+     */
+    private $relatedPaths = [];
+
+    /**
+     * Filter constructor.
+     * @param array $filter
+     * @param string $defaultType
+     */
+    public function __construct(array $filter, $defaultType = '')
     {
-        $this->qb = $qb;
-        $this->filter = $filter;
+        if(!empty($filter)) {
+            if($this->getArrayDepth($filter) < 3 && !empty($defaultType)) {
+                $newFilter = [];
+                $newFilter[$defaultType] = $filter;
+                $filter = $newFilter;
+            }
+
+            if(count($filter) === 1) {
+                $this->path = current(array_keys($filter));
+            } else {
+                foreach ($filter as $path => $data) {
+                    if($this->isRelational($path)) {
+                        $this->relatedPaths[] = $path;
+                    } else {
+                        $this->path = $path;
+                    }
+                }
+            }
+
+            $this->filter = $filter;
+        }
     }
 
-    public function process()
+    /**
+     * @param array $array
+     * @return int
+     */
+    public function getArrayDepth(array $array): int
     {
-        if(!$type = $this->getFilterType()) {
+        if(!is_array($array) || empty($array)) {
+            return 0;
+        }
+
+        $exploded = explode(',', json_encode($array, JSON_FORCE_OBJECT)."\n\n");
+
+        $longest = 0;
+        foreach($exploded as $row){
+            $longest = (substr_count($row, ':')>$longest)?
+                substr_count($row, ':'):$longest;
+        }
+
+        return (int) $longest;
+    }
+
+    /**
+     * @return QueryBuilder
+     */
+    public function process(): QueryBuilder
+    {
+        if(!is_array($this->filter) || empty($this->filter)) {
             return $this->qb;
         }
 
-        if($type === 'conditional') {
-            $this->addConditionalFilter();
+        if($this->isRelational($this->path)) {
+            $this->addJoin($this->path);
         }
 
-        if($type === 'single') {
+        if(!empty($this->relatedPaths)) {
+            foreach($this->relatedPaths as $path) {
+                if($this->isRelational($path)) {
+                    $this->addJoin($path);
+                }
+            }
+        }
+
+        if($this->getFilterType($this->filter) === 'conditional') {
+            $this->addConditionalFilter($this->path);
+
+            if(!empty($this->relatedPaths)) {
+                foreach($this->relatedPaths as $path) {
+                    $this->addConditionalFilter($path);
+                }
+            }
+
+        }
+
+        if($this->getFilterType($this->filter) === 'single') {
             $this->addSingleFilter();
         }
 
         return $this->qb;
     }
 
-    public function getQb()
+    /**
+     * @param $path
+     * @return bool
+     */
+    private function isRelational(string $path): bool
+    {
+        return strpos($path, '.') > 0;
+    }
+
+    /**
+     * @return QueryBuilder
+     */
+    public function getQb(): QueryBuilder
     {
         return $this->qb;
     }
 
     /**
+     * @param QueryBuilder $qb
+     */
+    public function setQb(QueryBuilder $qb): void
+    {
+        $this->qb = $qb;
+    }
+
+    /**
+     * @param $filter
      * @return bool|string
      */
-    private function getFilterType()
+    public function getFilterType(array $filter): string
     {
-        if(!is_array($this->filter) || empty($this->filter)) {
+        if(!is_array($filter) || empty($filter)) {
             return false;
         }
 
-        if(array_key_exists('and', $this->filter) || array_key_exists('or', $this->filter)) {
+        if(array_key_exists('and', $filter[$this->path]) || array_key_exists('or', $filter[$this->path])) {
             return 'conditional';
         }
 
@@ -67,23 +165,128 @@ class Filter
     }
 
 
-    private function addSingleFilter()
+    /**
+     * @return string
+     */
+    public function getAliases(): string
     {
-        $property = array_keys($this->filter)[0];
-        $condition = array_keys($this->filter[$property])[0];
-        $value = array_values($this->filter[$property])[0];
-        $this->addFilter($property, $condition, $value);
+        $path = is_string($this->path) ? $this->path : '';
+        return implode(',', array_keys($this->createAliases($path)));
     }
 
-    private function addConditionalFilter()
+    /**
+     * @return string
+     */
+    public function getRootAlias(): string
     {
-        foreach($this->filter as $propertyConditional => $value) {
+        $path = is_string($this->path) ? $this->path : '';
+        $aliases = array_keys($this->createAliases($path));
+        return $aliases[0];
+    }
+
+    /**
+     * @return string
+     */
+    public function getLastAlias(): string
+    {
+        $aliases = array_keys($this->createAliases($this->path));
+        return end($aliases);
+    }
+
+
+    /**
+     * @param string $path
+     * @return array
+     */
+    public function createAliases(string $path): array
+    {
+        $parts = explode('.', $path);
+
+        $aliases = array();
+
+        foreach($parts as $key => $part) {
+            $aliases['a' . $key . $part] = $part;
+        }
+
+        return $aliases;
+    }
+
+    /**
+     * @param $path
+     * @return array
+     */
+    public function getJoins($path): array
+    {
+        $count = 0;
+        $key = '';
+        $joins = array();
+
+        foreach($this->createAliases($path) as $alias => $relation) {
+            if($count === 0) {
+                $key = $alias;
+            } else {
+                $key .= '.' . $relation;
+                $joins[$key] = $alias;
+                $key = $alias;
+            }
+
+            $count++;
+        }
+
+        return $joins;
+    }
+
+    private function addSingleFilter(): void
+    {
+        $property = array_keys($this->filter[$this->path])[0];
+        $condition = array_keys($this->filter[$this->path][$property])[0];
+        $value = array_values($this->filter[$this->path][$property])[0];
+
+        $joins = $this->getJoins($this->path);
+        $alias = current($joins);
+
+        if($this->isRelational($this->path)) {
+            $alias = $this->getLastAlias();
+        }
+
+        if(empty($alias)) {
+            $alias = $this->getRootAlias();
+        }
+
+        $this->addFilter($property, $condition, $value, 'and', $alias);
+    }
+
+    /**
+     * @param $path
+     * @throws JadException
+     */
+    private function addConditionalFilter($path): void
+    {
+        foreach($this->filter[$path] as $propertyConditional => $value) {
             $property = array_keys($value)[0];
             $conditions = $value[$property];
 
-            foreach($conditions as $condition => $val) {
-                $this->addFilter($property, $condition, $val, $propertyConditional);
+            if(!is_array($conditions)) {
+                throw new JadException('Conditional filter value is not an array, check if [and] - [or] is present.');
             }
+
+            $joins = $this->getJoins($path);
+            $alias = current($joins);
+
+            if(empty($alias)) {
+                $alias = $this->getRootAlias();
+            }
+
+            foreach($conditions as $condition => $val) {
+                $this->addFilter($property, $condition, $val, $propertyConditional, $alias);
+            }
+        }
+    }
+
+    public function addJoin($path): void
+    {
+        foreach($this->getJoins($path) as $relation => $alias) {
+            $this->qb->innerJoin($relation, $alias);
         }
     }
 
@@ -92,9 +295,10 @@ class Filter
      * @param $condition
      * @param $value
      * @param string $where
+     * @param null $alias
      * @throws JadException
      */
-    private function addFilter($property, $condition, $value, $where = 'and')
+    private function addFilter($property, $condition, $value, $where = 'and', $alias = null)
     {
         $value = urldecode($value);
 
@@ -103,15 +307,31 @@ class Filter
         }
 
         $field = Text::deKebabify($property);
-        $fieldName = $field . '_' . uniqid();
+        $fieldName1 = $field . '_' . uniqid();
+        $fieldName2 = $field . '_' . uniqid();
 
         $whereCondition = $where === 'and' ? 'andWhere' : 'orWhere';
+
+        if(empty($alias)) {
+            $alias = $this->getRootAlias();
+        }
 
         if(in_array($condition, ['like', 'notLike'])) {
             $value = '%' . $value . '%';
         }
 
-        $this->qb->$whereCondition($this->qb->expr()->$condition('t.' . $field, ':' . $fieldName));
-        $this->qb->setParameter($fieldName, $value);
+        if(in_array($condition, ['in', 'notIn', 'between'])) {
+            $value = explode(',', $value);
+        }
+
+        if(in_array($condition, ['between'])) {
+            $this->qb->$whereCondition($this->qb->expr()->$condition($alias . '.' . $field, ':' . $fieldName1,  ':' . $fieldName2));
+            $this->qb->setParameter($fieldName1, $value[0]);
+            $this->qb->setParameter($fieldName2, $value[1]);
+        } else {
+            $this->qb->$whereCondition($this->qb->expr()->$condition($alias . '.' . $field, ':' . $fieldName1));
+            $this->qb->setParameter($fieldName1, $value);
+        }
+
     }
 }

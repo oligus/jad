@@ -58,4 +58,33 @@ class ParameterTest extends TestCase
             'tracks' => ['test1', 'test2']
         ], $parameters->getFields());
     }
+
+    public function testGetFilter()
+    {
+        $parameters = new Parameters([
+            'filter' => [
+                'customers.invoice' => [
+                    'total' => [
+                        'lte' => 5
+                    ]
+                ]
+            ]
+        ]);
+
+        $this->assertEquals([
+            'customers.invoice' => [
+                'total' => [
+                    'lte' => 5
+                ]
+            ]
+        ], $parameters->getFilter());
+
+        $this->assertEquals([
+            'customers.invoice' => [
+                'total' => [
+                    'lte' => 5
+                ]
+            ]
+        ], $parameters->getFilter());
+    }
 }
