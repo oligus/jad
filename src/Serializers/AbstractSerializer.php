@@ -172,8 +172,14 @@ abstract class AbstractSerializer implements Serializer
         return $mapItem;
     }
 
-    public function getIncludedResources($type, $collection)
+    /**
+     * @param string $type
+     * @param array $collection
+     * @param array $fields
+     * @return array
+     */
+    public function getIncludedResources(string $type, array $collection, array $fields = []): array
     {
-
+        return [];
     }
 }

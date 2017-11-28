@@ -94,18 +94,22 @@ class EntitySerializer extends AbstractSerializer
     }
 
     /**
-     * @param $type
-     * @param $entityCollection
-     * @param $fields
+     * @param string $type
+     * @param array $entityCollection
+     * @param array $fields
      * @return array
      */
-    public function getIncludedResources($type, $entityCollection, $fields = [])
+    public function getIncludedResources(string $type, array $entityCollection, array $fields = []): array
     {
         $resources = [];
-
         $this->includeMeta[$type] = [];
 
         foreach ($entityCollection as $associatedEntity) {
+
+            if(empty($associatedEntity)) {
+                continue;
+            }
+
             $resource = new Resource($associatedEntity, new IncludedSerializer($this->mapper, $type, $this->request));
             $resource->setFields($fields);
             $resources[] = $resource;
