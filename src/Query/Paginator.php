@@ -198,5 +198,20 @@ class Paginator
         $this->calculatePages();
     }
 
+    /**
+     * @return int
+     */
+    public function getCount(): int
+    {
+        return $this->count;
+    }
+
+    /**
+     * @return int
+     */
+    public function getLastPage(): int
+    {
+        return $this->lastPage;
+    }
 
 }

@@ -17,6 +17,11 @@ class JsonDocument implements \JsonSerializable
     private $links = null;
 
     /**
+     * @var Meta $meta
+     */
+    private $meta = null;
+
+    /**
      * JsonApiResponse constructor.
      * @param \JsonSerializable $element
      */
@@ -31,6 +36,11 @@ class JsonDocument implements \JsonSerializable
     public function addLinks(Links $links)
     {
         $this->links = $links;
+    }
+
+    public function addMeta(Meta $meta)
+    {
+        $this->meta = $meta;
     }
 
     /**
@@ -55,6 +65,10 @@ class JsonDocument implements \JsonSerializable
             $document->links = $this->links;
         }
 
+        if(!is_null($this->meta)) {
+            $document->meta = $this->meta;
+        }
+
         if($this->hasPagination($this->element)) {
             /** @var Paginator $paginator */
             $paginator = $this->element->getPaginator();
@@ -70,6 +84,13 @@ class JsonDocument implements \JsonSerializable
             if($paginator->hasPrevious()) {
                 $document->links->setPrevious($paginator->getPrevious());
             }
+
+            $document->meta->setCount($paginator->getCount());
+            $document->meta->setPages($paginator->getLastPage());
+        }
+
+        if($document->meta->isEmpty()) {
+            unset($document->meta);
         }
 
         return $document;

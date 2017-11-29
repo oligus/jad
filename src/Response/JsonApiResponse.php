@@ -3,6 +3,7 @@
 namespace Jad\Response;
 
 use Jad\Configure;
+use Jad\Document\Meta;
 use Jad\Exceptions\ResourceNotFoundException;
 use Jad\Map\Mapper;
 use Jad\Common\ClassHelper;
@@ -159,6 +160,9 @@ class JsonApiResponse
         $links = new Links();
         $links->setSelf($this->request->getCurrentUrl());
         $document->addLinks($links);
+
+        $meta = new Meta();
+        $document->addMeta($meta);
 
         if(Configure::getInstance()->getConfig('debug')) {
             $this->setResponse(json_encode($document, JSON_PRETTY_PRINT));
