@@ -40,10 +40,12 @@ class Read extends AbstractCRUD
         return $resource;
     }
 
-    public function getResources()
+    /**
+     * @return Collection
+     */
+    public function getResources(): Collection
     {
         $mapItem = $this->mapper->getMapItem($this->request->getResourceType());
-
         $qb = new QueryBuilder($this->mapper->getEm());
 
         $filterParams = $this->request->getParameters()->getFilter();
@@ -61,9 +63,9 @@ class Read extends AbstractCRUD
         $offset = $paginator->getOffset();
 
         if($paginator->isActive()) {
-            $dql = 'SELECT COUNT(t.' . $mapItem->getIdField() .') FROM ' . $mapItem->getEntityClass() . ' t';
-            $query = $this->mapper->getEm()->createQuery($dql);
-            $count = $query->getSingleScalarResult();
+            $countQb = clone $filter->getQb();
+            $countQb->select($countQb->expr()->count($filter->getRootAlias() . '.'.$mapItem->getIdField()));
+            $count = $countQb->getQuery()->getSingleScalarResult();
             $paginator->setCount($count);
         }
 
