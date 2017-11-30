@@ -46,6 +46,8 @@ class Parameters
 
             $keys = [];
 
+            $includes = array_unique($includes);
+
             foreach ($includes as $include) {
                 $tmpArray = [];
                 $parts = explode('.', trim($include));
