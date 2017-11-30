@@ -99,7 +99,7 @@ class EntitySerializer extends AbstractSerializer
      * @param array $fields
      * @return array
      */
-    public function getIncludedResources(string $type, array $entityCollection, array $fields = []): array
+    public function getIncludedResources(string $type, $entityCollection, array $fields = []): array
     {
         $resources = [];
         $this->includeMeta[$type] = [];

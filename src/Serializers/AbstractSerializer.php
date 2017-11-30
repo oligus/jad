@@ -174,11 +174,11 @@ abstract class AbstractSerializer implements Serializer
 
     /**
      * @param string $type
-     * @param array $collection
+     * @param $collection
      * @param array $fields
      * @return array
      */
-    public function getIncludedResources(string $type, array $collection, array $fields = []): array
+    public function getIncludedResources(string $type, $collection, array $fields = []): array
     {
         return [];
     }

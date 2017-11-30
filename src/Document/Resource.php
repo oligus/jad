@@ -2,6 +2,7 @@
 
 namespace Jad\Document;
 
+use Jad\Exceptions\MappingException;
 use Jad\Serializers\RelationshipSerializer;
 use Jad\Serializers\Serializer;
 use Jad\Common\Text;
@@ -124,6 +125,7 @@ class Resource implements \JsonSerializable
 
     /**
      * @return array
+     * @throws \Exception
      */
     public function getIncluded()
     {
@@ -133,6 +135,11 @@ class Resource implements \JsonSerializable
             foreach ($includes as $includedType => $relation) {
                 if (empty($relation)) {
                     $include = $this->serializer->getIncluded($includedType, $this->entity, $this->fields);
+
+                    if(!is_array($include)) {
+                        throw new MappingException('Included type [' . $includedType . '] not available, check if resource type is mapped correctly.');
+                    }
+
                     $included = array_merge($included, $include);
                 } else {
                     $path = explode('.', $relation);
