@@ -35,7 +35,7 @@ class Employees
     protected $title;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Employees", fetch="EAGER")
+     * @ORM\ManyToOne(targetEntity="Employees")
      * @ORM\JoinColumn(name="ReportsTo", referencedColumnName="EmployeeId")
      */
     protected $reportsTo;

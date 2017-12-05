@@ -79,7 +79,7 @@ class Customers
     protected $email;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Employees", fetch="EAGER")
+     * @ORM\ManyToOne(targetEntity="Employees")
      * @ORM\JoinColumn(name="SupportRepId", referencedColumnName="EmployeeId")
      */
     protected $supportRep;

@@ -20,7 +20,7 @@ class Invoices
     protected $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Customers", fetch="EAGER")
+     * @ORM\ManyToOne(targetEntity="Customers")
      * @ORM\JoinColumn(name="CustomerId", referencedColumnName="CustomerId")
      */
     protected $customers;

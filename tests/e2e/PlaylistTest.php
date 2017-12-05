@@ -157,7 +157,7 @@ class PlaylistTest extends TestCase
     public function testUpdateAddRelationship()
     {
         Configure::getInstance()->setConfig('testMode', true);
-        $_SERVER['REQUEST_URI']  = '/playlists/4';
+        $_SERVER['REQUEST_URI']  = '/playlists/2';
         $_SERVER['REQUEST_METHOD'] = 'PATCH';
 
         $input = new \stdClass();
@@ -174,23 +174,7 @@ class PlaylistTest extends TestCase
         $mapper = new AnnotationsMapper(Manager::getInstance()->getEm());
         $jad = new Jad($mapper);
 
-        $expected = '{"data":{"id":"4","type":"playlists","attributes":{"name":"New Playlist"},"relationships":{"tracks":{"links":{"self":"http:\/\/:\/playlists\/4\/relationship\/tracks","related":"http:\/\/:\/playlists\/4\/tracks"}}}},"links":{"self":"http:\/\/:\/playlists\/4"}}';
-        $jad->jsonApiResult();
-        $this->expectOutputString($expected);
-    }
-
-    /**
-     * @depends testUpdateAddRelationship
-     */
-    public function testUpdateAddRelationshipVerify()
-    {
-        $_SERVER['REQUEST_URI']  = '/playlists/4/relationships/tracks';
-        $_SERVER['REQUEST_METHOD'] = 'GET';
-
-        $mapper = new AnnotationsMapper(Manager::getInstance()->getEm());
-        $jad = new Jad($mapper);
-
-        $expected = '{"data":[{"id":"15","type":"tracks"},{"id":"43","type":"tracks"},{"id":"77","type":"tracks"},{"id":"117","type":"tracks"},{"id":"351","type":"tracks"},{"id":"422","type":"tracks"}],"links":{"self":"http:\/\/:\/playlists\/4\/relationships\/tracks"}}';
+        $expected = '{"data":{"id":"2","type":"playlists","attributes":{"name":"Some tracks"},"relationships":{"tracks":{"links":{"self":"http:\/\/:\/playlists\/2\/relationship\/tracks","related":"http:\/\/:\/playlists\/2\/tracks"}}}},"links":{"self":"http:\/\/:\/playlists\/2"}}';
         $jad->jsonApiResult();
         $this->expectOutputString($expected);
     }

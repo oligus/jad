@@ -155,22 +155,22 @@ class GenresTest extends TestCase
     {
         Configure::getInstance()->setConfig('testMode', true);
 
-        $_SERVER['REQUEST_URI']  = '/genres/26';
+        $_SERVER['REQUEST_URI']  = '/genres/16';
         $_SERVER['REQUEST_METHOD'] = 'PATCH';
 
         $input = new \stdClass();
         $input->data = new \stdClass();
         $input->data->type = 'genres';
-        $input->data->id = '26';
+        $input->data->id = '16';
         $input->data->attributes = new \stdClass();
-        $input->data->attributes->name = 'Updated Genre';
+        $input->data->attributes->name = 'Hello World!';
 
         $_POST = ['input' => json_encode($input)];
 
         $mapper = new AnnotationsMapper(Manager::getInstance()->getEm());
         $jad = new Jad($mapper);
 
-        $expected = '{"data":{"id":"26","type":"genres","attributes":{"name":"Updated Genre"}},"links":{"self":"http:\/\/:\/genres\/26"}}';
+        $expected = '{"data":{"id":"16","type":"genres","attributes":{"name":"Hello World!"}},"links":{"self":"http:\/\/:\/genres\/16"}}';
         $jad->jsonApiResult();
         $this->expectOutputString($expected);
     }

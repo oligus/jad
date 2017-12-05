@@ -40,7 +40,7 @@ class InvoiceItems
     protected $quantity;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Invoices", fetch="EAGER")
+     * @ORM\ManyToOne(targetEntity="Invoices")
      * @ORM\JoinColumn(name="InvoiceId", referencedColumnName="InvoiceId")
      */
     protected $invoices;

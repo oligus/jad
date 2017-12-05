@@ -9,7 +9,7 @@ use Jad\Exceptions\ResourceNotFoundException;
 use Jad\Query\Paginator;
 use Jad\Query\Filter;
 use Doctrine\ORM\QueryBuilder;
-
+use Doctrine\ORM\Mapping\ClassMetadata;
 /**
  * Class Read
  * @package Jad\CRUD
@@ -20,12 +20,32 @@ class Read extends AbstractCRUD
      * @param $id
      * @return \Jad\Document\Resource
      * @throws ResourceNotFoundException
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws \Jad\Exceptions\JadException
+     * @throws \Jad\Exceptions\ParameterException
+     *
      */
     public function getResourceById($id)
     {
         /** @var \Jad\Map\MapItem $mapItem */
         $mapItem = $this->mapper->getMapItem($this->request->getResourceType());
-        $entity = $this->mapper->getEm()->getRepository($mapItem->getEntityClass())->find($id);
+        //$entity = $this->mapper->getEm()->getRepository($mapItem->getEntityClass())->find($id);
+
+        $qb = new QueryBuilder($this->mapper->getEm());
+
+        $qb->select('t');
+        $qb->from($mapItem->getEntityClass(), 't');
+        $qb->where(
+            $qb->expr()->eq('t.' . $mapItem->getIdField(), ':id')
+        );
+        $qb->setParameter('id', $id);
+        $query = $qb->getQuery();
+
+        foreach(array_keys($mapItem->getClassMeta()->getAssociationMappings()) as $relation) {
+            $query->setFetchMode($mapItem->getEntityClass(), $relation, ClassMetadata::FETCH_EAGER);
+        }
+
+        $entity = $query->getOneOrNullResult();
 
         if(is_null($entity)) {
             throw new ResourceNotFoundException(
@@ -42,6 +62,10 @@ class Read extends AbstractCRUD
 
     /**
      * @return Collection
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws \Jad\Exceptions\JadException
+     * @throws \Jad\Exceptions\ParameterException
      */
     public function getResources(): Collection
     {
@@ -81,7 +105,13 @@ class Read extends AbstractCRUD
             }
         }
 
-        $entities = $qb->getQuery()->getResult();
+        $query = $qb->getQuery();
+
+        foreach(array_keys($mapItem->getClassMeta()->getAssociationMappings()) as $relation) {
+            $query->setFetchMode($mapItem->getEntityClass(), $relation, ClassMetadata::FETCH_EAGER);
+        }
+
+        $entities = $query->getResult();
         $collection = new Collection();
         $collection->setPaginator($paginator);
 
@@ -98,6 +128,7 @@ class Read extends AbstractCRUD
     /**
      * @param $type
      * @return array|null
+     * @throws \Jad\Exceptions\ParameterException
      */
     public function getOrderBy($type)
     {
