@@ -51,7 +51,14 @@ class JsonApiResponse
     }
 
     /**
+     * @return string
      * @throws JadException
+     * @throws ResourceNotFoundException
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws \Exception
+     * @throws \Jad\Exceptions\ParameterException
+     * @throws \Jad\Exceptions\RequestException
      */
     public function render()
     {
@@ -92,11 +99,19 @@ class JsonApiResponse
         }
     }
 
+    /**
+     * @throws JadException
+     * @throws ResourceNotFoundException
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws \Jad\Exceptions\ParameterException
+     * @throws \Jad\Exceptions\RequestException
+     */
     public function fetchResources()
     {
         $relationship = $this->request->getRelationship();
 
-        if(is_null($relationship)) {
+        if(empty($relationship)) {
             if($this->request->hasId()) {
                 $resource = (new Read($this->request, $this->mapper))->getResourceById($this->request->getId());
                 $this->createDocument($resource);
@@ -109,6 +124,12 @@ class JsonApiResponse
         }
     }
 
+    /**
+     * @param $relationship
+     * @return Collection|Resource
+     * @throws JadException
+     * @throws ResourceNotFoundException
+     */
     public function getRelationship($relationship)
     {
         $id = $this->request->getId();

@@ -24,23 +24,27 @@ class RelationshipSerializer extends AbstractSerializer implements Serializer
         $this->relationship = $relationship;
     }
 
-    public function getConfig()
+    /**
+     * @return array
+     */
+    public function getRelationship(): array
     {
         return $this->relationship;
     }
 
     /**
      * @param $entity
-     * @return mixed
+     * @return string
      */
-    public function getType($entity)
+    public function getType($entity): string
     {
         return Text::kebabify($this->relationship['type']);
     }
 
     /**
      * @param $entity
-     * @return array
+     * @return array|mixed
+     * @throws \Exception
      */
     public function getRelationships($entity)
     {
@@ -62,16 +66,17 @@ class RelationshipSerializer extends AbstractSerializer implements Serializer
         return $relationships;
     }
 
-    public function getLinks($entity)
-    {
-        // TODO: Implement getLinks() method.
-    }
+    /**
+     * @param $entity
+     * @return mixed|void
+     */
+    public function getLinks($entity) { }
 
-    public function getMeta($model)
-    {
-        // TODO: Implement getMeta() method.
-    }
-
+    /**
+     * @param $model
+     * @return mixed|void
+     */
+    public function getMeta($model) { }
 
     /**
      * @return MapItem
@@ -80,15 +85,9 @@ class RelationshipSerializer extends AbstractSerializer implements Serializer
     public function getMapItem()
     {
         /** @var \Jad\Map\MapItem $mapItem */
-        $mapItem = $this->mapper->getMapItem($this->type);
-
-        $resourceType = $this->relationship['type'];
-
-        $association = $mapItem->getClassMeta()->getAssociationMapping($resourceType);
-
-        $entityClass = $association['targetEntity'];
-
-        $relatedMapItem = $this->mapper->getMapItemByClass($entityClass);
+        $mapItem            = $this->mapper->getMapItem($this->type);
+        $association        = $mapItem->getClassMeta()->getAssociationMapping($this->relationship['type']);
+        $relatedMapItem     = $this->mapper->getMapItemByClass($association['targetEntity']);
 
         if(!$relatedMapItem instanceof MapItem) {
             throw new \Exception('Could not find map item for type: ' . $this->relationship['type']);
@@ -97,13 +96,11 @@ class RelationshipSerializer extends AbstractSerializer implements Serializer
         return $relatedMapItem;
     }
 
-    public function getRelatedEntities()
-    {
-
-    }
-
-    public function getIncluded($type, $entity, $fields)
-    {
-        // TODO: Implement getIncluded() method.
-    }
+    /**
+     * @param $type
+     * @param $entity
+     * @param $fields
+     * @return mixed|void
+     */
+    public function getIncluded($type, $entity, $fields) {}
 }

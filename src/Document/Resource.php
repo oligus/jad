@@ -104,9 +104,9 @@ class Resource implements \JsonSerializable
         $resource->type = $type;
 
         if($this->serializer instanceof RelationshipSerializer) {
-            $config = $this->serializer->getConfig();
+            $relationship = $this->serializer->getRelationship();
 
-            if($config['view'] !== 'list') {
+            if($relationship['view'] !== 'list') {
                 $resource->attributes = $this->serializer->getAttributes($entity, $fields);
             }
         } else {
@@ -155,11 +155,12 @@ class Resource implements \JsonSerializable
     }
 
     /**
-     * Crawl entities to last one
+     * Crawl entities
      *
      * @param $entity
      * @param $relations
      * @return array
+     * @throws \Jad\Exceptions\JadException
      */
     public function crawlRelations($entity, $relations)
     {

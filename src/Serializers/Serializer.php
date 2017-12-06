@@ -5,6 +5,10 @@ namespace Jad\Serializers;
 use Jad\Map\Mapper;
 use Jad\Request\JsonApiRequest;
 
+/**
+ * Interface Serializer
+ * @package Jad\Serializers
+ */
 interface Serializer
 {
     /**

@@ -37,6 +37,9 @@ class JsonApiRequestTest extends TestCase
         $this->assertEquals($request->getItems(), ['api', 'v1', 'accounts', '1']);
     }
 
+    /**
+     * @throws \Jad\Exceptions\RequestException
+     */
     public function testGetType()
     {
         // GET Types
@@ -52,7 +55,7 @@ class JsonApiRequestTest extends TestCase
 
         $this->assertEquals($request->getResourceType(), 'articles');
         $this->assertEquals($request->getId(), null);
-        $this->assertEquals($request->getRelationship(), null);
+        $this->assertEquals($request->getRelationship(), []);
 
         $_SERVER['REQUEST_URI']  = '/api/jad/articles/1';
         $request = new JsonApiRequest();
@@ -60,7 +63,7 @@ class JsonApiRequestTest extends TestCase
 
         $this->assertEquals($request->getResourceType(), 'articles');
         $this->assertEquals($request->getId(), 1);
-        $this->assertEquals($request->getRelationship(), null);
+        $this->assertEquals($request->getRelationship(), []);
 
         $_SERVER['REQUEST_URI']  = '/api/jad/articles/1/author';
         $request = new JsonApiRequest();
@@ -82,6 +85,7 @@ class JsonApiRequestTest extends TestCase
     /**
      * @expectedException \Jad\Exceptions\RequestException
      * @expectedExceptionMessage Relationship resource type missing
+     * @throws \Jad\Exceptions\RequestException
      */
     public function testGetTypeException()
     {

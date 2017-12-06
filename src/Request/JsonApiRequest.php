@@ -102,10 +102,10 @@ class JsonApiRequest
     }
 
     /**
-     * @return mixed|null
-     * @throws \Exception
+     * @return array
+     * @throws RequestException
      */
-    public function getRelationship()
+    public function getRelationship(): array
     {
         $items = $this->getItems();
         $relationships = [];
@@ -123,10 +123,8 @@ class JsonApiRequest
 
             $relationships['view'] = 'list';
             $relationships['type'] = Text::deKebabify($items[3]);
-
-            return $relationships;
         }
-        return null;
+        return $relationships;
     }
     /**
      * @return bool
