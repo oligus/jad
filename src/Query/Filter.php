@@ -85,6 +85,7 @@ class Filter
 
     /**
      * @return QueryBuilder
+     * @throws JadException
      */
     public function process(): QueryBuilder
     {
@@ -205,7 +206,7 @@ class Filter
         $aliases = array();
 
         foreach($parts as $key => $part) {
-            $aliases['a' . $key . $part] = $part;
+            $aliases['a' . $key . Text::deKebabify($part)] = $part;
         }
 
         return $aliases;

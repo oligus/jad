@@ -18,10 +18,12 @@ class EntitySerializer extends AbstractSerializer
      * @var array
      */
     private $includeMeta = [];
-    
+
     /**
      * @param $entity
-     * @return array
+     * @return array|mixed
+     * @throws \Exception
+     * @throws \Jad\Exceptions\JadException
      */
     public function getRelationships($entity)
     {
@@ -70,9 +72,11 @@ class EntitySerializer extends AbstractSerializer
     /**
      * @param $type
      * @param $entity
-     * @param array $fields
-     * @return array|null
+     * @param $fields
+     * @return array|mixed|null
      * @throws SerializerException
+     * @throws \Exception
+     * @throws \Jad\Exceptions\JadException
      */
     public function getIncluded($type, $entity, $fields)
     {
@@ -95,9 +99,10 @@ class EntitySerializer extends AbstractSerializer
 
     /**
      * @param string $type
-     * @param array $entityCollection
+     * @param $entityCollection
      * @param array $fields
      * @return array
+     * @throws \Jad\Exceptions\JadException
      */
     public function getIncludedResources(string $type, $entityCollection, array $fields = []): array
     {

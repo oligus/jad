@@ -68,7 +68,7 @@ class FilterTest extends TestCase
         ];
 
         $filter = new Filter($filter1);
-        $this->assertEquals('a0customer,a1invoices,a2invoice-items', $filter->getAliases());
+        $this->assertEquals('a0customer,a1invoices,a2invoiceItems', $filter->getAliases());
     }
 
     public function testGetRootAlias()
@@ -130,13 +130,13 @@ class FilterTest extends TestCase
         ];
 
         $filter = new Filter($filter1);
-        $this->assertEquals('a2invoice-items', $filter->getLastAlias());
+        $this->assertEquals('a2invoiceItems', $filter->getLastAlias());
     }
 
     public function testSingleFilter()
     {
         $dql = $this->getDQLFromFilter(['total' => ['lt' => '5']]);
-        $this->assertRegExp('/SELECT a0test-type FROM TestEntityClass a0test-type WHERE a0test-type.total < :total_[a-z0-9]{13}$/', $dql);
+        $this->assertRegExp('/SELECT a0testType FROM TestEntityClass a0testType WHERE a0testType.total < :total_[a-z0-9]{13}$/', $dql);
 
         $dql = $this->getDQLFromFilter(['customers' => ['total' => ['lt' => '5']]]);
         $this->assertRegExp('/SELECT a0customers FROM TestEntityClass a0customers WHERE a0customers.total < :total_[a-z0-9]{13}$/', $dql);
