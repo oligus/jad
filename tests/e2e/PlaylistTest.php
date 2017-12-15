@@ -75,7 +75,7 @@ class PlaylistTest extends TestCase
 
         $mapper = new AnnotationsMapper(Manager::getInstance()->getEm());
         $jad = new Jad($mapper);
-        $expected = '{"data":{"id":"15","type":"tracks","attributes":{"name":"Go Down","composer":"AC\/DC","price":"0.99"},"relationships":{"albums":{"links":{"self":"http:\/\/:\/tracks\/15\/relationship\/albums","related":"http:\/\/:\/tracks\/15\/albums"}},"media-types":{"links":{"self":"http:\/\/:\/tracks\/15\/relationship\/media-types","related":"http:\/\/:\/tracks\/15\/media-types"}},"genres":{"links":{"self":"http:\/\/:\/tracks\/15\/relationship\/genres","related":"http:\/\/:\/tracks\/15\/genres"}},"playlists":{"links":{"self":"http:\/\/:\/tracks\/15\/relationship\/playlists","related":"http:\/\/:\/tracks\/15\/playlists"}}}},"links":{"self":"http:\/\/:\/tracks\/15"}}';
+        $expected = '{"data":{"id":"15","type":"tracks","attributes":{"name":"Go Down","composer":"AC\/DC","milliseconds":331180,"price":"0.99"},"relationships":{"albums":{"links":{"self":"http:\/\/:\/tracks\/15\/relationship\/albums","related":"http:\/\/:\/tracks\/15\/albums"}},"media-types":{"links":{"self":"http:\/\/:\/tracks\/15\/relationship\/media-types","related":"http:\/\/:\/tracks\/15\/media-types"}},"genres":{"links":{"self":"http:\/\/:\/tracks\/15\/relationship\/genres","related":"http:\/\/:\/tracks\/15\/genres"}},"playlists":{"links":{"self":"http:\/\/:\/tracks\/15\/relationship\/playlists","related":"http:\/\/:\/tracks\/15\/playlists"}}}},"links":{"self":"http:\/\/:\/tracks\/15"}}';
 
         $jad->jsonApiResult();
         $this->expectOutputString($expected);
@@ -105,6 +105,33 @@ class PlaylistTest extends TestCase
         $this->expectOutputString($expected);
     }
 
+    public function testCreateSingleRelationship()
+    {
+        Configure::getInstance()->setConfig('testMode', true);
+        $_SERVER['REQUEST_URI']  = '/playlists';
+        $_SERVER['REQUEST_METHOD'] = 'POST';
+
+        $input = new \stdClass();
+        $input->data = new \stdClass();
+        $input->data->type = 'playlists';
+        $input->data->attributes = new \stdClass();
+        $input->data->attributes->name = 'New Playlist';
+        $input->data->relationships = new \stdClass();
+        $input->data->relationships->tracks = new \stdClass();
+        $input->data->relationships->tracks->data = new \stdClass();
+        $input->data->relationships->tracks->data->type = 'tracks';
+        $input->data->relationships->tracks->data->id = 15;
+
+        $_POST = ['input' => json_encode($input)];
+
+        $mapper = new AnnotationsMapper(Manager::getInstance()->getEm());
+        $jad = new Jad($mapper);
+
+        $expected = '{"data":{"id":"4","type":"playlists","attributes":{"name":"New Playlist"},"relationships":{"tracks":{"links":{"self":"http:\/\/:\/playlists\/4\/relationship\/tracks","related":"http:\/\/:\/playlists\/4\/tracks"}}}},"links":{"self":"http:\/\/:\/playlists"}}';
+        $jad->jsonApiResult();
+        $this->expectOutputString($expected);
+    }
+
     public function testCreateRelationship()
     {
         Configure::getInstance()->setConfig('testMode', true);
@@ -130,7 +157,7 @@ class PlaylistTest extends TestCase
         $mapper = new AnnotationsMapper(Manager::getInstance()->getEm());
         $jad = new Jad($mapper);
 
-        $expected = '{"data":{"id":"4","type":"playlists","attributes":{"name":"New Playlist"},"relationships":{"tracks":{"links":{"self":"http:\/\/:\/playlists\/4\/relationship\/tracks","related":"http:\/\/:\/playlists\/4\/tracks"}}}},"links":{"self":"http:\/\/:\/playlists"}}';
+        $expected = '{"data":{"id":"5","type":"playlists","attributes":{"name":"New Playlist"},"relationships":{"tracks":{"links":{"self":"http:\/\/:\/playlists\/5\/relationship\/tracks","related":"http:\/\/:\/playlists\/5\/tracks"}}}},"links":{"self":"http:\/\/:\/playlists"}}';
         $jad->jsonApiResult();
         $this->expectOutputString($expected);
     }
@@ -140,13 +167,13 @@ class PlaylistTest extends TestCase
      */
     public function testCreateRelationshipVerify()
     {
-        $_SERVER['REQUEST_URI']  = '/playlists/4/relationships/tracks';
+        $_SERVER['REQUEST_URI']  = '/playlists/5/relationships/tracks';
         $_SERVER['REQUEST_METHOD'] = 'GET';
 
         $mapper = new AnnotationsMapper(Manager::getInstance()->getEm());
         $jad = new Jad($mapper);
 
-        $expected = '{"data":[{"id":"15","type":"tracks"},{"id":"43","type":"tracks"},{"id":"77","type":"tracks"},{"id":"117","type":"tracks"},{"id":"351","type":"tracks"}],"links":{"self":"http:\/\/:\/playlists\/4\/relationships\/tracks"}}';
+        $expected = '{"data":[{"id":"15","type":"tracks"},{"id":"43","type":"tracks"},{"id":"77","type":"tracks"},{"id":"117","type":"tracks"},{"id":"351","type":"tracks"}],"links":{"self":"http:\/\/:\/playlists\/5\/relationships\/tracks"}}';
         $jad->jsonApiResult();
         $this->expectOutputString($expected);
     }

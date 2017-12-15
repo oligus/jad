@@ -49,6 +49,11 @@ class Tracks
     protected $composer;
 
     /**
+     * @ORM\Column(name="Milliseconds", type="integer")
+     */
+    protected $milliseconds;
+
+    /**
      * @ORM\Column(name="UnitPrice", type="decimal", precision=10, scale=2)
      */
     protected $price;

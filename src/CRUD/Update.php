@@ -113,7 +113,7 @@ class Update extends AbstractCRUD
                         $relatedProperty->add($reference);
                     }
                 } else {
-                    ClassHelper::setPropertyValue($entity, $relatedProperty, $reference);
+                    ClassHelper::setPropertyValue($entity, $relatedType, $reference);
                 }
             }
         }
