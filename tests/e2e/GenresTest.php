@@ -130,7 +130,7 @@ class GenresTest extends TestCase
 
     public function testCreate()
     {
-        Configure::getInstance()->setConfig('testMode', true);
+        Configure::getInstance()->setConfig('test_mode', true);
 
         $_SERVER['REQUEST_URI']  = '/genres';
         $_SERVER['REQUEST_METHOD'] = 'POST';
@@ -153,7 +153,7 @@ class GenresTest extends TestCase
 
     public function testUpdate()
     {
-        Configure::getInstance()->setConfig('testMode', true);
+        Configure::getInstance()->setConfig('test_mode', true);
 
         $_SERVER['REQUEST_URI']  = '/genres/16';
         $_SERVER['REQUEST_METHOD'] = 'PATCH';

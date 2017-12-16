@@ -51,7 +51,7 @@ class JsonApiResponse
     }
 
     /**
-     * @return string
+     * @return string|null
      * @throws JadException
      * @throws ResourceNotFoundException
      * @throws \Doctrine\ORM\NoResultException
@@ -95,8 +95,12 @@ class JsonApiResponse
                 break;
 
             default:
-                throw new JadException('Http method [' . $method . '] is not supported.');
+                if(Configure::getInstance()->getConfig('strict')) {
+                    throw new JadException('Http method [' . $method . '] is not supported.');
+                }
         }
+
+        return null;
     }
 
     /**

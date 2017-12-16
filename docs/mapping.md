@@ -4,7 +4,7 @@
 
 ## Mapping
 
-Jad needs to know what resource belongs to what entity so a mapping is required before you can use Jad. There are three
+JAD needs to know what resource belongs to what entity so a mapping is required before you can use JAD. There are three
 different types of mapping options available:
 
 * AnnotationMapper
@@ -43,7 +43,7 @@ class Albums
 * Visibility `@JAD\Attribute(visible=true)`
 * Readonly `@JAD\Attribute(readOnly=true)`
 
-After your entities have been annotated, simply create annotations mapper to inject to Jad:
+After your entities have been annotated, simply create annotations mapper to inject to JAD:
 
 ```
 $mapper = new Jad\Map\AnnotationsMapper($em);
@@ -51,7 +51,7 @@ $mapper = new Jad\Map\AnnotationsMapper($em);
 
 ##### Note
 
-If Doctrine can't seem to find the Jad annotation classes and you get an error similar to this one:
+If Doctrine can't seem to find the JAD annotation classes and you get an error similar to this one:
 
 ```json
 {

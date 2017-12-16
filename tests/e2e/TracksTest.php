@@ -55,7 +55,7 @@ class TracksTest extends TestCase
 
    public function testCreateTrack()
    {
-       Configure::getInstance()->setConfig('testMode', true);
+       Configure::getInstance()->setConfig('test_mode', true);
        $_SERVER['REQUEST_URI']  = '/tracks';
        $_SERVER['REQUEST_METHOD'] = 'POST';
 
@@ -95,7 +95,7 @@ class TracksTest extends TestCase
 
     public function testUpdateTrack()
     {
-        Configure::getInstance()->setConfig('testMode', true);
+        Configure::getInstance()->setConfig('test_mode', true);
         $_SERVER['REQUEST_URI'] = '/tracks/43';
         $_SERVER['REQUEST_METHOD'] = 'PATCH';
 

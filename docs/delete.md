@@ -20,7 +20,7 @@ Response:
    "errors":[
       {
          "status":404,
-         "title":"Jad error",
+         "title":"JAD error",
          "detail":"Resource of type [genre] with id [26] could not be found."
       }
    ]

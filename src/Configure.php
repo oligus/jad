@@ -18,7 +18,7 @@ class Configure
      */
     private $config = [
         // Used for unit tests
-        'testMode'          => false,
+        'test_mode'          => false,
 
         // Pretty print JSON
         'debug'             => false,

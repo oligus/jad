@@ -160,9 +160,7 @@ class JsonApiRequest
     {
         $input = file_get_contents("php://input");
 
-        $testMode = Configure::getInstance()->getConfig('testMode');
-
-        if($testMode) {
+        if(Configure::getInstance()->getConfig('test_mode')) {
             $input = $this->request->request->get('input');
         }
 

@@ -51,6 +51,8 @@ GET /api/v1/jad/albums
 
 ## Contents
 
+[Configure](docs/configure.md)
+
 [Mapping your entities](docs/mapping.md)
 
 [Fetching the resources](docs/fetch.md)

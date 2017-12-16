@@ -107,7 +107,7 @@ class PlaylistTest extends TestCase
 
     public function testCreateSingleRelationship()
     {
-        Configure::getInstance()->setConfig('testMode', true);
+        Configure::getInstance()->setConfig('test_mode', true);
         $_SERVER['REQUEST_URI']  = '/playlists';
         $_SERVER['REQUEST_METHOD'] = 'POST';
 
@@ -134,7 +134,7 @@ class PlaylistTest extends TestCase
 
     public function testCreateRelationship()
     {
-        Configure::getInstance()->setConfig('testMode', true);
+        Configure::getInstance()->setConfig('test_mode', true);
         $_SERVER['REQUEST_URI']  = '/playlists';
         $_SERVER['REQUEST_METHOD'] = 'POST';
 
@@ -183,7 +183,7 @@ class PlaylistTest extends TestCase
      */
     public function testUpdateAddRelationship()
     {
-        Configure::getInstance()->setConfig('testMode', true);
+        Configure::getInstance()->setConfig('test_mode', true);
         $_SERVER['REQUEST_URI']  = '/playlists/2';
         $_SERVER['REQUEST_METHOD'] = 'PATCH';
 
