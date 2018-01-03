@@ -264,10 +264,7 @@ class Filter
     private function addConditionalFilter($path): void
     {
         foreach($this->filter[$path] as $propertyConditional => $value) {
-            foreach($value as $k => $v){
-                $property = $k;
-                $conditions = $v;
-
+            foreach($value as $property => $conditions) {
                 if(!is_array($conditions)) {
                     throw new JadException('Conditional filter value is not an array, check if [and] - [or] is present.');
                 }
