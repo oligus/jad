@@ -85,6 +85,7 @@ class Create extends AbstractCRUD
 
         foreach($relationships as $relatedType => $related) {
             $relatedData = $related->data;
+            $relatedType = Text::deKebabify($relatedType);
             $related = is_array($relatedData) ? $relatedData : [$relatedData];
             $relatedProperty = ClassHelper::getPropertyValue($entity, $relatedType);
 
