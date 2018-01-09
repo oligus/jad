@@ -7,6 +7,8 @@ use Jad\Response\JsonApiResponse;
 use Jad\Response\Error;
 use Jad\Request\JsonApiRequest;
 use Jad\Exceptions\ResourceNotFoundException;
+use Jad\Request\Parameters;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Class Jad
@@ -30,8 +32,10 @@ class Jad
      */
     public function __construct(Mapper $mapper)
     {
+        $request = Request::createFromGlobals();
+        $parameters = new Parameters($request->query->all());
         $this->mapper = $mapper;
-        $this->jsonApiRequest = new JsonApiRequest();
+        $this->jsonApiRequest = new JsonApiRequest($request, $parameters);
     }
 
     /**

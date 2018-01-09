@@ -27,10 +27,10 @@ class JsonApiRequest
      */
     private $parameters;
 
-    public function __construct()
+    public function __construct(Request $request, Parameters $parameters)
     {
-        $this->request = Request::createFromGlobals();
-        $this->parameters = new Parameters($this->request->query->all());
+        $this->request = $request;
+        $this->parameters = $parameters;
     }
 
     /**
