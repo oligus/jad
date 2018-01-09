@@ -3,9 +3,19 @@
 namespace Jad\Tests;
 
 use Jad\Request\JsonApiRequest;
+use Jad\Request\Parameters;
+use Symfony\Component\HttpFoundation\Request;
 
 class JsonApiRequestTest extends TestCase
 {
+
+    private function createRequest()
+    {
+        $request = Request::createFromGlobals();
+        $parameters = new Parameters($request->query->all());
+        return new JsonApiRequest($request, $parameters);
+    }
+
     public function testParameters()
     {
         $_GET = [
@@ -17,7 +27,7 @@ class JsonApiRequestTest extends TestCase
 
         $_SERVER['REQUEST_URI']  = '/api/jad/articles';
 
-        $request = new JsonApiRequest();
+        $request = $this->createRequest();
 
         $this->assertInstanceOf('Jad\Request\Parameters', $request->getParameters());
         $this->assertEquals(['articles' => ['title', 'body', 'author']], $request->getParameters()->getFields());
@@ -27,12 +37,12 @@ class JsonApiRequestTest extends TestCase
     public function testGetItems()
     {
         $_SERVER['REQUEST_URI']  = '/api/jad/posts/2/moo';
-        $request = new JsonApiRequest();
+        $request = $this->createRequest();
         $request->setPathPrefix('api/jad');
         $this->assertEquals($request->getItems(), ['posts', '2', 'moo']);
 
         $_SERVER['REQUEST_URI']  = '/api/v1/accounts/1';
-        $request = new JsonApiRequest();
+        $request = $this->createRequest();
         $request->setPathPrefix('/api/v1/jad');
         $this->assertEquals($request->getItems(), ['api', 'v1', 'accounts', '1']);
     }
@@ -50,7 +60,7 @@ class JsonApiRequestTest extends TestCase
         // /articles/1/relationships/comments   => get comments relationships
 
         $_SERVER['REQUEST_URI']  = '/api/jad/articles';
-        $request = new JsonApiRequest();
+        $request = $this->createRequest();
         $request->setPathPrefix('api/jad');
 
         $this->assertEquals($request->getResourceType(), 'articles');
@@ -58,7 +68,7 @@ class JsonApiRequestTest extends TestCase
         $this->assertEquals($request->getRelationship(), []);
 
         $_SERVER['REQUEST_URI']  = '/api/jad/articles/1';
-        $request = new JsonApiRequest();
+        $request = $this->createRequest();
         $request->setPathPrefix('api/jad');
 
         $this->assertEquals($request->getResourceType(), 'articles');
@@ -66,7 +76,7 @@ class JsonApiRequestTest extends TestCase
         $this->assertEquals($request->getRelationship(), []);
 
         $_SERVER['REQUEST_URI']  = '/api/jad/articles/1/author';
-        $request = new JsonApiRequest();
+        $request = $this->createRequest();
         $request->setPathPrefix('api/jad');
 
         $this->assertEquals($request->getResourceType(), 'articles');
@@ -74,7 +84,7 @@ class JsonApiRequestTest extends TestCase
         $this->assertEquals($request->getRelationship(), ['view' => 'full', 'type' => 'author']);
 
         $_SERVER['REQUEST_URI']  = '/api/jad/articles/1/relationships/authors';
-        $request = new JsonApiRequest();
+        $request = $this->createRequest();
         $request->setPathPrefix('api/jad');
 
         $this->assertEquals($request->getResourceType(), 'articles');
@@ -90,7 +100,7 @@ class JsonApiRequestTest extends TestCase
     public function testGetTypeException()
     {
         $_SERVER['REQUEST_URI']  = '/api/jad/articles/1/relationships';
-        $request = new JsonApiRequest();
+        $request = $this->createRequest();
         $request->setPathPrefix('api/jad');
 
         $this->assertEquals($request->getResourceType(), 'articles');
@@ -101,7 +111,7 @@ class JsonApiRequestTest extends TestCase
     public function testIsCollection()
     {
         $_SERVER['REQUEST_URI']  = '/api/jad/articles/1';
-        $request = new JsonApiRequest();
+        $request = $this->createRequest();
         $request->setPathPrefix('api/jad');
 
         $this->assertFalse($request->isCollection());
