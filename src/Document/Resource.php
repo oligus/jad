@@ -52,6 +52,14 @@ class Resource implements \JsonSerializable
     }
 
     /**
+     * @return mixed
+     */
+    public function getEntity()
+    {
+        return $this->entity;
+    }
+
+    /**
      * @param $fields
      */
     public function setFields($fields)
