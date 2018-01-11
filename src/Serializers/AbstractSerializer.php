@@ -51,15 +51,18 @@ abstract class AbstractSerializer implements Serializer
     /**
      * @param $entity
      * @return string
+     * @throws \Exception
+     * @throws \Jad\Exceptions\JadException
      */
-    public function getId($entity)
+    public function getId($entity): string
     {
         return (string) ClassHelper::getPropertyValue($entity, $this->getMapItem()->getIdField());
     }
 
     /**
      * @param $model
-     * @return mixed
+     * @return mixed|string
+     * @throws \Exception
      */
     public function getType($model)
     {
@@ -67,9 +70,11 @@ abstract class AbstractSerializer implements Serializer
     }
 
     /**
-     * @param mixed $entity
+     * @param $entity
      * @param array|null $fields
-     * @return array
+     * @return array|mixed
+     * @throws \Exception
+     * @throws \Jad\Exceptions\JadException
      */
     public function getAttributes($entity, array $fields = null)
     {
@@ -143,7 +148,7 @@ abstract class AbstractSerializer implements Serializer
      * @param string $dateType
      * @return string
      */
-    protected function getDateTime(\DateTime $value, $dateType = 'datetime')
+    protected function getDateTime(\DateTime $value, $dateType = 'datetime'): string
     {
         switch($dateType)
         {
@@ -163,7 +168,7 @@ abstract class AbstractSerializer implements Serializer
      * @return MapItem
      * @throws \Exception
      */
-    public function getMapItem()
+    public function getMapItem(): MapItem
     {
         $mapItem = $this->mapper->getMapItem($this->type);
         if(!$mapItem instanceof MapItem) {

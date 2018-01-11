@@ -4,6 +4,8 @@ namespace Jad\Map;
 
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Jad\Exceptions\JadException;
+use Jad\Map\Annotations\Header;
+use Doctrine\Common\Annotations\AnnotationReader;
 
 class MapItem
 {
@@ -144,5 +146,27 @@ class MapItem
     public function setPaginate($paginate)
     {
         $this->paginate = $paginate;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isReadOnly(): bool
+    {
+        $reader     = new AnnotationReader();
+        $reflection = new \ReflectionClass($this->getEntityClass());
+
+        $header = $reader->getClassAnnotation($reflection, Header::class);
+
+        if (!is_null($header)) {
+            if (property_exists($header, 'readOnly')) {
+                $readOnly = is_null($header->readOnly) ? false : (bool)$header->readOnly;
+
+                if ($readOnly) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

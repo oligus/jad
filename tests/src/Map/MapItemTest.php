@@ -5,8 +5,15 @@ namespace Jad\Tests\Map;
 use Jad\Tests\TestCase;
 use Jad\Map\MapItem;
 
+/**
+ * Class MapItemTest
+ * @package Jad\Tests\Map
+ */
 class MapItemTest extends TestCase
 {
+    /**
+     * @throws \Jad\Exceptions\JadException
+     */
     public function testConstruct()
     {
         $mapItem = new MapItem('test', 'TestClass');
@@ -31,5 +38,14 @@ class MapItemTest extends TestCase
         $this->assertEquals('test2', $mapItem->getType());
         $this->assertEquals('TestClass2', $mapItem->getEntityClass());
         $this->assertEquals('id2', $mapItem->getIdField());
+    }
+
+    public function testIsReadOnly()
+    {
+        $mapItem = new MapItem('media-types', 'Jad\Database\Entities\MediaTypes');
+        $this->assertTrue($mapItem->isReadOnly());
+
+        $mapItem = new MapItem('media-types', 'Jad\Database\Entities\Tracks');
+        $this->assertFalse($mapItem->isReadOnly());
     }
 }
