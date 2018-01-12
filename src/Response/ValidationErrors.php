@@ -7,6 +7,10 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\ConstraintViolationInterface;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 
+/**
+ * Class ValidationErrors
+ * @package Jad\Response
+ */
 class ValidationErrors
 {
     /**
@@ -42,6 +46,7 @@ class ValidationErrors
             $error->title = 'Validation Error';
             $document->errors[] = $error;
         }
+
 
         $response = new Response();
         $headers['Content-Type'] = 'application/vnd.api+json';

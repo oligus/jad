@@ -22,4 +22,10 @@ interface Mapper
      * @return bool
      */
     public function hasMapItem($type): bool;
+
+    /**
+     * @param $className
+     * @return MapItem
+     */
+    public function getMapItemByClass($className): MapItem;
 }

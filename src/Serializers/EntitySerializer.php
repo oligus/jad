@@ -35,22 +35,22 @@ class EntitySerializer extends AbstractSerializer
             $assocName = Text::kebabify($association['fieldName']);
 
             if($this->request->hasId()) {
-                $relationships[$assocName] = array(
-                    'links' => array(
+                $relationships[$assocName] = [
+                    'links' => [
                         'self' => $this->request->getCurrentUrl() . '/relationship/' . $assocName,
                         'related' => $this->request->getCurrentUrl() . '/' . $assocName
-                    )
-                );
+                    ]
+                ];
             } else {
                 $id = method_exists($entity, 'get' .  ucfirst($this->getMapItem()->getIdField()))
                     ? $entity->getId()
                     : ClassHelper::getPropertyValue($entity,  $this->getMapItem()->getIdField());
 
                 $relationships[$assocName] = array(
-                    'links' => array(
+                    'links' => [
                         'self' => $this->request->getCurrentUrl() . '/' . $id . '/relationship/' . $assocName,
                         'related' => $this->request->getCurrentUrl() . '/' . $id . '/' . $assocName
-                    )
+                    ]
                 );
             }
 
@@ -123,15 +123,4 @@ class EntitySerializer extends AbstractSerializer
 
         return $resources;
     }
-
-    public function getLinks($entity)
-    {
-        // TODO: Implement getLinks() method.
-    }
-
-    public function getMeta($model)
-    {
-        // TODO: Implement getMeta() method.
-    }
-
 }

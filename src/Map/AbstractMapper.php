@@ -112,7 +112,7 @@ abstract class AbstractMapper implements Mapper
      * @return mixed
      * @throws MappingException
      */
-    public function getMapItemByClass($className)
+    public function getMapItemByClass($className): MapItem
     {
         foreach ($this->map as $mapItem) {
             if($mapItem->getEntityClass() === $className) {

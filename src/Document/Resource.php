@@ -172,7 +172,7 @@ class Resource implements \JsonSerializable
      */
     public function crawlRelations($entity, $relations)
     {
-        $collection = array($entity);
+        $collection = [$entity];
         $type = end($relations);
 
         while($relation = array_shift($relations)) {
@@ -184,7 +184,7 @@ class Resource implements \JsonSerializable
                 if($result instanceof Collection) {
                     $newCollection = array_merge($newCollection, $result->toArray());
                 } else {
-                    $newCollection =  array_merge($newCollection, array($result));
+                    $newCollection =  array_merge($newCollection, [$result]);
                 }
             }
 

@@ -23,7 +23,7 @@ class Error
     public function render()
     {
         $document = new \stdClass();
-        $document->errors = array();
+        $document->errors = [];
 
         $error = new \stdClass();
         $error->status = (string) $this->exception->getCode();

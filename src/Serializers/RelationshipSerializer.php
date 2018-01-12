@@ -46,9 +46,9 @@ class RelationshipSerializer extends AbstractSerializer implements Serializer
      * @return array|mixed
      * @throws \Exception
      */
-    public function getRelationships($entity)
+    public function getRelationships($entity): array
     {
-        $relationships = array();
+        $relationships = [];
 
         $associations = $this->getMapItem()->getClassMeta()->getAssociationMappings();
 
@@ -67,22 +67,11 @@ class RelationshipSerializer extends AbstractSerializer implements Serializer
     }
 
     /**
-     * @param $entity
-     * @return mixed|void
-     */
-    public function getLinks($entity) { }
-
-    /**
-     * @param $model
-     * @return mixed|void
-     */
-    public function getMeta($model) { }
-
-    /**
      * @return MapItem
+     * @throws \Doctrine\ORM\Mapping\MappingException
      * @throws \Exception
      */
-    public function getMapItem()
+    public function getMapItem(): MapItem
     {
         /** @var \Jad\Map\MapItem $mapItem */
         $mapItem            = $this->mapper->getMapItem($this->type);

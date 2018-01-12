@@ -87,7 +87,7 @@ class JsonApiResponse
 
             case 'DELETE':
                 (new Delete($this->request, $this->mapper))->deleteResource();
-                $this->setResponse('', array(), 204);
+                $this->setResponse('', [], 204);
                 break;
 
             case 'GET':

@@ -43,18 +43,6 @@ interface Serializer
      * @param $entity
      * @return mixed
      */
-    public function getLinks($entity);
-
-    /**
-     * @param $entity
-     * @return mixed
-     */
-    public function getMeta($entity);
-
-    /**
-     * @param $entity
-     * @return mixed
-     */
     public function getRelationships($entity);
 
     /**

@@ -79,7 +79,7 @@ abstract class AbstractSerializer implements Serializer
     public function getAttributes($entity, array $fields = null)
     {
         $reader         = new AnnotationReader();
-        $attributes     = array();
+        $attributes     = [];
 
         if(is_array($fields)) {
             $fields = array_map(function($field) {

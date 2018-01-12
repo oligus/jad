@@ -26,7 +26,7 @@ class Collection implements \JsonSerializable
     /**
      * @var array
      */
-    private $resources = array();
+    private $resources = [];
 
     /**
      * @var Paginator

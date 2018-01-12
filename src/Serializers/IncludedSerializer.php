@@ -2,8 +2,6 @@
 
 namespace Jad\Serializers;
 
-use Jad\Exceptions\SerializerException;
-
 /**
  * Class EntitySerializer
  * @package Jad\Serializers
@@ -14,29 +12,19 @@ class IncludedSerializer extends AbstractSerializer implements Serializer
      * @param $entity
      * @return array
      */
-    public function getRelationships($entity)
+    public function getRelationships($entity): array
     {
-        return array();
+        return [];
     }
 
     /**
-     * @param $entity
      * @param $type
-     * @return array|null
-     * @throws SerializerException
+     * @param $entity
+     * @param $fields
+     * @return array|mixed
      */
-    public function getIncluded($type, $entity, $fields)
+    public function getIncluded($type, $entity, $fields): array
     {
-        return array();
-    }
-
-    public function getLinks($entity)
-    {
-        // TODO: Implement getLinks() method.
-    }
-
-    public function getMeta($model)
-    {
-        // TODO: Implement getMeta() method.
+        return [];
     }
 }

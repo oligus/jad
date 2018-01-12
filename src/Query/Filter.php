@@ -203,7 +203,7 @@ class Filter
     {
         $parts = explode('.', $path);
 
-        $aliases = array();
+        $aliases = [];
 
         foreach($parts as $key => $part) {
             $aliases['a' . $key . Text::deKebabify($part)] = $part;
@@ -220,7 +220,7 @@ class Filter
     {
         $count = 0;
         $key = '';
-        $joins = array();
+        $joins = [];
 
         foreach($this->createAliases($path) as $alias => $relation) {
             if($count === 0) {
