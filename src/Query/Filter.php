@@ -264,22 +264,21 @@ class Filter
     private function addConditionalFilter($path): void
     {
         foreach($this->filter[$path] as $propertyConditional => $value) {
-            $property = array_keys($value)[0];
-            $conditions = $value[$property];
+            foreach($value as $property => $conditions) {
+                if(!is_array($conditions)) {
+                    throw new JadException('Conditional filter value is not an array, check if [and] - [or] is present.');
+                }
 
-            if(!is_array($conditions)) {
-                throw new JadException('Conditional filter value is not an array, check if [and] - [or] is present.');
-            }
+                $joins = $this->getJoins($path);
+                $alias = current($joins);
 
-            $joins = $this->getJoins($path);
-            $alias = current($joins);
+                if(empty($alias)) {
+                    $alias = $this->getRootAlias();
+                }
 
-            if(empty($alias)) {
-                $alias = $this->getRootAlias();
-            }
-
-            foreach($conditions as $condition => $val) {
-                $this->addFilter($property, $condition, $val, $propertyConditional, $alias);
+                foreach($conditions as $condition => $val) {
+                    $this->addFilter($property, $condition, $val, $propertyConditional, $alias);
+                }
             }
         }
     }
