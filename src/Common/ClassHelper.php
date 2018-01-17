@@ -11,71 +11,68 @@ use Jad\Exceptions\JadException;
 class ClassHelper
 {
     /**
-     * @param $className
+     * @param $class
      * @param string $property
      * @return mixed
      * @throws JadException
      */
-    public static function getPropertyValue($className, string $property)
+    public static function getPropertyValue($class, string $property)
     {
-        $methodName = 'get' . ucfirst($property);
+        $method = 'get' . ucfirst($property);
 
-        if(method_exists($className, $methodName)) {
-            return $className->$methodName();
+        if(method_exists($class, $method)) {
+            return $class->$method();
         }
 
-        $reflection = new \ReflectionClass($className);
+        $reflection = new \ReflectionClass($class);
 
         if($reflection->hasProperty($property)) {
             $reflectionProperty = $reflection->getProperty($property);
-            $reflectionProperty->isPublic();
             $reflectionProperty->setAccessible(true);
-            return $reflectionProperty->getValue($className);
+            return $reflectionProperty->getValue($class);
         }
 
-        throw new JadException('Property [' . $property . '] not found in class [' . get_class($className) . ']');
+        throw new JadException('Property [' . $property . '] not found in class [' . get_class($class) . ']');
     }
 
     /**
-     * @param $className
+     * @param $class
      * @param string $property
      * @param $value
      */
-    public static function setPropertyValue($className, string $property, $value)
+    public static function setPropertyValue($class, string $property, $value)
     {
-        $methodName = 'set' . ucfirst($property);
+        $method = 'set' . ucfirst($property);
 
-        if (method_exists($className, $methodName)) {
-            $className->$methodName($value);
-        } else {
-            $reflection = new \ReflectionClass($className);
-            if ($reflection->hasProperty($property)) {
-                $reflectionProperty = $reflection->getProperty($property);
-                $reflectionProperty->setAccessible(true);
-                $reflectionProperty->setValue($className, $value);
-            }
+        if (method_exists($class, $method)) {
+            $class->$method($value);
+            return;
+        }
+
+        $reflection = new \ReflectionClass($class);
+
+        if ($reflection->hasProperty($property)) {
+            $reflectionProperty = $reflection->getProperty($property);
+            $reflectionProperty->setAccessible(true);
+            $reflectionProperty->setValue($class, $value);
         }
     }
 
     /**
-     * @param $className
+     * @param $class
      * @param string $property
      * @return bool
      */
-    public static function hasPropertyValue($className, string $property): bool
+    public static function hasPropertyValue($class, string $property): bool
     {
-        $methodName = 'set' . ucfirst($property);
+        $method = 'set' . ucfirst($property);
 
-        if (method_exists($className, $methodName)) {
+        if (method_exists($class, $method)) {
             return true;
-        } else {
-            $reflection = new \ReflectionClass($className);
-
-            if ($reflection->hasProperty($property)) {
-                return true;
-            }
         }
 
-        return false;
+        $reflection = new \ReflectionClass($class);
+
+        return $reflection->hasProperty($property);
     }
 }
