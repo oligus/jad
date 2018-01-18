@@ -104,7 +104,8 @@ abstract class AbstractSerializer implements Serializer
             if(!empty($fields) && !in_array($field, $fields)) {
                 continue;
             }
-
+            
+            /*
             $jadAnnotation = $reader->getPropertyAnnotation(
                 $reflection->getProperty($field),
                 'Jad\Map\Annotations\Attribute'
@@ -119,7 +120,33 @@ abstract class AbstractSerializer implements Serializer
                     }
                 }
             }
-
+            */
+            
+            $i = 0;
+            $bool = false;
+            $aProperty = json_decode(json_encode($reader->getPropertyAnnotations($reflection->getProperty($field))), true);
+            foreach($aProperty as $key => $aVal) {
+                foreach($aVal as $k => $v) {
+                    if($k === 'visible') {
+                        $i = $key;
+                        $bool = true;
+                    }
+                }
+            }
+            
+            if($bool) {
+                $jadAnnotation = $reader->getPropertyAnnotations($reflection->getProperty($field))[$i];
+                if(!is_null($jadAnnotation)) {
+                    if(property_exists($jadAnnotation, 'visible')) {
+                        $visible = is_null($jadAnnotation->visible) ? true : (bool) $jadAnnotation->visible;
+                        
+                        if(!$visible) {
+                            continue;
+                        }
+                    }
+                }
+            }
+            
             $fieldValue = ClassHelper::getPropertyValue($entity, $field);
             $value = $fieldValue;
 
