@@ -121,7 +121,6 @@ abstract class AbstractSerializer implements Serializer
                 if(!is_null($jadAnnotation)) {
                     if(property_exists($jadAnnotation, 'visible')) {
                         $visible = is_null($jadAnnotation->visible) ? true : (bool) $jadAnnotation->visible;
-
                         if(!$visible) {
                             continue;
                         }
