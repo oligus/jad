@@ -65,8 +65,6 @@ class JsonApiResponse
         if(!$this->mapper->hasMapItem($this->request->getResourceType())) {
             if(Configure::getInstance()->getConfig('strict')) {
                 throw new ResourceNotFoundException('Resource type not found [' . $this->request->getResourceType() . ']');
-            } else {
-                return '';
             }
         }
 

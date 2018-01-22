@@ -67,6 +67,28 @@ GET /api/v1/jad/albums
 
 [Validation](docs/validation.md)
 
+## Support
+
+### Lumen
+
+Support for lumen via middleware.
+
+In your Lumen bootstrap file (../lumen/bootstrap/app.php)
+```php
+// Jad middleware
+$app->middleware([
+    'jad' => Jad\Support\Lumen\JadMiddleWare::class,
+]);
+
+...
+
+// Register Service Providers
+$app->register(Jad\Support\Lumen\JadServiceProvider::class);
+```
+
+You can go with the default configuration or copy `lumen/vendor/oligus/jad/src/Support/Lumen/jad.php` to `/lumen/config`
+and change it there.
+
 ## Contributing
 
 When contributing to this repository, please first discuss the change you wish to make via issue before making a pull request.

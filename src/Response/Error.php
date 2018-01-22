@@ -3,6 +3,7 @@
 namespace Jad\Response;
 
 use Symfony\Component\HttpFoundation\Response;
+use Jad\Configure;
 
 class Error
 {
@@ -43,6 +44,11 @@ class Error
         $response->setStatusCode(500);
         $response->sendHeaders();
         $response->sendContent();
+
+        if(!Configure::getInstance()->getConfig('test_mode')) {
+            exit(0);
+        }
+
     }
 
     /**

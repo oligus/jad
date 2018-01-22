@@ -47,6 +47,7 @@ class Invoices
 
     /**
      * @ORM\Column(name="BillingCountry", type="string", length=40)
+     * @JAD\Attribute(readOnly=false, visible=false)
      */
     protected $billingCountry;
 

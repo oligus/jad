@@ -48,6 +48,7 @@ class GenresTest extends TestCase
     public function testResourceNotFoundException()
     {
         Configure::getInstance()->setConfig('strict', true);
+        Configure::getInstance()->setConfig('test_mode', true);
         $_SERVER['REQUEST_URI']  = '/notfound';
 
         $mapper = new AnnotationsMapper(Manager::getInstance()->getEm());
