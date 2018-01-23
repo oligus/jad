@@ -8,7 +8,7 @@
     "orm"
   ],
   "type": "library",
-  "license": "GPL-2.0",
+  "license": "MIT",
   "authors": [
     {
       "name": "oligus",
