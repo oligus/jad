@@ -55,7 +55,7 @@ class Jad
     }
 
     /**
-     *
+     * @return bool
      */
     public function jsonApiResult()
     {

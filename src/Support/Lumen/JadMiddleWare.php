@@ -25,14 +25,16 @@ class JadMiddleWare
     }
 
     /**
-     * @param $request
+     * @param Request $request
      * @param \Closure $next
      * @return mixed
+     * @throws \Exception
      */
     public function handle(Request $request, \Closure $next)
     {
         $pathPrefix = config()['jad']['pathPrefix'];
-        $pathMatch = (bool) strpos($pathPrefix, $request->path());
+
+        $pathMatch = (bool) preg_match('!' . ltrim($pathPrefix, '/') . '!', $request->path(), $matches);
 
         if(!$pathMatch) {
             return $next($request);
