@@ -5,6 +5,7 @@ JSON Api :heart: Doctrine ORM
 [![Build Status](https://travis-ci.org/oligus/jad.svg?branch=master)](https://travis-ci.org/oligus/jad)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Codecov.io](https://codecov.io/gh/oligus/jad/branch/master/graphs/badge.svg)](https://codecov.io/gh/oligus/jad)
+[![Open Source Helpers](https://www.codetriage.com/oligus/jad/badges/users.svg)](https://www.codetriage.com/oligus/jad)
 
 JAD is a library created for rapid development of [JSON API](http://jsonapi.org) backend REST implementation. You can
 run JAD as a standalone server with php -S (see [demo](demo/README.md)), or you can use it as a middleware in your framework.
