@@ -1,0 +1,49 @@
+{
+    "data": [
+        {
+            "id": "1",
+            "type": "genres",
+            "attributes": {
+                "name": "Rock"
+            }
+        },
+        {
+            "id": "2",
+            "type": "genres",
+            "attributes": {
+                "name": "Jazz"
+            }
+        },
+        {
+            "id": "3",
+            "type": "genres",
+            "attributes": {
+                "name": "Metal"
+            }
+        },
+        {
+            "id": "4",
+            "type": "genres",
+            "attributes": {
+                "name": "Alternative & Punk"
+            }
+        },
+        {
+            "id": "5",
+            "type": "genres",
+            "attributes": {
+                "name": "Rock And Roll"
+            }
+        }
+    ],
+    "links": {
+        "self": "http:\/\/:\/genres?page[size]=5&page[number]=1",
+        "first": "http:\/\/:\/genres?page[size]=5&page[number]=1",
+        "last": "http:\/\/:\/genres?page[size]=5&page[number]=5",
+        "next": "http:\/\/:\/genres?page[size]=5&page[number]=2"
+    },
+    "meta": {
+        "count": 25,
+        "pages": 5
+    }
+}

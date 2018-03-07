@@ -1,0 +1,41 @@
+{
+    "data": {
+        "id": "15",
+        "type": "tracks",
+        "attributes": {
+            "name": "Go Down",
+            "composer": "AC\/DC",
+            "milliseconds": 331180,
+            "price": "0.99"
+        },
+        "relationships": {
+            "albums": {
+                "links": {
+                    "self": "http:\/\/:\/tracks\/15\/relationship\/albums",
+                    "related": "http:\/\/:\/tracks\/15\/albums"
+                }
+            },
+            "media-types": {
+                "links": {
+                    "self": "http:\/\/:\/tracks\/15\/relationship\/media-types",
+                    "related": "http:\/\/:\/tracks\/15\/media-types"
+                }
+            },
+            "genres": {
+                "links": {
+                    "self": "http:\/\/:\/tracks\/15\/relationship\/genres",
+                    "related": "http:\/\/:\/tracks\/15\/genres"
+                }
+            },
+            "playlists": {
+                "links": {
+                    "self": "http:\/\/:\/tracks\/15\/relationship\/playlists",
+                    "related": "http:\/\/:\/tracks\/15\/playlists"
+                }
+            }
+        }
+    },
+    "links": {
+        "self": "http:\/\/:\/tracks\/15"
+    }
+}

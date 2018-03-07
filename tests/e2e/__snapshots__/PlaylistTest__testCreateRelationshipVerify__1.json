@@ -1,0 +1,27 @@
+{
+    "data": [
+        {
+            "id": "15",
+            "type": "tracks"
+        },
+        {
+            "id": "43",
+            "type": "tracks"
+        },
+        {
+            "id": "77",
+            "type": "tracks"
+        },
+        {
+            "id": "117",
+            "type": "tracks"
+        },
+        {
+            "id": "351",
+            "type": "tracks"
+        }
+    ],
+    "links": {
+        "self": "http:\/\/:\/playlists\/5\/relationships\/tracks"
+    }
+}

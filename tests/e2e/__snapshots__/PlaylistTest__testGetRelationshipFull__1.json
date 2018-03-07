@@ -1,0 +1,21 @@
+{
+    "data": [
+        {
+            "id": "1",
+            "type": "playlists",
+            "attributes": {
+                "name": "All tracks"
+            }
+        },
+        {
+            "id": "2",
+            "type": "playlists",
+            "attributes": {
+                "name": "Some tracks"
+            }
+        }
+    ],
+    "links": {
+        "self": "http:\/\/:\/tracks\/15\/playlists"
+    }
+}

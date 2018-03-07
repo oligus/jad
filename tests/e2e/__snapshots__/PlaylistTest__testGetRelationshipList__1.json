@@ -1,0 +1,15 @@
+{
+    "data": [
+        {
+            "id": "1",
+            "type": "playlists"
+        },
+        {
+            "id": "2",
+            "type": "playlists"
+        }
+    ],
+    "links": {
+        "self": "http:\/\/:\/tracks\/15\/relationships\/playlists"
+    }
+}

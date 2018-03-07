@@ -1,0 +1,9 @@
+{
+    "errors": [
+        {
+            "status": "404",
+            "title": "Resource Not Found error",
+            "detail": "Resource of type [genres] with id [26] could not be found."
+        }
+    ]
+}

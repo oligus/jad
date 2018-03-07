@@ -1,0 +1,41 @@
+{
+    "data": {
+        "id": "43",
+        "type": "tracks",
+        "attributes": {
+            "name": "Forgiven",
+            "composer": "Alanis Morissette & Glenn Ballard",
+            "milliseconds": 300355,
+            "price": "0.99"
+        },
+        "relationships": {
+            "albums": {
+                "links": {
+                    "self": "http:\/\/:\/tracks\/43\/relationship\/albums",
+                    "related": "http:\/\/:\/tracks\/43\/albums"
+                }
+            },
+            "media-types": {
+                "links": {
+                    "self": "http:\/\/:\/tracks\/43\/relationship\/media-types",
+                    "related": "http:\/\/:\/tracks\/43\/media-types"
+                }
+            },
+            "genres": {
+                "links": {
+                    "self": "http:\/\/:\/tracks\/43\/relationship\/genres",
+                    "related": "http:\/\/:\/tracks\/43\/genres"
+                }
+            },
+            "playlists": {
+                "links": {
+                    "self": "http:\/\/:\/tracks\/43\/relationship\/playlists",
+                    "related": "http:\/\/:\/tracks\/43\/playlists"
+                }
+            }
+        }
+    },
+    "links": {
+        "self": "http:\/\/:\/tracks\/43"
+    }
+}

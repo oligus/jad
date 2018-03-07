@@ -2,45 +2,16 @@
 
 namespace Jad\E2E;
 
-use Jad\Tests\TestCase;
+use Jad\Jad;
+use Jad\Tests\DBTestCase;
 use Jad\Database\Manager;
 use Jad\Map\AnnotationsMapper;
-use Jad\Jad;
-use PHPUnit\DbUnit\TestCaseTrait;
 use PHPUnit\DbUnit\DataSet\CsvDataSet;
+use Spatie\Snapshots\MatchesSnapshots;
 
-class PaginationTest extends TestCase
+class PaginationTest extends DBTestCase
 {
-    use TestCaseTrait;
-
-    /**
-     * delete from your_table;
-    delete from sqlite_sequence where name='your_table';
-     */
-    public function setUp()
-    {
-        parent::setUp();
-        $this->databaseTester = null;
-
-        $this->getDatabaseTester()->setSetUpOperation($this->getSetUpOperation());
-        $this->getDatabaseTester()->setDataSet($this->getDataSet());
-        $this->getDatabaseTester()->onSetUp();
-
-        $_GET = [];
-    }
-
-    public function getConnection()
-    {
-        $pdo = new \PDO('sqlite://' . dirname(__DIR__ ) . '/fixtures/test_db.sqlite');
-        return $this->createDefaultDBConnection($pdo, ':memory:');
-    }
-
-    public function getDataSet()
-    {
-        $dataSet = new CsvDataSet();
-        $dataSet->addTable('genres', dirname(__DIR__ ) . '/fixtures/genres.csv');
-        return $dataSet;
-    }
+    use MatchesSnapshots;
 
     public function testSize()
     {
@@ -50,10 +21,11 @@ class PaginationTest extends TestCase
         $mapper = new AnnotationsMapper(Manager::getInstance()->getEm());
         $jad = new Jad($mapper);
 
-        $expected = '{"data":[{"id":"1","type":"genres","attributes":{"name":"Rock"}},{"id":"2","type":"genres","attributes":{"name":"Jazz"}},{"id":"3","type":"genres","attributes":{"name":"Metal"}},{"id":"4","type":"genres","attributes":{"name":"Alternative & Punk"}},{"id":"5","type":"genres","attributes":{"name":"Rock And Roll"}}],"links":{"self":"http:\/\/:\/genres?page[size]=5&page[number]=1","first":"http:\/\/:\/genres?page[size]=5&page[number]=1","last":"http:\/\/:\/genres?page[size]=5&page[number]=5","next":"http:\/\/:\/genres?page[size]=5&page[number]=2"},"meta":{"count":25,"pages":5}}';
-
+        ob_start();
         $jad->jsonApiResult();
-        $this->expectOutputString($expected);
+        $output = ob_get_clean();
+
+        $this->assertMatchesJsonSnapshot($output);
     }
 
     public function testNumber()
@@ -64,9 +36,11 @@ class PaginationTest extends TestCase
         $mapper = new AnnotationsMapper(Manager::getInstance()->getEm());
         $jad = new Jad($mapper);
 
-        $expected = '{"data":[{"id":"6","type":"genres","attributes":{"name":"Blues"}},{"id":"7","type":"genres","attributes":{"name":"Latin"}},{"id":"8","type":"genres","attributes":{"name":"Reggae"}},{"id":"9","type":"genres","attributes":{"name":"Pop"}},{"id":"10","type":"genres","attributes":{"name":"Soundtrack"}}],"links":{"self":"http:\/\/:\/genres?page[size]=5&page[number]=2","first":"http:\/\/:\/genres?page[size]=5&page[number]=1","last":"http:\/\/:\/genres?page[size]=5&page[number]=5","next":"http:\/\/:\/genres?page[size]=5&page[number]=3","previous":"http:\/\/:\/genres?page[size]=5&page[number]=1"},"meta":{"count":25,"pages":5}}';
+        ob_start();
         $jad->jsonApiResult();
-        $this->expectOutputString($expected);
+        $output = ob_get_clean();
+
+        $this->assertMatchesJsonSnapshot($output);
     }
 
     public function testLast()
@@ -77,9 +51,17 @@ class PaginationTest extends TestCase
         $mapper = new AnnotationsMapper(Manager::getInstance()->getEm());
         $jad = new Jad($mapper);
 
-        $expected = '{"data":[{"id":"25","type":"genres","attributes":{"name":"Opera"}}],"links":{"self":"http:\/\/:\/genres?page[size]=3&page[number]=9","first":"http:\/\/:\/genres?page[size]=3&page[number]=1","last":"http:\/\/:\/genres?page[size]=3&page[number]=9","previous":"http:\/\/:\/genres?page[size]=3&page[number]=8"},"meta":{"count":25,"pages":9}}';
-
+        ob_start();
         $jad->jsonApiResult();
-        $this->expectOutputString($expected);
+        $output = ob_get_clean();
+
+        $this->assertMatchesJsonSnapshot($output);
+    }
+
+    public function getDataSet()
+    {
+        $dataSet = new CsvDataSet();
+        $dataSet->addTable('genres', dirname(__DIR__ ) . '/fixtures/genres.csv');
+        return $dataSet;
     }
 }

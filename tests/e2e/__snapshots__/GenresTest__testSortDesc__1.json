@@ -1,0 +1,84 @@
+{
+    "data": [
+        {
+            "id": "16",
+            "type": "genres",
+            "attributes": {
+                "name": "World"
+            }
+        },
+        {
+            "id": "19",
+            "type": "genres",
+            "attributes": {
+                "name": "TV Shows"
+            }
+        },
+        {
+            "id": "10",
+            "type": "genres",
+            "attributes": {
+                "name": "Soundtrack"
+            }
+        },
+        {
+            "id": "18",
+            "type": "genres",
+            "attributes": {
+                "name": "Science Fiction"
+            }
+        },
+        {
+            "id": "20",
+            "type": "genres",
+            "attributes": {
+                "name": "Sci Fi & Fantasy"
+            }
+        },
+        {
+            "id": "5",
+            "type": "genres",
+            "attributes": {
+                "name": "Rock And Roll"
+            }
+        },
+        {
+            "id": "1",
+            "type": "genres",
+            "attributes": {
+                "name": "Rock"
+            }
+        },
+        {
+            "id": "8",
+            "type": "genres",
+            "attributes": {
+                "name": "Reggae"
+            }
+        },
+        {
+            "id": "14",
+            "type": "genres",
+            "attributes": {
+                "name": "R&B\/Soul"
+            }
+        },
+        {
+            "id": "9",
+            "type": "genres",
+            "attributes": {
+                "name": "Pop"
+            }
+        }
+    ],
+    "links": {
+        "self": "http:\/\/:\/genres?page[size]=10&page[number]=1",
+        "first": "http:\/\/:\/genres?page[size]=10&page[number]=1",
+        "last": "http:\/\/:\/genres?page[size]=10&page[number]=3",
+        "next": "http:\/\/:\/genres?page[size]=10&page[number]=2"
+    },
+    "meta": {
+        "count": 25,
+        "pages": 3
+    }
+}

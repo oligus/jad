@@ -1,0 +1,52 @@
+{
+    "data": [
+        {
+            "id": "1",
+            "type": "playlists",
+            "attributes": {
+                "name": "All tracks"
+            },
+            "relationships": {
+                "tracks": {
+                    "links": {
+                        "self": "http:\/\/:\/playlists\/1\/relationship\/tracks",
+                        "related": "http:\/\/:\/playlists\/1\/tracks"
+                    }
+                }
+            }
+        },
+        {
+            "id": "2",
+            "type": "playlists",
+            "attributes": {
+                "name": "Some tracks"
+            },
+            "relationships": {
+                "tracks": {
+                    "links": {
+                        "self": "http:\/\/:\/playlists\/2\/relationship\/tracks",
+                        "related": "http:\/\/:\/playlists\/2\/tracks"
+                    }
+                }
+            }
+        },
+        {
+            "id": "3",
+            "type": "playlists",
+            "attributes": {
+                "name": "No tracks"
+            },
+            "relationships": {
+                "tracks": {
+                    "links": {
+                        "self": "http:\/\/:\/playlists\/3\/relationship\/tracks",
+                        "related": "http:\/\/:\/playlists\/3\/tracks"
+                    }
+                }
+            }
+        }
+    ],
+    "links": {
+        "self": "http:\/\/:\/playlists"
+    }
+}

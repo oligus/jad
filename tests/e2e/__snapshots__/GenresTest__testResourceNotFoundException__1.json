@@ -1,0 +1,9 @@
+{
+    "errors": [
+        {
+            "status": "404",
+            "title": "Resource Not Found error",
+            "detail": "Resource type not found [notfound]"
+        }
+    ]
+}

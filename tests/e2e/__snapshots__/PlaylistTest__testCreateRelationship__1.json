@@ -1,0 +1,20 @@
+{
+    "data": {
+        "id": "5",
+        "type": "playlists",
+        "attributes": {
+            "name": "New Playlist"
+        },
+        "relationships": {
+            "tracks": {
+                "links": {
+                    "self": "http:\/\/:\/playlists\/5\/relationship\/tracks",
+                    "related": "http:\/\/:\/playlists\/5\/tracks"
+                }
+            }
+        }
+    },
+    "links": {
+        "self": "http:\/\/:\/playlists"
+    }
+}

@@ -6,7 +6,6 @@ use Jad\Map\Mapper;
 use Jad\Request\JsonApiRequest;
 use Jad\Common\ClassHelper;
 use Jad\Common\Text;
-use Jad\Map\Annotations\Header;
 use Jad\Map\MapItem;
 use Doctrine\Common\Collections\Collection as DoctrineCollection;
 use Doctrine\Common\Annotations\AnnotationReader;
@@ -152,6 +151,13 @@ class AbstractCRUD
     public function getMapItem(): MapItem
     {
         $input = $this->request->getInputJson();
-        return $this->mapper->getMapItem($input->data->type);
+
+        if(!array_key_exists('type', $input->data)) {
+            $type = $this->request->getResourceType();
+        } else {
+            $type = $input->data->type;
+        }
+
+        return $this->mapper->getMapItem($type);
     }
 }

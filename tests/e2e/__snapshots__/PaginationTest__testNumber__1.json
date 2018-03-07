@@ -1,0 +1,50 @@
+{
+    "data": [
+        {
+            "id": "6",
+            "type": "genres",
+            "attributes": {
+                "name": "Blues"
+            }
+        },
+        {
+            "id": "7",
+            "type": "genres",
+            "attributes": {
+                "name": "Latin"
+            }
+        },
+        {
+            "id": "8",
+            "type": "genres",
+            "attributes": {
+                "name": "Reggae"
+            }
+        },
+        {
+            "id": "9",
+            "type": "genres",
+            "attributes": {
+                "name": "Pop"
+            }
+        },
+        {
+            "id": "10",
+            "type": "genres",
+            "attributes": {
+                "name": "Soundtrack"
+            }
+        }
+    ],
+    "links": {
+        "self": "http:\/\/:\/genres?page[size]=5&page[number]=2",
+        "first": "http:\/\/:\/genres?page[size]=5&page[number]=1",
+        "last": "http:\/\/:\/genres?page[size]=5&page[number]=5",
+        "next": "http:\/\/:\/genres?page[size]=5&page[number]=3",
+        "previous": "http:\/\/:\/genres?page[size]=5&page[number]=1"
+    },
+    "meta": {
+        "count": 25,
+        "pages": 5
+    }
+}

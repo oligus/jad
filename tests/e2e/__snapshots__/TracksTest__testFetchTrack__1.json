@@ -1,0 +1,41 @@
+{
+    "data": {
+        "id": "1874",
+        "type": "tracks",
+        "attributes": {
+            "name": "Fight Fire With Fire",
+            "composer": "Metallica",
+            "milliseconds": 285753,
+            "price": "0.99"
+        },
+        "relationships": {
+            "albums": {
+                "links": {
+                    "self": "http:\/\/:\/tracks\/1874\/relationship\/albums",
+                    "related": "http:\/\/:\/tracks\/1874\/albums"
+                }
+            },
+            "media-types": {
+                "links": {
+                    "self": "http:\/\/:\/tracks\/1874\/relationship\/media-types",
+                    "related": "http:\/\/:\/tracks\/1874\/media-types"
+                }
+            },
+            "genres": {
+                "links": {
+                    "self": "http:\/\/:\/tracks\/1874\/relationship\/genres",
+                    "related": "http:\/\/:\/tracks\/1874\/genres"
+                }
+            },
+            "playlists": {
+                "links": {
+                    "self": "http:\/\/:\/tracks\/1874\/relationship\/playlists",
+                    "related": "http:\/\/:\/tracks\/1874\/playlists"
+                }
+            }
+        }
+    },
+    "links": {
+        "self": "http:\/\/:\/tracks\/1874"
+    }
+}

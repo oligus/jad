@@ -1,0 +1,84 @@
+{
+    "data": [
+        {
+            "id": "23",
+            "type": "genres",
+            "attributes": {
+                "name": "Alternative"
+            }
+        },
+        {
+            "id": "4",
+            "type": "genres",
+            "attributes": {
+                "name": "Alternative & Punk"
+            }
+        },
+        {
+            "id": "6",
+            "type": "genres",
+            "attributes": {
+                "name": "Blues"
+            }
+        },
+        {
+            "id": "11",
+            "type": "genres",
+            "attributes": {
+                "name": "Bossa Nova"
+            }
+        },
+        {
+            "id": "24",
+            "type": "genres",
+            "attributes": {
+                "name": "Classical"
+            }
+        },
+        {
+            "id": "22",
+            "type": "genres",
+            "attributes": {
+                "name": "Comedy"
+            }
+        },
+        {
+            "id": "21",
+            "type": "genres",
+            "attributes": {
+                "name": "Drama"
+            }
+        },
+        {
+            "id": "12",
+            "type": "genres",
+            "attributes": {
+                "name": "Easy Listening"
+            }
+        },
+        {
+            "id": "15",
+            "type": "genres",
+            "attributes": {
+                "name": "Electronica\/Dance"
+            }
+        },
+        {
+            "id": "13",
+            "type": "genres",
+            "attributes": {
+                "name": "Heavy Metal"
+            }
+        }
+    ],
+    "links": {
+        "self": "http:\/\/:\/genres?page[size]=10&page[number]=1",
+        "first": "http:\/\/:\/genres?page[size]=10&page[number]=1",
+        "last": "http:\/\/:\/genres?page[size]=10&page[number]=3",
+        "next": "http:\/\/:\/genres?page[size]=10&page[number]=2"
+    },
+    "meta": {
+        "count": 25,
+        "pages": 3
+    }
+}

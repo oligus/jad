@@ -15,6 +15,7 @@ try {
     $config = Configure::getInstance();
     $config->setConfig('debug', true);
     $config->setConfig('cors', true);
+    $config->setConfig('strict', true);
     $config->setConfig('max_page_size', 100);
 
     $jad = new Jad($mapper);

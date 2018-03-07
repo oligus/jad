@@ -4,35 +4,15 @@ namespace Jad\E2E;
 
 use Jad\Jad;
 use Jad\Configure;
-use Jad\Tests\TestCase;
+use Jad\Tests\DBTestCase;
 use Jad\Database\Manager;
 use Jad\Map\AnnotationsMapper;
-
-use PHPUnit\DbUnit\TestCaseTrait;
 use PHPUnit\DbUnit\DataSet\CsvDataSet;
+use Spatie\Snapshots\MatchesSnapshots;
 
-class TracksTest extends TestCase
+class TracksTest extends DBTestCase
 {
-    use TestCaseTrait;
-
-    public function setUp()
-    {
-        parent::setUp();
-
-        $this->databaseTester = null;
-
-        $this->getDatabaseTester()->setSetUpOperation($this->getSetUpOperation());
-        $this->getDatabaseTester()->setDataSet($this->getDataSet());
-        $this->getDatabaseTester()->onSetUp();
-
-        $_GET = [];
-    }
-
-    public function getConnection()
-    {
-        $pdo = new \PDO('sqlite://' . dirname(__DIR__ ) . '/fixtures/test_db.sqlite');
-        return $this->createDefaultDBConnection($pdo, ':memory:');
-    }
+    use MatchesSnapshots;
 
     public function getDataSet()
     {
@@ -48,9 +28,11 @@ class TracksTest extends TestCase
         $mapper = new AnnotationsMapper(Manager::getInstance()->getEm());
         $jad = new Jad($mapper);
 
-        $expected = '{"data":{"id":"1874","type":"tracks","attributes":{"name":"Fight Fire With Fire","composer":"Metallica","milliseconds":285753,"price":"0.99"},"relationships":{"albums":{"links":{"self":"http:\/\/:\/tracks\/1874\/relationship\/albums","related":"http:\/\/:\/tracks\/1874\/albums"}},"media-types":{"links":{"self":"http:\/\/:\/tracks\/1874\/relationship\/media-types","related":"http:\/\/:\/tracks\/1874\/media-types"}},"genres":{"links":{"self":"http:\/\/:\/tracks\/1874\/relationship\/genres","related":"http:\/\/:\/tracks\/1874\/genres"}},"playlists":{"links":{"self":"http:\/\/:\/tracks\/1874\/relationship\/playlists","related":"http:\/\/:\/tracks\/1874\/playlists"}}}},"links":{"self":"http:\/\/:\/tracks\/1874"}}';
+        ob_start();
         $jad->jsonApiResult();
-        $this->expectOutputString($expected);
+        $output = ob_get_clean();
+
+        $this->assertMatchesJsonSnapshot($output);
     }
 
    public function testCreateTrack()
@@ -89,8 +71,11 @@ class TracksTest extends TestCase
        $mapper = new AnnotationsMapper(Manager::getInstance()->getEm());
        $jad = new Jad($mapper);
 
+       ob_start();
        $jad->jsonApiResult();
-       $this->expectOutputRegex('/tracks.+?name.:.New\sTrack/');
+       $output = ob_get_clean();
+
+       $this->assertRegExp('/tracks.+?name.:.New\sTrack/', $output);
    }
 
     public function testUpdateTrack()
@@ -113,8 +98,10 @@ class TracksTest extends TestCase
         $mapper = new AnnotationsMapper(Manager::getInstance()->getEm());
         $jad = new Jad($mapper);
 
-        $expected = '{"data":{"id":"43","type":"tracks","attributes":{"name":"Forgiven","composer":"Alanis Morissette & Glenn Ballard","milliseconds":300355,"price":"0.99"},"relationships":{"albums":{"links":{"self":"http:\/\/:\/tracks\/43\/relationship\/albums","related":"http:\/\/:\/tracks\/43\/albums"}},"media-types":{"links":{"self":"http:\/\/:\/tracks\/43\/relationship\/media-types","related":"http:\/\/:\/tracks\/43\/media-types"}},"genres":{"links":{"self":"http:\/\/:\/tracks\/43\/relationship\/genres","related":"http:\/\/:\/tracks\/43\/genres"}},"playlists":{"links":{"self":"http:\/\/:\/tracks\/43\/relationship\/playlists","related":"http:\/\/:\/tracks\/43\/playlists"}}}},"links":{"self":"http:\/\/:\/tracks\/43"}}';
+        ob_start();
         $jad->jsonApiResult();
-        $this->expectOutputString($expected);
+        $output = ob_get_clean();
+
+        $this->assertMatchesJsonSnapshot($output);
     }
 }

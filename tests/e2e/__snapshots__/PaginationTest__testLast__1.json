@@ -1,0 +1,21 @@
+{
+    "data": [
+        {
+            "id": "25",
+            "type": "genres",
+            "attributes": {
+                "name": "Opera"
+            }
+        }
+    ],
+    "links": {
+        "self": "http:\/\/:\/genres?page[size]=3&page[number]=9",
+        "first": "http:\/\/:\/genres?page[size]=3&page[number]=1",
+        "last": "http:\/\/:\/genres?page[size]=3&page[number]=9",
+        "previous": "http:\/\/:\/genres?page[size]=3&page[number]=8"
+    },
+    "meta": {
+        "count": 25,
+        "pages": 9
+    }
+}
