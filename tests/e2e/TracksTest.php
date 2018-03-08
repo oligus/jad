@@ -3,7 +3,6 @@
 namespace Jad\E2E;
 
 use Jad\Jad;
-use Jad\Configure;
 use Jad\Tests\DBTestCase;
 use Jad\Database\Manager;
 use Jad\Map\AnnotationsMapper;
@@ -37,7 +36,6 @@ class TracksTest extends DBTestCase
 
    public function testCreateTrack()
    {
-       Configure::getInstance()->setConfig('test_mode', true);
        $_SERVER['REQUEST_URI']  = '/tracks';
        $_SERVER['REQUEST_METHOD'] = 'POST';
 
@@ -80,7 +78,6 @@ class TracksTest extends DBTestCase
 
     public function testUpdateTrack()
     {
-        Configure::getInstance()->setConfig('test_mode', true);
         $_SERVER['REQUEST_URI'] = '/tracks/43';
         $_SERVER['REQUEST_METHOD'] = 'PATCH';
 

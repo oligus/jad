@@ -3,18 +3,30 @@
 namespace Jad\Tests;
 
 use PHPUnit\Framework\TestCase as PHPUnitTestCase;
+use Jad\Configure;
 
 class TestCase extends PHPUnitTestCase
 {
     protected function setUp()
     {
+        Configure::getInstance()->setConfig('test_mode', true);
+        Configure::getInstance()->setConfig('strict', true);
         parent::setUp();
+    }
+
+    /**
+     * @before
+     */
+    public function setupTestDatabase()
+    {
+        system('cp tests/fixtures/test_db_origin.sqlite tests/fixtures/test_db.sqlite ');
     }
 
     /**
      * @param $className
      * @param $methodName
      * @return \ReflectionMethod
+     * @throws \ReflectionException
      */
     protected static function getMethod($className, $methodName) {
         $class = new \ReflectionClass($className);
@@ -47,6 +59,7 @@ class TestCase extends PHPUnitTestCase
      * @param $className
      * @param $property
      * @param $value
+     * @throws \ReflectionException
      */
     public function setProtectedProperty($className, $property, $value)
     {

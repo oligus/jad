@@ -3,7 +3,6 @@
 namespace Jad\E2E;
 
 use Jad\Jad;
-use Jad\Configure;
 use Jad\Tests\DBTestCase;
 use Jad\Database\Manager;
 use Jad\Map\AnnotationsMapper;
@@ -87,7 +86,6 @@ class PlaylistTest extends DBTestCase
 
     public function testCreateSingleRelationship()
     {
-        Configure::getInstance()->setConfig('test_mode', true);
         $_SERVER['REQUEST_URI']  = '/playlists';
         $_SERVER['REQUEST_METHOD'] = 'POST';
 
@@ -116,9 +114,9 @@ class PlaylistTest extends DBTestCase
 
     public function testCreateRelationship()
     {
-        Configure::getInstance()->setConfig('test_mode', true);
         $_SERVER['REQUEST_URI']  = '/playlists';
         $_SERVER['REQUEST_METHOD'] = 'POST';
+        $_GET = ['include' => 'tracks'];
 
         $input = new \stdClass();
         $input->data = new \stdClass();
@@ -142,25 +140,6 @@ class PlaylistTest extends DBTestCase
         ob_start();
         $jad->jsonApiResult();
         $output = ob_get_clean();
-
-        $this->assertMatchesJsonSnapshot($output);
-    }
-
-    /**
-     * @depends testCreateRelationship
-     */
-    public function testCreateRelationshipVerify()
-    {
-        $_SERVER['REQUEST_URI']  = '/playlists/5/relationships/tracks';
-        $_SERVER['REQUEST_METHOD'] = 'GET';
-
-        $mapper = new AnnotationsMapper(Manager::getInstance()->getEm());
-        $jad = new Jad($mapper);
-
-        ob_start();
-        $jad->jsonApiResult();
-        $output = ob_get_clean();
-
         $this->assertMatchesJsonSnapshot($output);
     }
 
@@ -169,7 +148,6 @@ class PlaylistTest extends DBTestCase
      */
     public function testUpdateAddRelationship()
     {
-        Configure::getInstance()->setConfig('test_mode', true);
         $_SERVER['REQUEST_URI']  = '/playlists/2';
         $_SERVER['REQUEST_METHOD'] = 'PATCH';
 

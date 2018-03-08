@@ -15,6 +15,7 @@ class ClassHelper
      * @param string $property
      * @return mixed
      * @throws JadException
+     * @throws \ReflectionException
      */
     public static function getPropertyValue($class, string $property)
     {
@@ -39,6 +40,7 @@ class ClassHelper
      * @param $class
      * @param string $property
      * @param $value
+     * @throws \ReflectionException
      */
     public static function setPropertyValue($class, string $property, $value)
     {
@@ -62,6 +64,7 @@ class ClassHelper
      * @param $class
      * @param string $property
      * @return bool
+     * @throws \ReflectionException
      */
     public static function hasPropertyValue($class, string $property): bool
     {

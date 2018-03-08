@@ -44,6 +44,7 @@ class AbstractCRUD
      * @param $entity
      * @throws \Doctrine\ORM\ORMException
      * @throws \Jad\Exceptions\JadException
+     * @throws \ReflectionException
      */
     protected function addRelationships($input, $entity): void
     {
@@ -80,9 +81,11 @@ class AbstractCRUD
     }
 
     /**
+     * @param MapItem $mapItem
      * @param $attributes
-     * @param $mapItem
      * @param $entity
+     * @throws \Doctrine\Common\Annotations\AnnotationException
+     * @throws \ReflectionException
      */
     protected function addAttributes(MapItem $mapItem, $attributes, $entity): void
     {

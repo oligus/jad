@@ -6,7 +6,6 @@ use Jad\Tests\DBTestCase;
 use Jad\Database\Manager;
 use Jad\Map\AnnotationsMapper;
 use Jad\Jad;
-use Jad\Configure;
 
 use PHPUnit\DbUnit\DataSet\CsvDataSet;
 use Spatie\Snapshots\MatchesSnapshots;
@@ -17,8 +16,6 @@ class GenresTest extends DBTestCase
 
     public function testResourceNotFoundException()
     {
-        Configure::getInstance()->setConfig('strict', true);
-        Configure::getInstance()->setConfig('test_mode', true);
         $_SERVER['REQUEST_URI']  = '/notfound';
 
         $mapper = new AnnotationsMapper(Manager::getInstance()->getEm());
@@ -108,8 +105,6 @@ class GenresTest extends DBTestCase
 
     public function testCreate()
     {
-        Configure::getInstance()->setConfig('test_mode', true);
-
         $_SERVER['REQUEST_URI']  = '/genres';
         $_SERVER['REQUEST_METHOD'] = 'POST';
 
@@ -133,8 +128,6 @@ class GenresTest extends DBTestCase
 
     public function testUpdate()
     {
-        Configure::getInstance()->setConfig('test_mode', true);
-
         $_SERVER['REQUEST_URI']  = '/genres/16';
         $_SERVER['REQUEST_METHOD'] = 'PATCH';
 

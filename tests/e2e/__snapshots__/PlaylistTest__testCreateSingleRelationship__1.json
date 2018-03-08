@@ -1,6 +1,6 @@
 {
     "data": {
-        "id": "4",
+        "id": "6",
         "type": "playlists",
         "attributes": {
             "name": "New Playlist"
@@ -8,8 +8,8 @@
         "relationships": {
             "tracks": {
                 "links": {
-                    "self": "http:\/\/:\/playlists\/4\/relationship\/tracks",
-                    "related": "http:\/\/:\/playlists\/4\/tracks"
+                    "self": "http:\/\/:\/playlists\/6\/relationship\/tracks",
+                    "related": "http:\/\/:\/playlists\/6\/tracks"
                 }
             }
         }
