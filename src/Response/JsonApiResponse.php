@@ -176,7 +176,7 @@ class JsonApiResponse
     /**
      * @param \JsonSerializable $resource
      */
-    private function createDocument(\JsonSerializable $resource)
+    public function createDocument(\JsonSerializable $resource)
     {
         $document = new Document($resource);
 
