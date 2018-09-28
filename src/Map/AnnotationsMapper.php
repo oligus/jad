@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Jad\Map;
 
@@ -16,6 +16,7 @@ class AnnotationsMapper extends AbstractMapper
     /**
      * AnnotationsMapper constructor.
      * @param EntityManagerInterface $em
+     * @throws \Doctrine\Common\Annotations\AnnotationException
      */
     public function __construct(EntityManagerInterface $em)
     {
@@ -27,15 +28,15 @@ class AnnotationsMapper extends AbstractMapper
         $metaData = $em->getMetadataFactory()->getAllMetadata();
 
         /** @var \Doctrine\ORM\Mapping\ClassMetadata $meta */
-        foreach($metaData as $meta) {
+        foreach ($metaData as $meta) {
             $head = $reader->getClassAnnotation($meta->getReflectionClass(), Annotations\Header::class);
 
-            if(!empty($head) && !empty($head->type)) {
+            if (!empty($head) && !empty($head->type)) {
                 $className = $meta->getName();
                 $paginate = !!$head->paginate;
                 $this->add($head->type, $className, $paginate);
 
-                if(!empty($head->aliases)) {
+                if (!empty($head->aliases)) {
                     $aliases = explode(',', $head->aliases);
 
                     foreach ($aliases as $type) {
@@ -44,12 +45,12 @@ class AnnotationsMapper extends AbstractMapper
                 }
 
                 //Set auto aliases for relationship mappings that do not
-                foreach($meta->getAssociationMappings() as $associatedType => $associatedData) {
+                foreach ($meta->getAssociationMappings() as $associatedType => $associatedData) {
                     $targetType = $associatedData['targetEntity'];
                     $targetType = preg_replace('/.*\\\(.+?)/', '$1', $targetType);
                     $associatedType = ucfirst($associatedType);
 
-                    if($targetType !== $associatedType) {
+                    if ($targetType !== $associatedType) {
                         $this->add(
                             Text::kebabify($associatedType),
                             $associatedData['targetEntity'],

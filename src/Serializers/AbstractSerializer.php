@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Jad\Serializers;
 
@@ -18,7 +18,7 @@ abstract class AbstractSerializer implements Serializer
 {
     const DATE_FORMAT = 'Y-m-d';
     const TIME_FORMAT = 'H:i:s';
-    const DATE_TIME_FORMAT =  'Y-m-d H:i:s';
+    const DATE_TIME_FORMAT = 'Y-m-d H:i:s';
 
     /**
      * @var Mapper $mapper
@@ -41,7 +41,7 @@ abstract class AbstractSerializer implements Serializer
      * @param $type
      * @param JsonApiRequest $request
      */
-    public function __construct(Mapper $mapper, $type, JsonApiRequest $request)
+    public function __construct(Mapper $mapper, string $type, JsonApiRequest $request)
     {
         $this->mapper = $mapper;
         $this->type = $type;
@@ -56,15 +56,28 @@ abstract class AbstractSerializer implements Serializer
      */
     public function getId($entity): string
     {
-        return (string) ClassHelper::getPropertyValue($entity, $this->getMapItem()->getIdField());
+        return (string)ClassHelper::getPropertyValue($entity, $this->getMapItem()->getIdField());
     }
 
     /**
-     * @param $model
+     * @return MapItem
+     * @throws \Exception
+     */
+    public function getMapItem(): MapItem
+    {
+        $mapItem = $this->mapper->getMapItem($this->type);
+        if (!$mapItem instanceof MapItem) {
+            throw new SerializerException('Could not find map item for type: ' . $this->type);
+        }
+        return $mapItem;
+    }
+
+    /**
+     * @param $entity
      * @return mixed|string
      * @throws \Exception
      */
-    public function getType($model)
+    public function getType($entity): string
     {
         return $this->getMapItem()->getType();
     }
@@ -76,13 +89,13 @@ abstract class AbstractSerializer implements Serializer
      * @throws \Exception
      * @throws \Jad\Exceptions\JadException
      */
-    public function getAttributes($entity, array $fields = null)
+    public function getAttributes($entity, ?array $fields): array
     {
-        $reader         = new AnnotationReader();
-        $attributes     = [];
+        $reader = new AnnotationReader();
+        $attributes = [];
 
-        if(is_array($fields)) {
-            $fields = array_map(function($field) {
+        if (is_array($fields)) {
+            $fields = array_map(function ($field) {
                 return Text::deKebabify($field);
             }, $fields);
         }
@@ -93,20 +106,20 @@ abstract class AbstractSerializer implements Serializer
 
         $mergedFields = array_unique(array_merge($metaFields, $classFields));
 
-        foreach($mergedFields as $field) {
+        foreach ($mergedFields as $field) {
 
             // Do not display association
-            if($this->getMapItem()->getClassMeta()->hasAssociation($field)) {
+            if ($this->getMapItem()->getClassMeta()->hasAssociation($field)) {
                 continue;
             }
 
             // Do not display id field
-            if($field === $this->getMapItem()->getIdField()) {
+            if ($field === $this->getMapItem()->getIdField()) {
                 continue;
             }
 
             // If filtered fields, only show selected fields
-            if(!empty($fields) && !in_array($field, $fields)) {
+            if (!empty($fields) && !in_array($field, $fields)) {
                 continue;
             }
 
@@ -115,11 +128,11 @@ abstract class AbstractSerializer implements Serializer
                 'Jad\Map\Annotations\Attribute'
             );
 
-            if(!is_null($jadAnnotation)) {
-                if(property_exists($jadAnnotation, 'visible')) {
-                    $visible = is_null($jadAnnotation->visible) ? true : (bool) $jadAnnotation->visible;
+            if (!is_null($jadAnnotation)) {
+                if (property_exists($jadAnnotation, 'visible')) {
+                    $visible = is_null($jadAnnotation->visible) ? true : (bool)$jadAnnotation->visible;
 
-                    if(!$visible) {
+                    if (!$visible) {
                         continue;
                     }
                 }
@@ -133,7 +146,7 @@ abstract class AbstractSerializer implements Serializer
                 'Doctrine\ORM\Mapping\Column'
             );
 
-            if($fieldValue instanceof \DateTime) {
+            if ($fieldValue instanceof \DateTime) {
                 $value = $this->getDateTime($fieldValue, $annotation->type);
             }
 
@@ -150,8 +163,7 @@ abstract class AbstractSerializer implements Serializer
      */
     protected function getDateTime(\DateTime $value, $dateType = 'datetime'): string
     {
-        switch($dateType)
-        {
+        switch ($dateType) {
             case 'date':
                 return $value->format(self::DATE_FORMAT);
 
@@ -161,20 +173,6 @@ abstract class AbstractSerializer implements Serializer
             default:
                 return $value->format(self::DATE_TIME_FORMAT);
         }
-    }
-
-
-    /**
-     * @return MapItem
-     * @throws \Exception
-     */
-    public function getMapItem(): MapItem
-    {
-        $mapItem = $this->mapper->getMapItem($this->type);
-        if(!$mapItem instanceof MapItem) {
-            throw new SerializerException('Could not find map item for type: ' . $this->type);
-        }
-        return $mapItem;
     }
 
     /**

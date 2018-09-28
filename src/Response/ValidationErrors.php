@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Jad\Response;
 
@@ -27,19 +27,15 @@ class ValidationErrors
         $this->errorList = $errorList;
     }
 
-    /**
-     *
-     */
-    public function render()
+    public function render(): void
     {
         $document = new \stdClass();
         $document->errors = [];
 
         /** @var ConstraintViolationInterface $validationError */
-        foreach($this->errorList as $validationError) {
+        foreach ($this->errorList as $validationError) {
             $error = new \stdClass();
             $attribute = Text::kebabify($validationError->getPropertyPath());
-            // $value = $validationError->getInvalidValue();
 
             $error->status = "500";
             $error->detail = $validationError->getMessage() . ' [' . $attribute . ']';
@@ -47,11 +43,10 @@ class ValidationErrors
             $document->errors[] = $error;
         }
 
-
         $response = new Response();
         $headers['Content-Type'] = 'application/vnd.api+json';
 
-        foreach($headers as $key => $value) {
+        foreach ($headers as $key => $value) {
             $response->headers->set($key, $value);
         }
 

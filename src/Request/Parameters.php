@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Jad\Request;
 
@@ -7,9 +7,6 @@ use Jad\Exceptions\ParameterException;
 
 /**
  * Class Parameters
- *
- * Based on https://github.com/tobscure/json-api Parameter
- *
  * @package Jad\Request
  */
 class Parameters
@@ -37,7 +34,7 @@ class Parameters
      * @return array
      * @throws ParameterException
      */
-    public function getInclude(array $available = [])
+    public function getInclude(array $available = []): array
     {
         $relationships = [];
 
@@ -82,11 +79,24 @@ class Parameters
     }
 
     /**
+     * Get an input item.
+     *
+     * @param string $key
+     * @param null $default
+     *
+     * @return mixed
+     */
+    protected function getInput(string $key, string $default = null)
+    {
+        return isset($this->input[$key]) ? $this->input[$key] : $default;
+    }
+
+    /**
      * @param null $perPage
      * @return int
      * @throws \Exception
      */
-    public function getOffset($perPage = null)
+    public function getOffset(int $perPage = null): int
     {
         if ($perPage && ($offset = $this->getOffsetFromNumber($perPage))) {
             return $offset;
@@ -105,7 +115,7 @@ class Parameters
      * @param $perPage
      * @return int
      */
-    protected function getOffsetFromNumber($perPage)
+    protected function getOffsetFromNumber(int $perPage): int
     {
         $page = (int)$this->getPage('number');
 
@@ -117,11 +127,24 @@ class Parameters
     }
 
     /**
-     * @param null $max
-     * @param int $default
-     * @return mixed|null
+     * Get the page.
+     *
+     * @param string $key
+     *
+     * @return string
      */
-    public function getLimit($max = null, $default = 25)
+    protected function getPage($key)
+    {
+        $page = $this->getInput('page');
+        return isset($page[$key]) ? $page[$key] : '';
+    }
+
+    /**
+     * @param int|null $max
+     * @param int $default
+     * @return int
+     */
+    public function getLimit(int $max = null, int $default = 25): int
     {
         $limit = $this->getPage('limit') ?: null;
         $size = $this->getPage('size') ?: $default;
@@ -144,7 +167,7 @@ class Parameters
      * @return array
      * @throws ParameterException
      */
-    public function getSort(array $available = [])
+    public function getSort(array $available = []): array
     {
         $sort = [];
 
@@ -178,7 +201,7 @@ class Parameters
      *
      * @return array
      */
-    public function getFields()
+    public function getFields(): array
     {
         $fields = $this->getInput('fields');
 
@@ -196,9 +219,9 @@ class Parameters
     }
 
     /**
-     * @return array|mixed
+     * @return array
      */
-    public function getFilter()
+    public function getFilter(): array
     {
         $input = $this->getInput('filter');
 
@@ -206,32 +229,9 @@ class Parameters
     }
 
     /**
-     * Get an input item.
-     *
-     * @param string $key
-     * @param null $default
-     *
-     * @return mixed
+     * @param int $default
+     * @return int
      */
-    protected function getInput($key, $default = null)
-    {
-        return isset($this->input[$key]) ? $this->input[$key] : $default;
-    }
-
-    /**
-     * Get the page.
-     *
-     * @param string $key
-     *
-     * @return string
-     */
-    protected function getPage($key)
-    {
-        $page = $this->getInput('page');
-
-        return isset($page[$key]) ? $page[$key] : '';
-    }
-
     public function getSize($default = 25)
     {
         return $this->getPage('size') ?: $default;

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Jad\Serializers;
 
@@ -17,19 +17,19 @@ interface Serializer
      * @param $type
      * @param JsonApiRequest $request
      */
-    public function __construct(Mapper $mapper, $type, JsonApiRequest $request);
+    public function __construct(Mapper $mapper, string $type, JsonApiRequest $request);
 
     /**
      * @param $entity
      * @return string
      */
-    public function getId($entity);
+    public function getId($entity): string;
 
     /**
      * @param $entity
      * @return mixed
      */
-    public function getType($entity);
+    public function getType($entity): string;
 
 
     /**
@@ -37,7 +37,7 @@ interface Serializer
      * @param array|null $fields
      * @return mixed
      */
-    public function getAttributes($entity, array $fields = null);
+    public function getAttributes($entity, ?array $fields): array;
 
     /**
      * @param $entity
@@ -51,7 +51,7 @@ interface Serializer
      * @param $fields
      * @return mixed
      */
-    public function getIncluded($type, $entity, $fields);
+    public function getIncluded(string $type, $entity, array $fields);
 
     /**
      * @param string $type

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Jad\Document;
 
@@ -62,23 +62,15 @@ class Resource implements \JsonSerializable
     /**
      * @param $fields
      */
-    public function setFields($fields)
+    public function setFields($fields): void
     {
         $this->fields = $fields;
     }
 
     /**
-     * @param $included
-     */
-    public function setIncluded($included)
-    {
-        $this->included = $included;
-    }
-
-    /**
      * @return bool
      */
-    public function hasIncluded()
+    public function hasIncluded(): bool
     {
         return !empty($this->includedParams);
     }
@@ -92,9 +84,10 @@ class Resource implements \JsonSerializable
     }
 
     /**
-     * @return \stdClass
+     * @return mixed|\stdClass
+     * @throws \Jad\Exceptions\JadException
      */
-    public function jsonSerialize()
+    public function jsonSerialize(): \stdClass
     {
         $resource = new \stdClass();
         $included = null;
@@ -104,17 +97,17 @@ class Resource implements \JsonSerializable
 
         $fields = null;
 
-        if(is_array($this->fields)) {
+        if (is_array($this->fields)) {
             $fields = array_key_exists($type, $this->fields) ? $this->fields[$type] : null;
         }
 
         $resource->id = $this->serializer->getId($entity);
         $resource->type = $type;
 
-        if($this->serializer instanceof RelationshipSerializer) {
+        if ($this->serializer instanceof RelationshipSerializer) {
             $relationship = $this->serializer->getRelationship();
 
-            if($relationship['view'] !== 'list') {
+            if ($relationship['view'] !== 'list') {
                 $resource->attributes = $this->serializer->getAttributes($entity, $fields);
             }
         } else {
@@ -123,7 +116,7 @@ class Resource implements \JsonSerializable
 
             $relationships = $this->serializer->getRelationships($entity);
 
-            if(!empty($relationships)) {
+            if (!empty($relationships)) {
                 $resource->relationships = $relationships;
             }
         }
@@ -135,7 +128,7 @@ class Resource implements \JsonSerializable
      * @return array
      * @throws \Exception
      */
-    public function getIncluded()
+    public function getIncluded(): array
     {
         $included = [];
 
@@ -144,7 +137,7 @@ class Resource implements \JsonSerializable
                 if (empty($relation)) {
                     $include = $this->serializer->getIncluded($includedType, $this->entity, $this->fields);
 
-                    if(!is_array($include)) {
+                    if (!is_array($include)) {
                         throw new MappingException('Included type [' . $includedType . '] not available, check if resource type is mapped correctly.');
                     }
 
@@ -163,28 +156,37 @@ class Resource implements \JsonSerializable
     }
 
     /**
+     * @param $included
+     */
+    public function setIncluded($included): void
+    {
+        $this->included = $included;
+    }
+
+    /**
      * Crawl entities
      *
      * @param $entity
      * @param $relations
      * @return array
      * @throws \Jad\Exceptions\JadException
+     * @throws \ReflectionException
      */
-    public function crawlRelations($entity, $relations)
+    public function crawlRelations($entity, array $relations): array
     {
         $collection = [$entity];
         $type = end($relations);
 
-        while($relation = array_shift($relations)) {
+        while ($relation = array_shift($relations)) {
             $newCollection = [];
             $property = Text::deKebabify($relation);
 
-            foreach($collection as $entity) {
+            foreach ($collection as $entity) {
                 $result = ClassHelper::getPropertyValue($entity, $property);
-                if($result instanceof Collection) {
+                if ($result instanceof Collection) {
                     $newCollection = array_merge($newCollection, $result->toArray());
                 } else {
-                    $newCollection =  array_merge($newCollection, [$result]);
+                    $newCollection = array_merge($newCollection, [$result]);
                 }
             }
 

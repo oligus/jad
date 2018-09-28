@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Jad\Request;
 
@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
 class JsonApiRequest
 {
     /**
-     * @var Request $request;
+     * @var Request $request ;
      */
     private $request;
     /**
@@ -34,37 +34,42 @@ class JsonApiRequest
     }
 
     /**
-     * @return Request
-     */
-    public function getRequest()
-    {
-        return $this->request;
-    }
-    /**
      * @return Parameters
      */
-    public function getParameters()
+    public function getParameters(): Parameters
     {
         return $this->parameters;
     }
+
     /**
      * @return string
      */
-    public function getPathPrefix()
+    public function getPathPrefix(): string
     {
         return $this->pathPrefix;
     }
+
     /**
      * @param string $pathPrefix
      */
-    public function setPathPrefix($pathPrefix)
+    public function setPathPrefix(string $pathPrefix): void
     {
         $this->pathPrefix = $pathPrefix;
     }
+
+    /**
+     * @return string
+     */
+    public function getResourceType(): string
+    {
+        $items = $this->getItems();
+        return $items[0];
+    }
+
     /**
      * @return array
      */
-    public function getItems()
+    public function getItems(): array
     {
         $currentPath = $this->request->getPathInfo();
         $currentPath = trim($currentPath, '/');
@@ -74,12 +79,11 @@ class JsonApiRequest
     }
 
     /**
-     * @return string
+     * @return bool
      */
-    public function getResourceType()
+    public function hasId(): bool
     {
-        $items = $this->getItems();
-        return $items[0];
+        return !is_null($this->getId());
     }
 
     /**
@@ -88,17 +92,10 @@ class JsonApiRequest
     public function getId()
     {
         $items = $this->getItems();
-        if(array_key_exists(1, $items)) {
+        if (array_key_exists(1, $items)) {
             return $items[1];
         }
         return null;
-    }
-    /**
-     * @return bool
-     */
-    public function hasId()
-    {
-        return !is_null($this->getId());
     }
 
     /**
@@ -110,14 +107,14 @@ class JsonApiRequest
         $items = $this->getItems();
         $relationships = [];
 
-        if(array_key_exists(2, $items)) {
-            if($items[2] !== 'relationships') {
+        if (array_key_exists(2, $items)) {
+            if ($items[2] !== 'relationships') {
                 $relationships['view'] = 'full';
                 $relationships['type'] = Text::deKebabify($items[2]);
                 return $relationships;
             }
 
-            if(!array_key_exists(3, $items)) {
+            if (!array_key_exists(3, $items)) {
                 throw new RequestException('Relationship resource type missing');
             }
 
@@ -126,10 +123,11 @@ class JsonApiRequest
         }
         return $relationships;
     }
+
     /**
      * @return bool
      */
-    public function isCollection()
+    public function isCollection(): bool
     {
         return is_null($this->getId());
     }
@@ -137,15 +135,23 @@ class JsonApiRequest
     /**
      * @return string
      */
-    public function getCurrentUrl()
+    public function getCurrentUrl(): string
     {
         return $this->getRequest()->getSchemeAndHttpHost() . $this->getRequest()->getPathInfo();
     }
 
     /**
+     * @return Request
+     */
+    public function getRequest(): Request
+    {
+        return $this->request;
+    }
+
+    /**
      * @return string
      */
-    public function getBaseUrl()
+    public function getBaseUrl(): string
     {
         return $this->getRequest()->getSchemeAndHttpHost() . $this->getRequest()->getBaseUrl();
     }
@@ -156,15 +162,15 @@ class JsonApiRequest
      * @return \stdClass
      * @throws RequestException
      */
-    public function getInputJson()
+    public function getInputJson(): \stdClass
     {
         $input = file_get_contents("php://input");
 
-        if(Configure::getInstance()->getConfig('test_mode')) {
+        if (Configure::getInstance()->getConfig('test_mode')) {
             $input = $this->request->request->get('input');
         }
 
-        if(empty($input)) {
+        if (empty($input)) {
             throw new RequestException('Empty input on POST or PATCH');
         }
 
@@ -172,12 +178,12 @@ class JsonApiRequest
 
         $result = json_decode($input);
 
-        if(json_last_error() !== JSON_ERROR_NONE) {
+        if (json_last_error() !== JSON_ERROR_NONE) {
             $msg = ucfirst(json_last_error_msg());
             throw new RequestException('JSON ERROR: ' . $msg . '.');
         }
 
-        if(empty($result) || !$result instanceof \stdClass) {
+        if (empty($result) || !$result instanceof \stdClass) {
             throw new RequestException('Error json decoding input, check your formatting.');
         }
 
@@ -187,7 +193,7 @@ class JsonApiRequest
     /**
      * @return string
      */
-    public function getMethod()
+    public function getMethod(): string
     {
         return $this->request->getMethod();
     }

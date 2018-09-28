@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Jad\Serializers;
 
@@ -23,7 +23,7 @@ class IncludedSerializer extends AbstractSerializer implements Serializer
      * @param $fields
      * @return array|mixed
      */
-    public function getIncluded($type, $entity, $fields): array
+    public function getIncluded(string $type, $entity, array $fields): array
     {
         return [];
     }

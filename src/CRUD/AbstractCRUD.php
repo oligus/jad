@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Jad\CRUD;
 
@@ -40,13 +40,40 @@ class AbstractCRUD
     }
 
     /**
+     * @return array
+     * @throws \Jad\Exceptions\RequestException
+     */
+    public function getAttributes(): array
+    {
+        $input = $this->request->getInputJson();
+        return isset($input->data->attributes) ? (array)$input->data->attributes : [];
+    }
+
+    /**
+     * @return MapItem
+     * @throws \Jad\Exceptions\RequestException
+     */
+    public function getMapItem(): MapItem
+    {
+        $input = $this->request->getInputJson();
+
+        if (!array_key_exists('type', $input->data)) {
+            $type = $this->request->getResourceType();
+        } else {
+            $type = $input->data->type;
+        }
+
+        return $this->mapper->getMapItem($type);
+    }
+
+    /**
      * @param $input
      * @param $entity
      * @throws \Doctrine\ORM\ORMException
      * @throws \Jad\Exceptions\JadException
      * @throws \ReflectionException
      */
-    protected function addRelationships($input, $entity): void
+    protected function addRelationships(\stdClass $input, $entity): void
     {
         $relationships = isset($input->data->relationships) ? (array)$input->data->relationships : [];
 
@@ -87,9 +114,9 @@ class AbstractCRUD
      * @throws \Doctrine\Common\Annotations\AnnotationException
      * @throws \ReflectionException
      */
-    protected function addAttributes(MapItem $mapItem, $attributes, $entity): void
+    protected function addAttributes(MapItem $mapItem, array $attributes, $entity): void
     {
-        $reader     = new AnnotationReader();
+        $reader = new AnnotationReader();
         $reflection = new \ReflectionClass($mapItem->getEntityClass());
 
         foreach ($attributes as $attribute => $value) {
@@ -135,32 +162,5 @@ class AbstractCRUD
             $error->render();
             exit(1);
         }
-    }
-
-    /**
-     * @return array
-     * @throws \Jad\Exceptions\RequestException
-     */
-    public function getAttributes(): array
-    {
-        $input = $this->request->getInputJson();
-        return isset($input->data->attributes) ? (array) $input->data->attributes : [];
-    }
-
-    /**
-     * @return MapItem
-     * @throws \Jad\Exceptions\RequestException
-     */
-    public function getMapItem(): MapItem
-    {
-        $input = $this->request->getInputJson();
-
-        if(!array_key_exists('type', $input->data)) {
-            $type = $this->request->getResourceType();
-        } else {
-            $type = $input->data->type;
-        }
-
-        return $this->mapper->getMapItem($type);
     }
 }

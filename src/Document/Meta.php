@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Jad\Document;
 
@@ -19,14 +19,6 @@ class Meta implements \JsonSerializable
     private $pages;
 
     /**
-     * @param int $count
-     */
-    public function setCount(int $count)
-    {
-        $this->count = $count;
-    }
-
-    /**
      * @return int
      */
     public function getCount(): int
@@ -35,11 +27,11 @@ class Meta implements \JsonSerializable
     }
 
     /**
-     * @param int $pages
+     * @param int $count
      */
-    public function setPages(int $pages)
+    public function setCount(int $count)
     {
-        $this->pages = $pages;
+        $this->count = $count;
     }
 
     /**
@@ -51,17 +43,25 @@ class Meta implements \JsonSerializable
     }
 
     /**
+     * @param int $pages
+     */
+    public function setPages(int $pages)
+    {
+        $this->pages = $pages;
+    }
+
+    /**
      * @return bool
      */
     public function isEmpty(): bool
     {
         $isEmpty = true;
 
-        if($this->count !== null) {
+        if ($this->count !== null) {
             $isEmpty = false;
         }
 
-        if($this->pages !== null) {
+        if ($this->pages !== null) {
             $isEmpty = false;
         }
 
@@ -75,11 +75,11 @@ class Meta implements \JsonSerializable
     {
         $meta = new \stdClass();
 
-        if($this->count !== null) {
+        if ($this->count !== null) {
             $meta->count = $this->count;
         }
 
-        if($this->pages !== null) {
+        if ($this->pages !== null) {
             $meta->pages = $this->pages;
         }
 

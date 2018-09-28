@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Jad\Map;
 
@@ -35,32 +35,24 @@ class MapItem
      * @param $params
      * @param bool $paginate
      */
-    public function __construct($type, $params, $paginate = false)
+    public function __construct(string $type, $params, bool $paginate = false)
     {
         $this->setType($type);
         $this->setPaginate($paginate);
 
-        if(is_string($params)) {
+        if (is_string($params)) {
             $this->setEntityClass($params);
         }
 
-        if(is_array($params)) {
-            if(array_key_exists('entityClass', $params)) {
+        if (is_array($params)) {
+            if (array_key_exists('entityClass', $params)) {
                 $this->setEntityClass($params['entityClass']);
             }
 
-            if(array_key_exists('classMeta', $params)) {
+            if (array_key_exists('classMeta', $params)) {
                 $this->setClassMeta($params['classMeta']);
             }
         }
-    }
-
-    /**
-     * @return string
-     */
-    public function getType(): string
-    {
-        return $this->type;
     }
 
     /**
@@ -71,14 +63,6 @@ class MapItem
     {
         $this->type = $type;
         return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getEntityClass(): string
-    {
-        return $this->entityClass;
     }
 
     /**
@@ -93,21 +77,29 @@ class MapItem
 
     /**
      * @return string
+     */
+    public function getType(): string
+    {
+        return $this->type;
+    }
+
+    /**
+     * @return string
      * @throws JadException
      */
     public function getIdField(): string
     {
-        if(!$this->classMeta instanceof ClassMetadata) {
+        if (!$this->classMeta instanceof ClassMetadata) {
             throw new JadException('No class meta data found');
         }
 
         $identifier = $this->classMeta->getIdentifier();
 
-        if(count($identifier) > 1) {
+        if (count($identifier) > 1) {
             throw new JadException('Composite identifier not supported');
         }
 
-        if(count($identifier) < 1) {
+        if (count($identifier) < 1) {
             throw new JadException('No identifier found');
         }
 
@@ -126,7 +118,7 @@ class MapItem
      * @param ClassMetadata $classMeta
      * @return $this
      */
-    public function setClassMeta(ClassMetadata $classMeta)
+    public function setClassMeta(ClassMetadata $classMeta): MapItem
     {
         $this->classMeta = $classMeta;
         return $this;
@@ -143,17 +135,19 @@ class MapItem
     /**
      * @param $paginate
      */
-    public function setPaginate($paginate)
+    public function setPaginate($paginate): void
     {
         $this->paginate = $paginate;
     }
 
     /**
      * @return bool
+     * @throws \Doctrine\Common\Annotations\AnnotationException
+     * @throws \ReflectionException
      */
     public function isReadOnly(): bool
     {
-        $reader     = new AnnotationReader();
+        $reader = new AnnotationReader();
         $reflection = new \ReflectionClass($this->getEntityClass());
 
         $header = $reader->getClassAnnotation($reflection, Header::class);
@@ -168,5 +162,13 @@ class MapItem
             }
         }
         return false;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEntityClass(): string
+    {
+        return $this->entityClass;
     }
 }

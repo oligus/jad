@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Jad\Map;
 
@@ -21,11 +21,11 @@ interface Mapper
      * @param $type
      * @return bool
      */
-    public function hasMapItem($type): bool;
+    public function hasMapItem(string $type): bool;
 
     /**
      * @param $className
      * @return MapItem
      */
-    public function getMapItemByClass($className): MapItem;
+    public function getMapItemByClass(string $className): MapItem;
 }

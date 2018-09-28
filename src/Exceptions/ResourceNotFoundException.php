@@ -22,7 +22,7 @@ class ResourceNotFoundException extends \Exception
     /**
      * @return mixed
      */
-    public function getTitle()
+    public function getTitle(): string
     {
         return $this->title;
     }
@@ -30,7 +30,7 @@ class ResourceNotFoundException extends \Exception
     /**
      * @param mixed $title
      */
-    public function setTitle($title)
+    public function setTitle(string $title)
     {
         $this->title = $title;
     }

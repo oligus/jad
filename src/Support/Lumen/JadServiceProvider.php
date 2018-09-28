@@ -1,10 +1,14 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Jad\Support\Lumen;
 
 use Illuminate\Support\ServiceProvider;
 use Jad\Configure;
 
+/**
+ * Class JadServiceProvider
+ * @package Jad\Support\Lumen
+ */
 class JadServiceProvider extends ServiceProvider
 {
     public function boot()

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Jad\CRUD;
 
@@ -10,6 +10,7 @@ use Jad\Query\Paginator;
 use Jad\Query\Filter;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Mapping\ClassMetadata;
+
 /**
  * Class Read
  * @package Jad\CRUD
@@ -25,7 +26,7 @@ class Read extends AbstractCRUD
      * @throws \Jad\Exceptions\ParameterException
      *
      */
-    public function getResourceById($id)
+    public function getResourceById(string $id)
     {
         /** @var \Jad\Map\MapItem $mapItem */
         $mapItem = $this->mapper->getMapItem($this->request->getResourceType());
@@ -41,19 +42,20 @@ class Read extends AbstractCRUD
         $qb->setParameter('id', $id);
         $query = $qb->getQuery();
 
-        foreach(array_keys($mapItem->getClassMeta()->getAssociationMappings()) as $relation) {
+        foreach (array_keys($mapItem->getClassMeta()->getAssociationMappings()) as $relation) {
             $query->setFetchMode($mapItem->getEntityClass(), $relation, ClassMetadata::FETCH_EAGER);
         }
 
         $entity = $query->getOneOrNullResult();
 
-        if(is_null($entity)) {
+        if (is_null($entity)) {
             throw new ResourceNotFoundException(
                 'Resource of type [' . $this->request->getResourceType() . '] with id [' . $id . '] could not be found.'
             );
         }
 
-        $resource = new Resource($entity, new EntitySerializer($this->mapper, $this->request->getResourceType(), $this->request));
+        $resource = new Resource($entity,
+            new EntitySerializer($this->mapper, $this->request->getResourceType(), $this->request));
         $resource->setFields($this->request->getParameters()->getFields());
         $resource->setIncludedParams($this->request->getParameters()->getInclude($mapItem->getClassMeta()->getAssociationNames()));
 
@@ -62,10 +64,10 @@ class Read extends AbstractCRUD
 
     /**
      * @return Collection
-     * @throws \Doctrine\ORM\NoResultException
      * @throws \Doctrine\ORM\NonUniqueResultException
      * @throws \Jad\Exceptions\JadException
      * @throws \Jad\Exceptions\ParameterException
+     * @throws \Exception
      */
     public function getResources(): Collection
     {
@@ -86,10 +88,10 @@ class Read extends AbstractCRUD
         $limit = $paginator->getLimit();
         $offset = $paginator->getOffset();
 
-        if($paginator->isActive()) {
+        if ($paginator->isActive()) {
             $countQb = clone $filter->getQb();
-            $countQb->select($countQb->expr()->count($filter->getRootAlias() . '.'.$mapItem->getIdField()));
-            $count = $countQb->getQuery()->getSingleScalarResult();
+            $countQb->select($countQb->expr()->count($filter->getRootAlias() . '.' . $mapItem->getIdField()));
+            $count = (int)$countQb->getQuery()->getSingleScalarResult();
             $paginator->setCount($count);
         }
 
@@ -99,15 +101,15 @@ class Read extends AbstractCRUD
 
         $sort = $this->getOrderBy($this->request->getResourceType());
 
-        if(!empty($sort)) {
-            foreach($sort as $property => $direction) {
+        if (!empty($sort)) {
+            foreach ($sort as $property => $direction) {
                 $qb->addOrderBy($filter->getRootAlias() . '.' . $property, $direction);
             }
         }
 
         $query = $qb->getQuery();
 
-        foreach(array_keys($mapItem->getClassMeta()->getAssociationMappings()) as $relation) {
+        foreach (array_keys($mapItem->getClassMeta()->getAssociationMappings()) as $relation) {
             $query->setFetchMode($mapItem->getEntityClass(), $relation, ClassMetadata::FETCH_EAGER);
         }
 
@@ -115,8 +117,9 @@ class Read extends AbstractCRUD
         $collection = new Collection();
         $collection->setPaginator($paginator);
 
-        foreach($entities as $entity) {
-            $resource = new Resource($entity, new EntitySerializer($this->mapper, $this->request->getResourceType(), $this->request));
+        foreach ($entities as $entity) {
+            $resource = new Resource($entity,
+                new EntitySerializer($this->mapper, $this->request->getResourceType(), $this->request));
             $resource->setFields($this->request->getParameters()->getFields());
             $resource->setIncludedParams($this->request->getParameters()->getInclude($mapItem->getClassMeta()->getAssociationNames()));
             $collection->add($resource);
@@ -130,7 +133,7 @@ class Read extends AbstractCRUD
      * @return array|null
      * @throws \Jad\Exceptions\ParameterException
      */
-    public function getOrderBy($type)
+    public function getOrderBy(string $type): ?array
     {
         $orderBy = null;
         $mapItem = $this->mapper->getMapItem($type);
@@ -138,7 +141,7 @@ class Read extends AbstractCRUD
 
         $result = $this->request->getParameters()->getSort($available);
 
-        if(!empty($result)) {
+        if (!empty($result)) {
             $orderBy = $result;
         }
 

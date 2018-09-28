@@ -1,8 +1,7 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Jad\Query;
 
-use Jad\Request\Parameters;
 use Jad\Request\JsonApiRequest;
 use Jad\Configure;
 
@@ -45,7 +44,7 @@ class Paginator
     private $currentPage = 0;
 
     /**
-     * @var
+     * @var int
      */
     private $lastPage = 0;
 
@@ -67,34 +66,17 @@ class Paginator
     /**
      * Paginator constructor.
      * @param JsonApiRequest $request
+     * @throws \Exception
      */
     public function __construct(JsonApiRequest $request)
     {
-        if((int) Configure::getInstance()->getConfig('max_page_size') > 0) {
-            $this->maxPageSize = (int) Configure::getInstance()->getConfig('max_page_size');
+        if ((int)Configure::getInstance()->getConfig('max_page_size') > 0) {
+            $this->maxPageSize = (int)Configure::getInstance()->getConfig('max_page_size');
         }
 
         $this->request = $request;
-        $this->limit = $this->request->getParameters()->getLimit($this->maxPageSize);
-        $this->offset = $this->request->getParameters()->getOffset($this->limit);
-    }
-
-    private function calculatePages()
-    {
-        $this->lastPage = ceil($this->count / $this->limit);
-        $this->currentPage = ceil($this->offset / $this->limit) + 1;
-
-        $this->nextPage = $this->currentPage + 1;
-
-        if($this->nextPage > $this->lastPage) {
-            $this->nextPage = null;
-        }
-
-        $this->previousPage = $this->currentPage - 1;
-
-        if($this->previousPage < 1) {
-            $this->previousPage = null;
-        }
+        $this->limit = (int)$this->request->getParameters()->getLimit($this->maxPageSize);
+        $this->offset = (int)$this->request->getParameters()->getOffset($this->limit);
     }
 
     /**
@@ -118,22 +100,23 @@ class Paginator
      */
     public function getLimit(): int
     {
-        return $this->request->getParameters()->getLimit($this->maxPageSize);
+        return (int)$this->request->getParameters()->getLimit($this->maxPageSize);
     }
 
     /**
      * @return int
+     * @throws \Exception
      */
     public function getOffset(): int
     {
         $size = $this->request->getParameters()->getSize(self::DEFAULT_PER_PAGE);
-        return $this->request->getParameters()->getOffset($size);
+        return (int)$this->request->getParameters()->getOffset($size);
     }
 
     /**
      * @return string
      */
-    public function getCurrent()
+    public function getCurrent(): string
     {
         $url = $this->request->getCurrentUrl();
         $url .= '?page[size]=' . $this->limit . '&page[number]=' . $this->currentPage;
@@ -144,7 +127,7 @@ class Paginator
     /**
      * @return string
      */
-    public function getFirst()
+    public function getFirst(): string
     {
         $url = $this->request->getCurrentUrl();
         $url .= '?page[size]=' . $this->limit . '&page[number]=1';
@@ -155,7 +138,7 @@ class Paginator
     /**
      * @return string
      */
-    public function getLast()
+    public function getLast(): string
     {
         $url = $this->request->getCurrentUrl();
         $url .= '?page[size]=' . $this->limit . '&page[number]=' . $this->lastPage;
@@ -163,12 +146,12 @@ class Paginator
         return $url;
     }
 
-    public function hasPrevious()
+    public function hasPrevious(): bool
     {
         return $this->previousPage !== null;
     }
 
-    public function getPrevious()
+    public function getPrevious(): string
     {
         $url = $this->request->getCurrentUrl();
         $url .= '?page[size]=' . $this->limit . '&page[number]=' . $this->previousPage;
@@ -176,12 +159,12 @@ class Paginator
         return $url;
     }
 
-    public function hasNext()
+    public function hasNext(): bool
     {
         return $this->nextPage !== null;
     }
 
-    public function getNext()
+    public function getNext(): string
     {
         $url = $this->request->getCurrentUrl();
         $url .= '?page[size]=' . $this->limit . '&page[number]=' . $this->nextPage;
@@ -190,20 +173,38 @@ class Paginator
     }
 
     /**
-     * @param int $count
-     */
-    public function setCount(int $count)
-    {
-        $this->count = (int) $count;
-        $this->calculatePages();
-    }
-
-    /**
      * @return int
      */
     public function getCount(): int
     {
-        return $this->count;
+        return (int)$this->count;
+    }
+
+    /**
+     * @param int $count
+     */
+    public function setCount(int $count): void
+    {
+        $this->count = (int)$count;
+        $this->calculatePages();
+    }
+
+    private function calculatePages(): void
+    {
+        $this->lastPage = ceil($this->count / $this->limit);
+        $this->currentPage = ceil($this->offset / $this->limit) + 1;
+
+        $this->nextPage = $this->currentPage + 1;
+
+        if ($this->nextPage > $this->lastPage) {
+            $this->nextPage = null;
+        }
+
+        $this->previousPage = $this->currentPage - 1;
+
+        if ($this->previousPage < 1) {
+            $this->previousPage = null;
+        }
     }
 
     /**
@@ -211,7 +212,7 @@ class Paginator
      */
     public function getLastPage(): int
     {
-        return $this->lastPage;
+        return (int)$this->lastPage;
     }
 
 }

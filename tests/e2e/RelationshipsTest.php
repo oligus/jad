@@ -19,9 +19,13 @@ class RelationshipsTest extends DBTestCase
         $dataSet->addTable('playlists', dirname(__DIR__) . '/fixtures/playlists.csv');
         $dataSet->addTable('tracks', dirname(__DIR__) . '/fixtures/tracks.csv');
         $dataSet->addTable('playlist_track', dirname(__DIR__) . '/fixtures/playlist_track.csv');
+        $dataSet->addTable('customers', dirname(__DIR__) . '/fixtures/customers.csv');
         return $dataSet;
     }
 
+    /**
+     * @throws \Doctrine\Common\Annotations\AnnotationException
+     */
     public function testCreateRecordOneRelationship()
     {
         $_SERVER['REQUEST_URI']  = '/playlists';
@@ -52,6 +56,9 @@ class RelationshipsTest extends DBTestCase
         $this->assertMatchesJsonSnapshot($output);
     }
 
+    /**
+     * @throws \Doctrine\Common\Annotations\AnnotationException
+     */
     public function testCreateRecordManyRelationships()
     {
         $_SERVER['REQUEST_URI']  = '/playlists';

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Jad\Serializers;
 
@@ -17,19 +17,19 @@ class RelationshipSerializer extends AbstractSerializer implements Serializer
     private $relationship;
 
     /**
-     * @param array $relationship
-     */
-    public function setRelationship($relationship)
-    {
-        $this->relationship = $relationship;
-    }
-
-    /**
      * @return array
      */
     public function getRelationship(): array
     {
         return $this->relationship;
+    }
+
+    /**
+     * @param array $relationship
+     */
+    public function setRelationship($relationship): void
+    {
+        $this->relationship = $relationship;
     }
 
     /**
@@ -52,7 +52,7 @@ class RelationshipSerializer extends AbstractSerializer implements Serializer
 
         $associations = $this->getMapItem()->getClassMeta()->getAssociationMappings();
 
-        foreach($associations as $association) {
+        foreach ($associations as $association) {
             $assocName = $association['fieldName'];
 
             $relationships[$assocName] = array(
@@ -74,11 +74,11 @@ class RelationshipSerializer extends AbstractSerializer implements Serializer
     public function getMapItem(): MapItem
     {
         /** @var \Jad\Map\MapItem $mapItem */
-        $mapItem            = $this->mapper->getMapItem($this->type);
-        $association        = $mapItem->getClassMeta()->getAssociationMapping($this->relationship['type']);
-        $relatedMapItem     = $this->mapper->getMapItemByClass($association['targetEntity']);
+        $mapItem = $this->mapper->getMapItem($this->type);
+        $association = $mapItem->getClassMeta()->getAssociationMapping($this->relationship['type']);
+        $relatedMapItem = $this->mapper->getMapItemByClass($association['targetEntity']);
 
-        if(!$relatedMapItem instanceof MapItem) {
+        if (!$relatedMapItem instanceof MapItem) {
             throw new \Exception('Could not find map item for type: ' . $this->relationship['type']);
         }
 
@@ -86,10 +86,13 @@ class RelationshipSerializer extends AbstractSerializer implements Serializer
     }
 
     /**
-     * @param $type
+     * @param string $type
      * @param $entity
-     * @param $fields
-     * @return mixed|void
+     * @param array $fields
+     * @return array
      */
-    public function getIncluded($type, $entity, $fields) {}
+    public function getIncluded(string $type, $entity, array $fields): array
+    {
+        return [];
+    }
 }

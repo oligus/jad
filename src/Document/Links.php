@@ -1,7 +1,11 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Jad\Document;
 
+/**
+ * Class Links
+ * @package Jad\Document
+ */
 class Links implements \JsonSerializable
 {
     /**
@@ -26,7 +30,7 @@ class Links implements \JsonSerializable
     /**
      * @param $self
      */
-    public function setSelf($self)
+    public function setSelf($self): void
     {
         $this->self = $self;
     }
@@ -34,7 +38,7 @@ class Links implements \JsonSerializable
     /**
      * @param null $first
      */
-    public function setFirst($first)
+    public function setFirst($first): void
     {
         $this->first = $first;
     }
@@ -42,7 +46,7 @@ class Links implements \JsonSerializable
     /**
      * @param null $last
      */
-    public function setLast($last)
+    public function setLast($last): void
     {
         $this->last = $last;
     }
@@ -50,7 +54,7 @@ class Links implements \JsonSerializable
     /**
      * @param mixed $next
      */
-    public function setNext($next)
+    public function setNext($next): void
     {
         $this->next = $next;
     }
@@ -58,35 +62,35 @@ class Links implements \JsonSerializable
     /**
      * @param mixed $previous
      */
-    public function setPrevious($previous)
+    public function setPrevious($previous): void
     {
         $this->previous = $previous;
     }
 
     /**
-     *
+     * @return \stdClass
      */
-    public function jsonSerialize()
+    public function jsonSerialize(): \stdClass
     {
         $links = new \stdClass();
 
-        if(!is_null($this->self)) {
+        if (!is_null($this->self)) {
             $links->self = $this->self;
         }
 
-        if(!is_null($this->first)) {
+        if (!is_null($this->first)) {
             $links->first = $this->first;
         }
 
-        if(!is_null($this->last)) {
+        if (!is_null($this->last)) {
             $links->last = $this->last;
         }
 
-        if(!is_null($this->next)) {
+        if (!is_null($this->next)) {
             $links->next = $this->next;
         }
 
-        if(!is_null($this->previous)) {
+        if (!is_null($this->previous)) {
             $links->previous = $this->previous;
         }
 

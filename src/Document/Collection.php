@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Jad\Document;
 
@@ -6,10 +6,7 @@ use Jad\Query\Paginator;
 
 /**
  * Class Collection
- *
- * Collection of resourcers
- *
- * @package Klirr\JsonApi\Response
+ * @package Jad\Document
  */
 class Collection implements \JsonSerializable
 {
@@ -36,7 +33,7 @@ class Collection implements \JsonSerializable
     /**
      * @param \Jad\Document\Resource $resource
      */
-    public function add(\Jad\Document\Resource $resource)
+    public function add(Resource $resource): void
     {
         $this->resources[] = $resource;
     }
@@ -50,23 +47,21 @@ class Collection implements \JsonSerializable
     }
 
     /**
-     * @param bool $included
+     * @return array
      */
-    private function setIncluded(bool $included)
-    {
-        $this->included = $included;
-    }
-
-    public function getIncluded()
+    public function getIncluded(): array
     {
         return $this->includes;
     }
 
-    public function loadIncludes()
+    /**
+     * @throws \Exception
+     */
+    public function loadIncludes(): void
     {
         /** @var \Jad\Document\Resource $resource */
-        foreach($this->resources as $resource) {
-            if($resource->hasIncluded()) {
+        foreach ($this->resources as $resource) {
+            if ($resource->hasIncluded()) {
                 $this->setIncluded(true);
                 $included = $resource->getIncluded();
                 $this->includes = array_merge($this->includes, $included);
@@ -75,9 +70,17 @@ class Collection implements \JsonSerializable
     }
 
     /**
+     * @param bool $included
+     */
+    private function setIncluded(bool $included): void
+    {
+        $this->included = $included;
+    }
+
+    /**
      * @return Paginator|null
      */
-    public function getPaginator()
+    public function getPaginator(): ?Paginator
     {
         return $this->paginator;
     }
@@ -85,7 +88,7 @@ class Collection implements \JsonSerializable
     /**
      * @param Paginator $paginator
      */
-    public function setPaginator(Paginator $paginator)
+    public function setPaginator(Paginator $paginator): void
     {
         $this->paginator = $paginator;
     }
@@ -93,7 +96,7 @@ class Collection implements \JsonSerializable
     /**
      * @return array
      */
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
         return $this->resources;
     }

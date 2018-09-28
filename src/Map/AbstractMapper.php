@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Jad\Map;
 
@@ -48,14 +48,14 @@ abstract class AbstractMapper implements Mapper
      * @param $values
      * @param bool $paginate
      */
-    public function add($type, $values, $paginate = false)
+    public function add(string $type, $values, bool $paginate = false): void
     {
         $mapItem = new MapItem($type, $values, $paginate);
 
         $entityClass = $mapItem->getEntityClass();
         $mapItem->setClassMeta($this->em->getClassMetadata($entityClass));
 
-        if(!$this->itemExists($mapItem)) {
+        if (!$this->itemExists($mapItem)) {
             $this->map[] = $mapItem;
         }
     }
@@ -64,11 +64,11 @@ abstract class AbstractMapper implements Mapper
      * @param \Jad\Map\MapItem $item
      * @return bool
      */
-    public function itemExists(MapItem $item)
+    public function itemExists(MapItem $item): bool
     {
         /** @var MapItem $mapItem */
         foreach ($this->map as $mapItem) {
-            if($mapItem->getType() === $item->getType()) {
+            if ($mapItem->getType() === $item->getType()) {
                 return true;
             }
         }
@@ -80,10 +80,10 @@ abstract class AbstractMapper implements Mapper
      * @param $type
      * @return bool
      */
-    public function hasMapItem($type): bool
+    public function hasMapItem(string $type): bool
     {
         foreach ($this->map as $mapItem) {
-            if($mapItem->getType() === $type) {
+            if ($mapItem->getType() === $type) {
                 return true;
             }
         }
@@ -99,7 +99,7 @@ abstract class AbstractMapper implements Mapper
     public function getMapItem($type): MapItem
     {
         foreach ($this->map as $mapItem) {
-            if($mapItem->getType() === $type) {
+            if ($mapItem->getType() === $type) {
                 return $mapItem;
             }
         }
@@ -112,10 +112,10 @@ abstract class AbstractMapper implements Mapper
      * @return mixed
      * @throws MappingException
      */
-    public function getMapItemByClass($className): MapItem
+    public function getMapItemByClass(string $className): MapItem
     {
         foreach ($this->map as $mapItem) {
-            if($mapItem->getEntityClass() === $className) {
+            if ($mapItem->getEntityClass() === $className) {
                 return $mapItem;
             }
         }

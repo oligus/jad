@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Jad;
 
@@ -34,7 +34,7 @@ class Configure
     /**
      * @return Configure
      */
-    public static function getInstance()
+    public static function getInstance(): Configure
     {
         if(!self::$instance instanceof Configure) {
             self::$instance = new self();
@@ -47,7 +47,7 @@ class Configure
      * @param $key
      * @param $value
      */
-    public function setConfig($key, $value)
+    public function setConfig(string $key, $value)
     {
         if(array_key_exists($key, $this->config)) {
             $this->config[$key] = $value;
@@ -55,13 +55,15 @@ class Configure
     }
 
     /**
-     * @param $key
-     * @return mixed
+     * @param string $key
+     * @return mixed|null
      */
-    public function getConfig($key)
+    public function getConfig(string $key)
     {
         if(array_key_exists($key, $this->config)) {
             return $this->config[$key];
         }
+
+        return null;
     }
 }

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Jad\CRUD;
 
@@ -14,17 +14,17 @@ class Update extends AbstractCRUD
      * @throws \Jad\Exceptions\JadException
      * @throws \Jad\Exceptions\RequestException
      */
-    public function updateResource()
+    public function updateResource(): void
     {
-        $mapItem        = $this->getMapItem();
-        $entityClass    = $mapItem->getEntityClass();
-        $entity         = $this->mapper->getEm()->getRepository($mapItem->getEntityClass())->find($this->request->getId());
+        $mapItem = $this->getMapItem();
+        $entityClass = $mapItem->getEntityClass();
+        $entity = $this->mapper->getEm()->getRepository($mapItem->getEntityClass())->find($this->request->getId());
 
-        if(!$entity instanceof $entityClass) {
+        if (!$entity instanceof $entityClass) {
             throw new \Exception('Entity not found');
         }
 
-        if($mapItem->isReadOnly()) {
+        if ($mapItem->isReadOnly()) {
             return;
         }
 

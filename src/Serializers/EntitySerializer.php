@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Jad\Serializers;
 
@@ -21,11 +21,12 @@ class EntitySerializer extends AbstractSerializer
 
     /**
      * @param $entity
-     * @return array|mixed
-     * @throws \Exception
+     * @return array
      * @throws \Jad\Exceptions\JadException
+     * @throws \ReflectionException
+     * @throws \Exception
      */
-    public function getRelationships($entity)
+    public function getRelationships($entity): array
     {
         $relationships = [];
 
@@ -78,7 +79,7 @@ class EntitySerializer extends AbstractSerializer
      * @throws \Exception
      * @throws \Jad\Exceptions\JadException
      */
-    public function getIncluded($type, $entity, $fields)
+    public function getIncluded(string $type, $entity, array $fields): ?array
     {
         if(!$this->mapper->hasMapItem($type)) {
             return null;
@@ -103,6 +104,7 @@ class EntitySerializer extends AbstractSerializer
      * @param array $fields
      * @return array
      * @throws \Jad\Exceptions\JadException
+     * @throws \ReflectionException
      */
     public function getIncludedResources(string $type, $entityCollection, array $fields = []): array
     {

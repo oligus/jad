@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Jad\Common;
 
@@ -21,13 +21,13 @@ class ClassHelper
     {
         $method = 'get' . ucfirst($property);
 
-        if(method_exists($class, $method)) {
+        if (method_exists($class, $method)) {
             return $class->$method();
         }
 
         $reflection = new \ReflectionClass($class);
 
-        if($reflection->hasProperty($property)) {
+        if ($reflection->hasProperty($property)) {
             $reflectionProperty = $reflection->getProperty($property);
             $reflectionProperty->setAccessible(true);
             return $reflectionProperty->getValue($class);
@@ -42,7 +42,7 @@ class ClassHelper
      * @param $value
      * @throws \ReflectionException
      */
-    public static function setPropertyValue($class, string $property, $value)
+    public static function setPropertyValue($class, string $property, $value): void
     {
         $method = 'set' . ucfirst($property);
 

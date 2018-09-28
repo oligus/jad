@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Jad;
 
@@ -49,7 +49,7 @@ class Jad
     /**
      * @param $pathPrefix
      */
-    public function setPathPrefix($pathPrefix)
+    public function setPathPrefix(string $pathPrefix): void
     {
         $this->getJsonApiRequest()->setPathPrefix($pathPrefix);
     }
@@ -57,7 +57,7 @@ class Jad
     /**
      * @return bool
      */
-    public function jsonApiResult()
+    public function jsonApiResult(): bool
     {
         $success = true;
 

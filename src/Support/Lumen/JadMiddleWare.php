@@ -1,13 +1,16 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Jad\Support\Lumen;
 
 use Jad\Jad;
-use Jad\Configure;
 use Jad\Map\AnnotationsMapper;
 use \Illuminate\Http\Request;
 use Doctrine\Common\Persistence\ManagerRegistry;
 
+/**
+ * Class JadMiddleWare
+ * @package Jad\Support\Lumen
+ */
 class JadMiddleWare
 {
     /**
@@ -28,15 +31,15 @@ class JadMiddleWare
      * @param Request $request
      * @param \Closure $next
      * @return mixed
-     * @throws \Exception
+     * @throws \Doctrine\Common\Annotations\AnnotationException
      */
     public function handle(Request $request, \Closure $next)
     {
         $pathPrefix = config()['jad']['pathPrefix'];
 
-        $pathMatch = (bool) preg_match('!' . ltrim($pathPrefix, '/') . '!', $request->path(), $matches);
+        $pathMatch = (bool)preg_match('!' . ltrim($pathPrefix, '/') . '!', $request->path(), $matches);
 
-        if(!$pathMatch) {
+        if (!$pathMatch) {
             return $next($request);
         }
 
@@ -46,7 +49,7 @@ class JadMiddleWare
         $jad = new Jad(new AnnotationsMapper($em));
         $jad->setPathPrefix(config()['jad']['pathPrefix']);
 
-        if($jad->jsonApiResult()) {
+        if ($jad->jsonApiResult()) {
             return $next($request);
         }
 

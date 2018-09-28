@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Jad\Common;
 
@@ -9,12 +9,12 @@ namespace Jad\Common;
 class Text
 {
     /**
-     * @param $string
+     * @param $str
      * @return string
      */
-    public static function kebabify($string)
+    public static function kebabify(string $str): string
     {
-        preg_match_all('!([A-Z][A-Z0-9]*(?=$|[A-Z][a-z0-9])|[A-Za-z][a-z0-9]+)!', $string, $matches);
+        preg_match_all('!([A-Z][A-Z0-9]*(?=$|[A-Z][a-z0-9])|[A-Za-z][a-z0-9]+)!', $str, $matches);
         $ret = $matches[0];
 
         foreach ($ret as &$match) {
@@ -25,14 +25,14 @@ class Text
     }
 
     /**
-     * @param $string
+     * @param $str
      * @return mixed
      */
-    public static function deKebabify($string)
+    public static function deKebabify(string $str): string
     {
-        return preg_replace_callback('!\-[a-z]!', function($result) {
+        return preg_replace_callback('!\-[a-z]!', function ($result) {
             $char = ltrim($result[0], '-');
             return strtoupper($char);
-        }, $string);
+        }, $str);
     }
 }

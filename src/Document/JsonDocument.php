@@ -1,9 +1,13 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Jad\Document;
 
 use Jad\Query\Paginator;
 
+/**
+ * Class JsonDocument
+ * @package Jad\Document
+ */
 class JsonDocument implements \JsonSerializable
 {
     /**
@@ -33,43 +37,44 @@ class JsonDocument implements \JsonSerializable
     /**
      * @param Links $links
      */
-    public function addLinks(Links $links)
+    public function addLinks(Links $links): void
     {
         $this->links = $links;
     }
 
-    public function addMeta(Meta $meta)
+    public function addMeta(Meta $meta): void
     {
         $this->meta = $meta;
     }
 
     /**
-     * @return \stdClass
+     * @return mixed|\stdClass
+     * @throws \Exception
      */
-    public function jsonSerialize()
+    public function jsonSerialize(): \stdClass
     {
         $document = new \stdClass();
 
-        if($this->element instanceof Collection) {
+        if ($this->element instanceof Collection) {
             $document->data = $this->element;
             $this->element->loadIncludes();
         } else {
             $document->data = $this->element;
         }
 
-        if($this->element->hasIncluded()) {
+        if ($this->element->hasIncluded()) {
             $document->included = $this->element->getIncluded();
         }
 
-        if(!is_null($this->links)) {
+        if (!is_null($this->links)) {
             $document->links = $this->links;
         }
 
-        if(!is_null($this->meta)) {
+        if (!is_null($this->meta)) {
             $document->meta = $this->meta;
         }
 
-        if($this->hasPagination($this->element)) {
+        if ($this->hasPagination($this->element)) {
             /** @var Paginator $paginator */
             $paginator = $this->element->getPaginator();
 
@@ -77,11 +82,11 @@ class JsonDocument implements \JsonSerializable
             $document->links->setFirst($paginator->getFirst());
             $document->links->setLast($paginator->getLast());
 
-            if($paginator->hasNext()) {
+            if ($paginator->hasNext()) {
                 $document->links->setNext($paginator->getNext());
             }
 
-            if($paginator->hasPrevious()) {
+            if ($paginator->hasPrevious()) {
                 $document->links->setPrevious($paginator->getPrevious());
             }
 
@@ -89,7 +94,7 @@ class JsonDocument implements \JsonSerializable
             $document->meta->setPages($paginator->getLastPage());
         }
 
-        if($document->meta->isEmpty()) {
+        if ($document->meta->isEmpty()) {
             unset($document->meta);
         }
 
@@ -100,19 +105,19 @@ class JsonDocument implements \JsonSerializable
      * @param $element
      * @return bool
      */
-    private function hasPagination($element)
+    private function hasPagination($element): bool
     {
-        if(!$element instanceof Collection) {
+        if (!$element instanceof Collection) {
             return false;
         }
 
         $paginator = $element->getPaginator();
 
-        if($paginator === null) {
+        if ($paginator === null) {
             return false;
         }
 
-        if(!$paginator instanceof Paginator) {
+        if (!$paginator instanceof Paginator) {
             return false;
         }
 

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Jad\Response;
 
@@ -21,13 +21,13 @@ class Error
         $this->exception = $exception;
     }
 
-    public function render()
+    public function render(): void
     {
         $document = new \stdClass();
         $document->errors = [];
 
         $error = new \stdClass();
-        $error->status = (string) $this->exception->getCode();
+        $error->status = (string)$this->exception->getCode();
         $error->title = $this->getTitle($this->exception) . ' error';
         $error->detail = $this->exception->getMessage();
 
@@ -36,7 +36,7 @@ class Error
         $response = new Response();
         $headers['Content-Type'] = 'application/vnd.api+json';
 
-        foreach($headers as $key => $value) {
+        foreach ($headers as $key => $value) {
             $response->headers->set($key, $value);
         }
 
@@ -45,7 +45,7 @@ class Error
         $response->sendHeaders();
         $response->sendContent();
 
-        if(!Configure::getInstance()->getConfig('test_mode')) {
+        if (!Configure::getInstance()->getConfig('test_mode')) {
             exit(0);
         }
 
@@ -55,10 +55,10 @@ class Error
      * @param \Exception $e
      * @return string
      */
-    private function getTitle(\Exception $e)
+    private function getTitle(\Exception $e): string
     {
-        $class = preg_replace('/^.*\\\(.+?)(Exception)?$/', '\1', get_class($e) );
-        $words = preg_split('/(?=[A-Z])/',$class);
+        $class = preg_replace('/^.*\\\(.+?)(Exception)?$/', '\1', get_class($e));
+        $words = preg_split('/(?=[A-Z])/', $class);
         return trim(implode(" ", $words));
     }
 }

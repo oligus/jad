@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Jad\Response;
 
@@ -51,29 +51,30 @@ class JsonApiResponse
     }
 
     /**
-     * @return string|null
+     * @return null|string
      * @throws JadException
      * @throws ResourceNotFoundException
-     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\Common\Annotations\AnnotationException
      * @throws \Doctrine\ORM\NonUniqueResultException
-     * @throws \Exception
+     * @throws \Doctrine\ORM\ORMException
      * @throws \Jad\Exceptions\ParameterException
      * @throws \Jad\Exceptions\RequestException
+     * @throws \ReflectionException
      */
-    public function render()
+    public function render(): ?string
     {
-        if(!$this->mapper->hasMapItem($this->request->getResourceType())) {
-            if(Configure::getInstance()->getConfig('strict')) {
+        if (!$this->mapper->hasMapItem($this->request->getResourceType())) {
+            if (Configure::getInstance()->getConfig('strict')) {
                 throw new ResourceNotFoundException('Resource type not found [' . $this->request->getResourceType() . ']');
             }
         }
 
         $method = $this->request->getMethod();
 
-        switch($method) {
+        switch ($method) {
             case 'PATCH':
                 (new Update($this->request, $this->mapper))->updateResource();
-                $resource = (new Read($this->request, $this->mapper))->getResourceById($this->request->getId());
+                $resource = (new Read($this->request, $this->mapper))->getResourceById((string) $this->request->getId());
                 $this->createDocument($resource);
                 break;
 
@@ -93,7 +94,7 @@ class JsonApiResponse
                 break;
 
             default:
-                if(Configure::getInstance()->getConfig('strict')) {
+                if (Configure::getInstance()->getConfig('strict')) {
                     throw new JadException('Http method [' . $method . '] is not supported.');
                 }
         }
@@ -102,20 +103,66 @@ class JsonApiResponse
     }
 
     /**
+     * @param \JsonSerializable $resource
+     */
+    private function createDocument(\JsonSerializable $resource): void
+    {
+        $document = new Document($resource);
+
+        $links = new Links();
+        $links->setSelf($this->request->getCurrentUrl());
+        $document->addLinks($links);
+
+        $meta = new Meta();
+        $document->addMeta($meta);
+
+        if (Configure::getInstance()->getConfig('debug')) {
+            $this->setResponse(json_encode($document, JSON_PRETTY_PRINT));
+        } else {
+            $this->setResponse(json_encode($document));
+        }
+
+    }
+
+    /**
+     * @param $content
+     * @param array $headers
+     * @param int $status
+     */
+    private function setResponse(string $content, array $headers = [], int $status = 200)
+    {
+        $response = new Response();
+        $headers['Content-Type'] = 'application/vnd.api+json';
+
+        if (Configure::getInstance()->getConfig('cors')) {
+            $headers['Access-Control-Allow-Origin'] = '*';
+        }
+
+        foreach ($headers as $key => $value) {
+            $response->headers->set($key, $value);
+        }
+
+        $response->setContent($content);
+        $response->setStatusCode($status);
+        $response->sendHeaders();
+        $response->sendContent();
+    }
+
+    /**
      * @throws JadException
      * @throws ResourceNotFoundException
-     * @throws \Doctrine\ORM\NoResultException
      * @throws \Doctrine\ORM\NonUniqueResultException
      * @throws \Jad\Exceptions\ParameterException
      * @throws \Jad\Exceptions\RequestException
+     * @throws \ReflectionException
      */
-    public function fetchResources()
+    public function fetchResources(): void
     {
         $relationship = $this->request->getRelationship();
 
-        if(empty($relationship)) {
-            if($this->request->hasId()) {
-                $resource = (new Read($this->request, $this->mapper))->getResourceById($this->request->getId());
+        if (empty($relationship)) {
+            if ($this->request->hasId()) {
+                $resource = (new Read($this->request, $this->mapper))->getResourceById((string) $this->request->getId());
                 $this->createDocument($resource);
             } else {
                 $resources = (new Read($this->request, $this->mapper))->getResources();
@@ -131,6 +178,7 @@ class JsonApiResponse
      * @return Collection|Resource
      * @throws JadException
      * @throws ResourceNotFoundException
+     * @throws \ReflectionException
      */
     public function getRelationship($relationship)
     {
@@ -141,7 +189,7 @@ class JsonApiResponse
         $mapItem = $this->mapper->getMapItem($type);
         $entity = $this->mapper->getEm()->getRepository($mapItem->getEntityClass())->find($id);
 
-        if(empty($entity)) {
+        if (empty($entity)) {
             throw new ResourceNotFoundException('Resource type not found [' . $type . '] with id [' . $id . ']');
         }
 
@@ -149,16 +197,16 @@ class JsonApiResponse
 
         $result = ClassHelper::getPropertyValue($entity, $relatedType);
 
-        if(is_null($result)) {
+        if (is_null($result)) {
             throw new ResourceNotFoundException('Related resource type not found [' . $relatedType . '] derived from [' . $type . ']');
         }
 
         $serializer = new RelationshipSerializer($this->mapper, $this->request->getResourceType(), $this->request);
         $serializer->setRelationship($relationship);
 
-        if($result instanceof PersistentCollection) {
+        if ($result instanceof PersistentCollection) {
             $collection = new Collection();
-            foreach($result as $entity ) {
+            foreach ($result as $entity) {
                 $resource = new Resource($entity, $serializer);
                 $resource->setFields($this->request->getParameters()->getFields());
                 $collection->add($resource);
@@ -171,50 +219,5 @@ class JsonApiResponse
         $resource->setFields($this->request->getParameters()->getFields());
 
         return $resource;
-    }
-
-    /**
-     * @param \JsonSerializable $resource
-     */
-    private function createDocument(\JsonSerializable $resource)
-    {
-        $document = new Document($resource);
-
-        $links = new Links();
-        $links->setSelf($this->request->getCurrentUrl());
-        $document->addLinks($links);
-
-        $meta = new Meta();
-        $document->addMeta($meta);
-
-        if(Configure::getInstance()->getConfig('debug')) {
-            $this->setResponse(json_encode($document, JSON_PRETTY_PRINT));
-        } else {
-            $this->setResponse(json_encode($document));
-        }
-
-    }
-    /**
-     * @param $content
-     * @param array $headers
-     * @param int $status
-     */
-    private function setResponse($content, array $headers = array(), $status = 200)
-    {
-        $response = new Response();
-        $headers['Content-Type'] = 'application/vnd.api+json';
-
-        if(Configure::getInstance()->getConfig('cors')) {
-            $headers['Access-Control-Allow-Origin'] = '*';
-        }
-
-        foreach($headers as $key => $value) {
-            $response->headers->set($key, $value);
-        }
-
-        $response->setContent($content);
-        $response->setStatusCode($status);
-        $response->sendHeaders();
-        $response->sendContent();
     }
 }
