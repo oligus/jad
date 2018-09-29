@@ -109,9 +109,10 @@ class AbstractCRUD
 
     /**
      * @param MapItem $mapItem
-     * @param $attributes
+     * @param array $attributes
      * @param $entity
      * @throws \Doctrine\Common\Annotations\AnnotationException
+     * @throws \Doctrine\ORM\Mapping\MappingException
      * @throws \ReflectionException
      */
     protected function addAttributes(MapItem $mapItem, array $attributes, $entity): void
@@ -139,6 +140,16 @@ class AbstractCRUD
                         continue;
                     }
                 }
+            }
+
+            $type = $mapItem->getClassMeta()->getFieldMapping($attribute)['type'];
+
+            switch($type) {
+                case 'datetime':
+                    $value = new \DateTime($value);
+                    break;
+
+                default:
             }
 
             // Update value

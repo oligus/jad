@@ -1,0 +1,31 @@
+{
+    "data": {
+        "id": "413",
+        "type": "invoices",
+        "attributes": {
+            "invoice-date": "2018-01-01 00:00:00",
+            "billing-address": "River street 14",
+            "billing-city": "Westham",
+            "billing-state": null,
+            "billing-postal-code": "WE345R",
+            "total": "2.64"
+        },
+        "relationships": {
+            "customers": {
+                "links": {
+                    "self": "http:\/\/:\/invoices\/413\/relationship\/customers",
+                    "related": "http:\/\/:\/invoices\/413\/customers"
+                }
+            },
+            "invoice-items": {
+                "links": {
+                    "self": "http:\/\/:\/invoices\/413\/relationship\/invoice-items",
+                    "related": "http:\/\/:\/invoices\/413\/invoice-items"
+                }
+            }
+        }
+    },
+    "links": {
+        "self": "http:\/\/:\/invoices"
+    }
+}

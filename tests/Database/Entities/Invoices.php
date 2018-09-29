@@ -1,7 +1,8 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Jad\Database\Entities;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Jad\Map\Annotations as JAD;
 
@@ -66,4 +67,11 @@ class Invoices
      */
     protected $invoiceItems;
 
+    /**
+     * Invoices constructor.
+     */
+    public function __construct()
+    {
+        $this->invoiceItems = new ArrayCollection();
+    }
 }

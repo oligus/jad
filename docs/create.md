@@ -40,6 +40,16 @@ Response:
 
 ## Create a new resource with relationships
 
+**Note!** *It is important that if the relationship is a collection of items, the item array has to be initailized before
+use.*
+
+*Example:*
+```php
+public function __construct()
+{
+    $this->tracks =  new ArrayCollection();
+}
+```
 Create a new playlist with tracks
 
 ```

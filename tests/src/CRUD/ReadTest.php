@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Jad\Tests\CRUD;
 
@@ -11,6 +11,12 @@ use Jad\Document\Collection;
 
 class ReadTest extends TestCase
 {
+    /**
+     * @throws \Doctrine\Common\Annotations\AnnotationException
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws \Jad\Exceptions\JadException
+     * @throws \Jad\Exceptions\ParameterException
+     */
     public function testGetResources()
     {
         $mapper = new AnnotationsMapper(Manager::getInstance()->getEm());

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Jad\E2E;
 
@@ -92,6 +92,57 @@ class RelationshipsTest extends DBTestCase
 
         $input->data->relationships->tracks->data = $data;
 
+        $_POST = ['input' => json_encode($input)];
+
+        $mapper = new AnnotationsMapper(Manager::getInstance()->getEm());
+        $jad = new Jad($mapper);
+
+        ob_start();
+        $jad->jsonApiResult();
+        $output = ob_get_clean();
+
+        $this->assertMatchesJsonSnapshot($output);
+    }
+
+    /**
+     * @throws \Doctrine\Common\Annotations\AnnotationException
+     */
+    public function testCreateRecordManyUniqueRelationships()
+    {
+        $_SERVER['REQUEST_URI']  = '/invoices';
+        $_SERVER['REQUEST_METHOD'] = 'POST';
+
+        $input = new \stdClass();
+        $input->data = new \stdClass();
+        $input->data->type = 'invoices';
+        $input->data->attributes = new \stdClass();
+        $input->data->attributes->{'invoice-date'} = '2018-01-01 00:00:00';
+        $input->data->attributes->{'billing-address'} = 'River street 14';
+        $input->data->attributes->{'billing-city'} = 'Westham';
+        $input->data->attributes->{'billing-state'} = null;
+        $input->data->attributes->{'billing-postal-code'} = 'WE345R';
+        $input->data->attributes->{'total'} = '2.64';
+
+        $input->data->relationships = new \stdClass();
+
+        $input->data->relationships = [];
+
+        $customers = new \stdClass();
+        $customers->data = new \stdClass();
+        $customers->data->id = '53';
+        $customers->data->type = 'customers';
+
+        $input->data->relationships['customers'] = $customers;
+
+        $item = new \stdClass();
+        $item->data = new \stdClass();
+        $item->data->id = '10';
+        $item->data->type = 'invoice-items';
+
+        //$input->data->relationships['invoice-items'] = [];
+        $input->data->relationships['invoice-items'] = $item;
+
+        //print_r(json_encode($input)); die;
         $_POST = ['input' => json_encode($input)];
 
         $mapper = new AnnotationsMapper(Manager::getInstance()->getEm());
