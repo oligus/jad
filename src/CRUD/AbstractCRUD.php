@@ -2,6 +2,8 @@
 
 namespace Jad\CRUD;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections;
 use Jad\Map\Mapper;
 use Jad\Request\JsonApiRequest;
 use Jad\Common\ClassHelper;
@@ -81,6 +83,17 @@ class AbstractCRUD
             $relatedType = Text::deKebabify($relatedType);
             $related = is_array($related->data) ? $related->data : [$related->data];
             $relatedProperty = ClassHelper::getPropertyValue($entity, $relatedType);
+
+            /**
+             * Clear collection on PATCH
+             */
+            if($this->request->getMethod() === 'PATCH') {
+                $attribute = ClassHelper::getPropertyValue($entity, $relatedType);
+
+                if($attribute instanceof Collections\Collection) {
+                    ClassHelper::setPropertyValue($entity, $relatedType, new ArrayCollection());
+                }
+            }
 
             foreach ($related as $relationship) {
                 $relationalMapItem = $this->mapper->getMapItem($relationship->type);

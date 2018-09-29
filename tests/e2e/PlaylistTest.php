@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Jad\E2E;
 
@@ -13,6 +13,9 @@ class PlaylistTest extends DBTestCase
 {
     use MatchesSnapshots;
 
+    /**
+     * @throws \Doctrine\Common\Annotations\AnnotationException
+     */
     public function testFetchCollection()
     {
         $_SERVER['REQUEST_URI']  = '/playlists';
@@ -27,6 +30,9 @@ class PlaylistTest extends DBTestCase
         $this->assertMatchesJsonSnapshot($output);
     }
 
+    /**
+     * @throws \Doctrine\Common\Annotations\AnnotationException
+     */
     public function testFetchCollectionFields()
     {
         $_SERVER['REQUEST_URI']  = '/tracks';
@@ -42,6 +48,9 @@ class PlaylistTest extends DBTestCase
         $this->assertMatchesJsonSnapshot($output);
     }
 
+    /**
+     * @throws \Doctrine\Common\Annotations\AnnotationException
+     */
     public function testGetTracks()
     {
         $_SERVER['REQUEST_URI']  = '/tracks/15';
@@ -56,6 +65,9 @@ class PlaylistTest extends DBTestCase
         $this->assertMatchesJsonSnapshot($output);
     }
 
+    /**
+     * @throws \Doctrine\Common\Annotations\AnnotationException
+     */
     public function testGetRelationshipFull()
     {
         $_SERVER['REQUEST_URI']  = '/tracks/15/playlists';
@@ -70,6 +82,9 @@ class PlaylistTest extends DBTestCase
         $this->assertMatchesJsonSnapshot($output);
     }
 
+    /**
+     * @throws \Doctrine\Common\Annotations\AnnotationException
+     */
     public function testGetRelationshipList()
     {
         $_SERVER['REQUEST_URI']  = '/tracks/15/relationships/playlists';
@@ -84,6 +99,9 @@ class PlaylistTest extends DBTestCase
         $this->assertMatchesJsonSnapshot($output);
     }
 
+    /**
+     * @throws \Doctrine\Common\Annotations\AnnotationException
+     */
     public function testCreateSingleRelationship()
     {
         $_SERVER['REQUEST_URI']  = '/playlists';
@@ -112,6 +130,9 @@ class PlaylistTest extends DBTestCase
         $this->assertMatchesJsonSnapshot($output);
     }
 
+    /**
+     * @throws \Doctrine\Common\Annotations\AnnotationException
+     */
     public function testCreateRelationship()
     {
         $_SERVER['REQUEST_URI']  = '/playlists';
@@ -145,6 +166,7 @@ class PlaylistTest extends DBTestCase
 
     /**
      * @depends testCreateRelationship
+     * @throws \Doctrine\Common\Annotations\AnnotationException
      */
     public function testUpdateAddRelationship()
     {
@@ -162,6 +184,56 @@ class PlaylistTest extends DBTestCase
 
         $_POST = ['input' => json_encode($input)];
 
+        $mapper = new AnnotationsMapper(Manager::getInstance()->getEm());
+        $jad = new Jad($mapper);
+
+        ob_start();
+        $jad->jsonApiResult();
+        $output = ob_get_clean();
+
+        $this->assertMatchesJsonSnapshot($output);
+    }
+
+    /**
+     * @throws \Doctrine\Common\Annotations\AnnotationException
+     */
+    public function testUpdateRelationships()
+    {
+        $_SERVER['REQUEST_URI']  = '/playlists/2';
+        $_SERVER['REQUEST_METHOD'] = 'PATCH';
+
+        $input = new \stdClass();
+        $input->data = new \stdClass();
+        $input->data->type = 'playlists';
+        $input->data->relationships = new \stdClass();
+        $input->data->relationships->tracks = new \stdClass();
+        $input->data->relationships->tracks->data = [];
+
+        $track = new \stdClass();
+        $track->type = 'tracks';
+        $track->id = 422;
+
+        $input->data->relationships->tracks->data[] = $track;
+
+        $track = new \stdClass();
+        $track->type = 'tracks';
+        $track->id = 1;
+
+        $input->data->relationships->tracks->data[] = $track;
+
+        $_POST = ['input' => json_encode($input)];
+
+        $mapper = new AnnotationsMapper(Manager::getInstance()->getEm());
+        $jad = new Jad($mapper);
+
+        ob_start();
+        $jad->jsonApiResult();
+        $output = ob_get_clean();
+
+        $this->assertMatchesJsonSnapshot($output);
+
+        $_SERVER['REQUEST_URI']  = '/playlists/2/relationships/tracks';
+        $_SERVER['REQUEST_METHOD'] = 'GET';
         $mapper = new AnnotationsMapper(Manager::getInstance()->getEm());
         $jad = new Jad($mapper);
 

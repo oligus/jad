@@ -123,8 +123,6 @@ class RelationshipsTest extends DBTestCase
         $input->data->attributes->{'billing-postal-code'} = 'WE345R';
         $input->data->attributes->{'total'} = '2.64';
 
-        $input->data->relationships = new \stdClass();
-
         $input->data->relationships = [];
 
         $customers = new \stdClass();

@@ -1,0 +1,20 @@
+{
+    "data": {
+        "id": "2",
+        "type": "playlists",
+        "attributes": {
+            "name": "Some tracks"
+        },
+        "relationships": {
+            "tracks": {
+                "links": {
+                    "self": "http:\/\/:\/playlists\/2\/relationship\/tracks",
+                    "related": "http:\/\/:\/playlists\/2\/tracks"
+                }
+            }
+        }
+    },
+    "links": {
+        "self": "http:\/\/:\/playlists\/2"
+    }
+}

@@ -19,7 +19,7 @@ class CreateTest extends TestCase
     public function testAddRelationshipTest()
     {
         $request = $this->getMockBuilder('Jad\Request\JsonApiRequest')
-            ->setMethods(['getInputJson'])
+            ->setMethods(['getInputJson', 'getMethod'])
             ->disableOriginalConstructor()
             ->getMock();
 
