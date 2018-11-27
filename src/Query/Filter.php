@@ -280,7 +280,9 @@ class Filter
             $this->qb->setParameter($fieldName2, $value[1]);
         } else {
             $this->qb->$whereCondition($this->qb->expr()->$condition($alias . '.' . $field, ':' . $fieldName1));
-            $this->qb->setParameter($fieldName1, $value);
+            if (!in_array($condition, ['isNull', 'isNotNull'])) {
+                $this->qb->setParameter($fieldName1, $value);
+            }
         }
 
     }
