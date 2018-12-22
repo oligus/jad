@@ -3,16 +3,22 @@
 namespace Jad\E2E;
 
 use Jad\Jad;
-use Jad\Tests\DBTestCase;
 use Jad\Database\Manager;
 use Jad\Map\AnnotationsMapper;
-use PHPUnit\DbUnit\DataSet\CsvDataSet;
+use Jad\Tests\TestCase;
 use Spatie\Snapshots\MatchesSnapshots;
 
-class InvoiceItems extends DBTestCase
+/**
+ * Class InvoiceItems
+ * @package Jad\E2E
+ */
+class InvoiceItems extends TestCase
 {
     use MatchesSnapshots;
 
+    /**
+     * @throws \Doctrine\Common\Annotations\AnnotationException
+     */
     public function testFilter()
     {
         $_SERVER['REQUEST_URI']  = '/invoice-items';
@@ -27,12 +33,4 @@ class InvoiceItems extends DBTestCase
 
         $this->assertMatchesJsonSnapshot($output);
     }
-
-    public function getDataSet()
-    {
-        $dataSet = new CsvDataSet();
-        $dataSet->addTable('Invoice_Items', dirname(__DIR__ ) . '/fixtures//invoice_items.csv');
-        return $dataSet;
-    }
-
 }

@@ -3,13 +3,16 @@
 namespace Jad\E2E;
 
 use Jad\Jad;
-use Jad\Tests\DBTestCase;
 use Jad\Database\Manager;
 use Jad\Map\AnnotationsMapper;
-use PHPUnit\DbUnit\DataSet\CsvDataSet;
+use Jad\Tests\TestCase;
 use Spatie\Snapshots\MatchesSnapshots;
 
-class PlaylistTest extends DBTestCase
+/**
+ * Class PlaylistTest
+ * @package Jad\E2E
+ */
+class PlaylistTest extends TestCase
 {
     use MatchesSnapshots;
 
@@ -18,7 +21,7 @@ class PlaylistTest extends DBTestCase
      */
     public function testFetchCollection()
     {
-        $_SERVER['REQUEST_URI']  = '/playlists';
+        $_SERVER['REQUEST_URI'] = '/playlists';
 
         $mapper = new AnnotationsMapper(Manager::getInstance()->getEm());
         $jad = new Jad($mapper);
@@ -35,8 +38,8 @@ class PlaylistTest extends DBTestCase
      */
     public function testFetchCollectionFields()
     {
-        $_SERVER['REQUEST_URI']  = '/tracks';
-        $_GET = ['page' => ['offset' => 0, 'limit' => 5], 'fields' => [ 'tracks' => 'name']];
+        $_SERVER['REQUEST_URI'] = '/tracks';
+        $_GET = ['page' => ['offset' => 0, 'limit' => 5], 'fields' => ['tracks' => 'name']];
 
         $mapper = new AnnotationsMapper(Manager::getInstance()->getEm());
         $jad = new Jad($mapper);
@@ -53,7 +56,7 @@ class PlaylistTest extends DBTestCase
      */
     public function testGetTracks()
     {
-        $_SERVER['REQUEST_URI']  = '/tracks/15';
+        $_SERVER['REQUEST_URI'] = '/tracks/15';
 
         $mapper = new AnnotationsMapper(Manager::getInstance()->getEm());
         $jad = new Jad($mapper);
@@ -70,7 +73,7 @@ class PlaylistTest extends DBTestCase
      */
     public function testGetRelationshipFull()
     {
-        $_SERVER['REQUEST_URI']  = '/tracks/15/playlists';
+        $_SERVER['REQUEST_URI'] = '/tracks/15/playlists';
 
         $mapper = new AnnotationsMapper(Manager::getInstance()->getEm());
         $jad = new Jad($mapper);
@@ -87,7 +90,7 @@ class PlaylistTest extends DBTestCase
      */
     public function testGetRelationshipList()
     {
-        $_SERVER['REQUEST_URI']  = '/tracks/15/relationships/playlists';
+        $_SERVER['REQUEST_URI'] = '/tracks/15/relationships/playlists';
 
         $mapper = new AnnotationsMapper(Manager::getInstance()->getEm());
         $jad = new Jad($mapper);
@@ -104,7 +107,7 @@ class PlaylistTest extends DBTestCase
      */
     public function testCreateSingleRelationship()
     {
-        $_SERVER['REQUEST_URI']  = '/playlists';
+        $_SERVER['REQUEST_URI'] = '/playlists';
         $_SERVER['REQUEST_METHOD'] = 'POST';
 
         $input = new \stdClass();
@@ -135,7 +138,7 @@ class PlaylistTest extends DBTestCase
      */
     public function testCreateRelationship()
     {
-        $_SERVER['REQUEST_URI']  = '/playlists';
+        $_SERVER['REQUEST_URI'] = '/playlists';
         $_SERVER['REQUEST_METHOD'] = 'POST';
         $_GET = ['include' => 'tracks'];
 
@@ -147,11 +150,11 @@ class PlaylistTest extends DBTestCase
         $input->data->relationships = new \stdClass();
         $input->data->relationships->tracks = new \stdClass();
         $input->data->relationships->tracks->data = [];
-        $input->data->relationships->tracks->data[] = [ 'type' => 'tracks', 'id' => 15];
-        $input->data->relationships->tracks->data[] = [ 'type' => 'tracks', 'id' => 43];
-        $input->data->relationships->tracks->data[] = [ 'type' => 'tracks', 'id' => 77];
-        $input->data->relationships->tracks->data[] = [ 'type' => 'tracks', 'id' => 117];
-        $input->data->relationships->tracks->data[] = [ 'type' => 'tracks', 'id' => 351];
+        $input->data->relationships->tracks->data[] = ['type' => 'tracks', 'id' => 15];
+        $input->data->relationships->tracks->data[] = ['type' => 'tracks', 'id' => 43];
+        $input->data->relationships->tracks->data[] = ['type' => 'tracks', 'id' => 77];
+        $input->data->relationships->tracks->data[] = ['type' => 'tracks', 'id' => 117];
+        $input->data->relationships->tracks->data[] = ['type' => 'tracks', 'id' => 351];
 
         $_POST = ['input' => json_encode($input)];
 
@@ -170,7 +173,7 @@ class PlaylistTest extends DBTestCase
      */
     public function testUpdateAddRelationship()
     {
-        $_SERVER['REQUEST_URI']  = '/playlists/2';
+        $_SERVER['REQUEST_URI'] = '/playlists/2';
         $_SERVER['REQUEST_METHOD'] = 'PATCH';
 
         $input = new \stdClass();
@@ -199,7 +202,7 @@ class PlaylistTest extends DBTestCase
      */
     public function testUpdateRelationships()
     {
-        $_SERVER['REQUEST_URI']  = '/playlists/2';
+        $_SERVER['REQUEST_URI'] = '/playlists/2';
         $_SERVER['REQUEST_METHOD'] = 'PATCH';
 
         $input = new \stdClass();
@@ -232,7 +235,7 @@ class PlaylistTest extends DBTestCase
 
         $this->assertMatchesJsonSnapshot($output);
 
-        $_SERVER['REQUEST_URI']  = '/playlists/2/relationships/tracks';
+        $_SERVER['REQUEST_URI'] = '/playlists/2/relationships/tracks';
         $_SERVER['REQUEST_METHOD'] = 'GET';
         $mapper = new AnnotationsMapper(Manager::getInstance()->getEm());
         $jad = new Jad($mapper);
@@ -242,15 +245,5 @@ class PlaylistTest extends DBTestCase
         $output = ob_get_clean();
 
         $this->assertMatchesJsonSnapshot($output);
-    }
-
-    public function getDataSet()
-    {
-        $dataSet = new CsvDataSet();
-        $dataSet->addTable('genres', dirname(__DIR__ ) . '/fixtures/genres.csv');
-        $dataSet->addTable('playlists', dirname(__DIR__ ) . '/fixtures/playlists.csv');
-        $dataSet->addTable('tracks', dirname(__DIR__ ) . '/fixtures/tracks.csv');
-        $dataSet->addTable('playlist_track', dirname(__DIR__ ) . '/fixtures/playlist_track.csv');
-        return $dataSet;
     }
 }

@@ -3,32 +3,25 @@
 namespace Jad\E2E;
 
 use Jad\Jad;
-use Jad\Tests\DBTestCase;
 use Jad\Database\Manager;
 use Jad\Map\AnnotationsMapper;
-use PHPUnit\DbUnit\DataSet\CsvDataSet;
+use Jad\Tests\TestCase;
 use Spatie\Snapshots\MatchesSnapshots;
 
-class RelationshipsTest extends DBTestCase
+/**
+ * Class RelationshipsTest
+ * @package Jad\E2E
+ */
+class RelationshipsTest extends TestCase
 {
     use MatchesSnapshots;
-
-    public function getDataSet()
-    {
-        $dataSet = new CsvDataSet();
-        $dataSet->addTable('playlists', dirname(__DIR__) . '/fixtures/playlists.csv');
-        $dataSet->addTable('tracks', dirname(__DIR__) . '/fixtures/tracks.csv');
-        $dataSet->addTable('playlist_track', dirname(__DIR__) . '/fixtures/playlist_track.csv');
-        $dataSet->addTable('customers', dirname(__DIR__) . '/fixtures/customers.csv');
-        return $dataSet;
-    }
 
     /**
      * @throws \Doctrine\Common\Annotations\AnnotationException
      */
     public function testCreateRecordOneRelationship()
     {
-        $_SERVER['REQUEST_URI']  = '/playlists';
+        $_SERVER['REQUEST_URI'] = '/playlists';
         $_GET = ['include' => 'tracks'];
         $_SERVER['REQUEST_METHOD'] = 'POST';
 
@@ -61,7 +54,7 @@ class RelationshipsTest extends DBTestCase
      */
     public function testCreateRecordManyRelationships()
     {
-        $_SERVER['REQUEST_URI']  = '/playlists';
+        $_SERVER['REQUEST_URI'] = '/playlists';
         $_GET = ['include' => 'tracks'];
         $_SERVER['REQUEST_METHOD'] = 'POST';
 
@@ -109,7 +102,7 @@ class RelationshipsTest extends DBTestCase
      */
     public function testCreateRecordManyUniqueRelationships()
     {
-        $_SERVER['REQUEST_URI']  = '/invoices';
+        $_SERVER['REQUEST_URI'] = '/invoices';
         $_SERVER['REQUEST_METHOD'] = 'POST';
 
         $input = new \stdClass();

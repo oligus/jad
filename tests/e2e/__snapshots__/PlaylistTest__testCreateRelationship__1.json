@@ -15,6 +15,22 @@
                     {
                         "type": "tracks",
                         "id": "15"
+                    },
+                    {
+                        "type": "tracks",
+                        "id": "43"
+                    },
+                    {
+                        "type": "tracks",
+                        "id": "77"
+                    },
+                    {
+                        "type": "tracks",
+                        "id": "117"
+                    },
+                    {
+                        "type": "tracks",
+                        "id": "351"
                     }
                 ]
             }
@@ -28,6 +44,46 @@
                 "name": "Go Down",
                 "composer": "AC\/DC",
                 "milliseconds": 331180,
+                "price": "0.99"
+            }
+        },
+        {
+            "id": "43",
+            "type": "tracks",
+            "attributes": {
+                "name": "Forgiven",
+                "composer": "Alanis Morissette & Glenn Ballard",
+                "milliseconds": 300355,
+                "price": "0.99"
+            }
+        },
+        {
+            "id": "77",
+            "type": "tracks",
+            "attributes": {
+                "name": "Enter Sandman",
+                "composer": "Apocalyptica",
+                "milliseconds": 221701,
+                "price": "0.99"
+            }
+        },
+        {
+            "id": "117",
+            "type": "tracks",
+            "attributes": {
+                "name": "Rock 'N' Roll Music",
+                "composer": "Chuck Berry",
+                "milliseconds": 141923,
+                "price": "0.99"
+            }
+        },
+        {
+            "id": "351",
+            "type": "tracks",
+            "attributes": {
+                "name": "Debra Kadabra",
+                "composer": "Frank Zappa",
+                "milliseconds": 234553,
                 "price": "0.99"
             }
         }

@@ -2,18 +2,23 @@
 
 namespace Jad\E2E;
 
-use Jad\Tests\DBTestCase;
+use Jad\Jad;
 use Jad\Database\Manager;
 use Jad\Map\AnnotationsMapper;
-use Jad\Jad;
-
-use PHPUnit\DbUnit\DataSet\CsvDataSet;
+use Jad\Tests\TestCase;
 use Spatie\Snapshots\MatchesSnapshots;
 
-class GenresTest extends DBTestCase
+/**
+ * Class GenresTest
+ * @package Jad\E2E
+ */
+class GenresTest extends TestCase
 {
     use MatchesSnapshots;
 
+    /**
+     * @throws \Doctrine\Common\Annotations\AnnotationException
+     */
     public function testResourceNotFoundException()
     {
         $_SERVER['REQUEST_URI']  = '/notfound';
@@ -28,6 +33,9 @@ class GenresTest extends DBTestCase
         $this->assertMatchesJsonSnapshot($output);
     }
 
+    /**
+     * @throws \Doctrine\Common\Annotations\AnnotationException
+     */
     public function testFetchCollection()
     {
         $_SERVER['REQUEST_URI']  = '/genres';
@@ -42,6 +50,9 @@ class GenresTest extends DBTestCase
         $this->assertMatchesJsonSnapshot($output);
     }
 
+    /**
+     * @throws \Doctrine\Common\Annotations\AnnotationException
+     */
     public function testLimit()
     {
         $_SERVER['REQUEST_URI']  = '/genres';
@@ -58,6 +69,9 @@ class GenresTest extends DBTestCase
         $this->assertMatchesJsonSnapshot($output);
     }
 
+    /**
+     * @throws \Doctrine\Common\Annotations\AnnotationException
+     */
     public function testOffset()
     {
         $_SERVER['REQUEST_URI']  = '/genres';
@@ -73,6 +87,9 @@ class GenresTest extends DBTestCase
         $this->assertMatchesJsonSnapshot($output);
     }
 
+    /**
+     * @throws \Doctrine\Common\Annotations\AnnotationException
+     */
     public function testSortAsc()
     {
         $_SERVER['REQUEST_URI']  = '/genres';
@@ -88,6 +105,9 @@ class GenresTest extends DBTestCase
         $this->assertMatchesJsonSnapshot($output);
     }
 
+    /**
+     * @throws \Doctrine\Common\Annotations\AnnotationException
+     */
     public function testSortDesc()
     {
         $_SERVER['REQUEST_URI']  = '/genres';
@@ -103,6 +123,9 @@ class GenresTest extends DBTestCase
         $this->assertMatchesJsonSnapshot($output);
     }
 
+    /**
+     * @throws \Doctrine\Common\Annotations\AnnotationException
+     */
     public function testCreate()
     {
         $_SERVER['REQUEST_URI']  = '/genres';
@@ -126,6 +149,9 @@ class GenresTest extends DBTestCase
         $this->assertMatchesJsonSnapshot($output);
     }
 
+    /**
+     * @throws \Doctrine\Common\Annotations\AnnotationException
+     */
     public function testUpdate()
     {
         $_SERVER['REQUEST_URI']  = '/genres/16';
@@ -150,6 +176,9 @@ class GenresTest extends DBTestCase
         $this->assertMatchesJsonSnapshot($output);
     }
 
+    /**
+     * @throws \Doctrine\Common\Annotations\AnnotationException
+     */
     public function testDelete()
     {
         $_SERVER['REQUEST_URI']  = '/genres/26';
@@ -162,7 +191,7 @@ class GenresTest extends DBTestCase
     }
 
     /**
-     * @depends testDelete
+     * @throws \Doctrine\Common\Annotations\AnnotationException
      */
     public function testDeleteVerify()
     {
@@ -177,12 +206,5 @@ class GenresTest extends DBTestCase
         $output = ob_get_clean();
 
         $this->assertMatchesJsonSnapshot($output);
-    }
-
-    public function getDataSet()
-    {
-        $dataSet = new CsvDataSet();
-        $dataSet->addTable('genres', dirname(__DIR__ ) . '/fixtures/genres.csv');
-        return $dataSet;
     }
 }

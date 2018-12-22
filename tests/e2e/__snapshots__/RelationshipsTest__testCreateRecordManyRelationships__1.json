@@ -14,7 +14,15 @@
                 "data": [
                     {
                         "type": "tracks",
-                        "id": "15"
+                        "id": "77"
+                    },
+                    {
+                        "type": "tracks",
+                        "id": "422"
+                    },
+                    {
+                        "type": "tracks",
+                        "id": "2014"
                     }
                 ]
             }
@@ -22,12 +30,32 @@
     },
     "included": [
         {
-            "id": "15",
+            "id": "77",
             "type": "tracks",
             "attributes": {
-                "name": "Go Down",
-                "composer": "AC\/DC",
-                "milliseconds": 331180,
+                "name": "Enter Sandman",
+                "composer": "Apocalyptica",
+                "milliseconds": 221701,
+                "price": "0.99"
+            }
+        },
+        {
+            "id": "422",
+            "type": "tracks",
+            "attributes": {
+                "name": "I Want It All",
+                "composer": "Queen",
+                "milliseconds": 241684,
+                "price": "0.99"
+            }
+        },
+        {
+            "id": "2014",
+            "type": "tracks",
+            "attributes": {
+                "name": "Something In The Way",
+                "composer": "Kurt Cobain",
+                "milliseconds": 230556,
                 "price": "0.99"
             }
         }

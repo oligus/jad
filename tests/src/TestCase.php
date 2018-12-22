@@ -2,16 +2,25 @@
 
 namespace Jad\Tests;
 
+use Jad\Database\Manager;
 use PHPUnit\Framework\TestCase as PHPUnitTestCase;
 use Jad\Configure;
 
 class TestCase extends PHPUnitTestCase
 {
+    /**
+     * @throws \Doctrine\Common\Persistence\Mapping\MappingException
+     */
     protected function setUp()
     {
+        parent::setUp();
         Configure::getInstance()->setConfig('test_mode', true);
         Configure::getInstance()->setConfig('strict', true);
-        parent::setUp();
+
+        Manager::getInstance()->getEm()->clear();
+        $_GET = [];
+        $_SERVER['REQUEST_URI']  = '';
+        $_SERVER['REQUEST_METHOD']  = 'GET';
     }
 
     /**
