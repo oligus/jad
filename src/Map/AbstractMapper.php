@@ -28,6 +28,7 @@ abstract class AbstractMapper implements Mapper
     }
 
     /**
+     * @codeCoverageIgnore
      * @return EntityManagerInterface
      */
     public function getEm(): EntityManagerInterface
@@ -36,6 +37,7 @@ abstract class AbstractMapper implements Mapper
     }
 
     /**
+     * @codeCoverageIgnore
      * @return array
      */
     public function getMap(): array

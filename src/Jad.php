@@ -33,12 +33,14 @@ class Jad
     public function __construct(Mapper $mapper)
     {
         $request = Request::createFromGlobals();
-        $parameters = new Parameters($request->query->all());
+        $parameters = new Parameters();
+        $parameters->setArguments($request->query->all());
         $this->mapper = $mapper;
         $this->jsonApiRequest = new JsonApiRequest($request, $parameters);
     }
 
     /**
+     * @codeCoverageIgnore
      * @return JsonApiRequest
      */
     public function getJsonApiRequest(): JsonApiRequest

@@ -15,7 +15,7 @@ interface Mapper
      * @param $type
      * @return MapItem
      */
-    public function getMapItem($type);
+    public function getMapItem($type): MapItem;
 
     /**
      * @param $type

@@ -34,6 +34,7 @@ class JsonApiRequest
     }
 
     /**
+     * @codeCoverageIgnore
      * @return Parameters
      */
     public function getParameters(): Parameters
@@ -42,6 +43,7 @@ class JsonApiRequest
     }
 
     /**
+     * @codeCoverageIgnore
      * @return string
      */
     public function getPathPrefix(): string
@@ -50,6 +52,7 @@ class JsonApiRequest
     }
 
     /**
+     * @codeCoverageIgnore
      * @param string $pathPrefix
      */
     public function setPathPrefix(string $pathPrefix): void
@@ -141,6 +144,7 @@ class JsonApiRequest
     }
 
     /**
+     * @codeCoverageIgnore
      * @return Request
      */
     public function getRequest(): Request

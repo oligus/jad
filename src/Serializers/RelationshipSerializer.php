@@ -17,6 +17,7 @@ class RelationshipSerializer extends AbstractSerializer implements Serializer
     private $relationship;
 
     /**
+     * @codeCoverageIgnore
      * @return array
      */
     public function getRelationship(): array
@@ -25,6 +26,7 @@ class RelationshipSerializer extends AbstractSerializer implements Serializer
     }
 
     /**
+     * @codeCoverageIgnore
      * @param array $relationship
      */
     public function setRelationship($relationship): void
@@ -86,6 +88,7 @@ class RelationshipSerializer extends AbstractSerializer implements Serializer
     }
 
     /**
+     * @codeCoverageIgnore
      * @param string $type
      * @param $entity
      * @param array $fields

@@ -19,6 +19,7 @@ class Meta implements \JsonSerializable
     private $pages;
 
     /**
+     * @codeCoverageIgnore
      * @return int
      */
     public function getCount(): int
@@ -27,6 +28,7 @@ class Meta implements \JsonSerializable
     }
 
     /**
+     * @codeCoverageIgnore
      * @param int $count
      */
     public function setCount(int $count)
@@ -35,6 +37,7 @@ class Meta implements \JsonSerializable
     }
 
     /**
+     * @codeCoverageIgnore
      * @return int
      */
     public function getPages(): int
@@ -43,6 +46,7 @@ class Meta implements \JsonSerializable
     }
 
     /**
+     * @codeCoverageIgnore
      * @param int $pages
      */
     public function setPages(int $pages)

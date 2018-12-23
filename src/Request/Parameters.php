@@ -14,14 +14,60 @@ class Parameters
     /**
      * @var array
      */
-    protected $input;
+    private $arguments;
 
     /**
-     * @param array $input
+     * @var array
      */
-    public function __construct(array $input)
+    private $includes = [];
+
+    /**
+     * @param array $arguments
+     */
+    public function setArguments(array $arguments): void
     {
-        $this->input = $input;
+        $this->arguments = $arguments;
+
+        $include = $this->getArgument('include');
+
+        if(!is_null($include)) {
+            $includes = explode(',', $include);
+
+            $includes = array_map(function($item) {
+                return trim($item);
+            }, $includes);
+
+
+            $includes = array_unique($includes);
+
+            $this->includes = $includes;
+        }
+    }
+
+    /**
+     * @return array
+     */
+    public function getIncludes(): array
+    {
+       return $this->includes;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasIncludes(): bool
+    {
+        return !empty($this->includes);
+    }
+
+    /**
+     * @param string $key
+     * @param string|null $default
+     * @return mixed|string
+     */
+    protected function getArgument(string $key, string $default = null)
+    {
+        return isset($this->arguments[$key]) ? $this->arguments[$key] : $default;
     }
 
     /**
@@ -29,29 +75,18 @@ class Parameters
      * @return array
      * @throws ParameterException
      */
-    /**
-     * @param array $available
-     * @return array
-     * @throws ParameterException
-     */
     public function getInclude(array $available = []): array
     {
-        $relationships = [];
+        $validIncludes = [];
 
-        if ($include = $this->getInput('include')) {
-            $includes = explode(',', $include);
-
+        if ($this->hasIncludes()) {
             $keys = [];
 
-            $includes = array_unique($includes);
-
-            foreach ($includes as $include) {
-                $tmpArray = [];
-                $parts = explode('.', trim($include));
+            foreach ($this->getIncludes() as $include) {
+                $parts = explode('.', $include);
                 $key = array_shift($parts);
                 $keys[] = Text::deKebabify($key);
-                $tmpArray[$key] = implode('.', $parts);
-                $relationships[] = $tmpArray;
+                $validIncludes[] = [$key => implode('.', $parts)];
             }
 
             $invalid = array_diff(array_unique($keys), $available);
@@ -75,20 +110,7 @@ class Parameters
             }
         }
 
-        return $relationships;
-    }
-
-    /**
-     * Get an input item.
-     *
-     * @param string $key
-     * @param null $default
-     *
-     * @return mixed
-     */
-    protected function getInput(string $key, string $default = null)
-    {
-        return isset($this->input[$key]) ? $this->input[$key] : $default;
+        return $validIncludes;
     }
 
     /**
@@ -135,7 +157,7 @@ class Parameters
      */
     protected function getPage($key)
     {
-        $page = $this->getInput('page');
+        $page = $this->getArgument('page');
         return isset($page[$key]) ? $page[$key] : '';
     }
 
@@ -171,10 +193,11 @@ class Parameters
     {
         $sort = [];
 
-        if ($input = $this->getInput('sort')) {
+        if ($input = $this->getArgument('sort')) {
             $fields = explode(',', $input);
 
             foreach ($fields as $field) {
+                $field = trim($field);
                 if (substr($field, 0, 1) === '-') {
                     $field = substr($field, 1);
                     $order = 'desc';
@@ -203,7 +226,7 @@ class Parameters
      */
     public function getFields(): array
     {
-        $fields = $this->getInput('fields');
+        $fields = $this->getArgument('fields');
 
         if (!is_array($fields)) {
             return [];
@@ -223,9 +246,9 @@ class Parameters
      */
     public function getFilter(): array
     {
-        $input = $this->getInput('filter');
+        $filter = $this->getArgument('filter');
 
-        return is_array($input) ? $input : [];
+        return is_array($filter) ? $filter : [];
     }
 
     /**

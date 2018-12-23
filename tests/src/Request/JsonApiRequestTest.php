@@ -12,7 +12,8 @@ class JsonApiRequestTest extends TestCase
     private function createRequest()
     {
         $request = Request::createFromGlobals();
-        $parameters = new Parameters($request->query->all());
+        $parameters = new Parameters();
+        $parameters->setArguments($request->query->all());
         return new JsonApiRequest($request, $parameters);
     }
 

@@ -28,6 +28,7 @@ class Links implements \JsonSerializable
     private $previous;
 
     /**
+     * @codeCoverageIgnore
      * @param $self
      */
     public function setSelf($self): void
@@ -36,6 +37,7 @@ class Links implements \JsonSerializable
     }
 
     /**
+     * @codeCoverageIgnore
      * @param null $first
      */
     public function setFirst($first): void
@@ -44,6 +46,7 @@ class Links implements \JsonSerializable
     }
 
     /**
+     * @codeCoverageIgnore
      * @param null $last
      */
     public function setLast($last): void
@@ -52,6 +55,7 @@ class Links implements \JsonSerializable
     }
 
     /**
+     * @codeCoverageIgnore
      * @param mixed $next
      */
     public function setNext($next): void
@@ -60,6 +64,7 @@ class Links implements \JsonSerializable
     }
 
     /**
+     * @codeCoverageIgnore
      * @param mixed $previous
      */
     public function setPrevious($previous): void

@@ -30,6 +30,7 @@ class JadServiceProvider extends ServiceProvider
     }
 
     /**
+     * @codeCoverageIgnore
      * @return string
      */
     protected function getConfigPath()

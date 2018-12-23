@@ -320,6 +320,7 @@ class Filter
     }
 
     /**
+     * @codeCoverageIgnore
      * @return QueryBuilder
      */
     public function getQb(): QueryBuilder
@@ -328,6 +329,7 @@ class Filter
     }
 
     /**
+     * @codeCoverageIgnore
      * @param QueryBuilder $qb
      */
     public function setQb(QueryBuilder $qb): void

@@ -20,6 +20,7 @@ class ResourceNotFoundException extends \Exception
     protected $title;
 
     /**
+     * @codeCoverageIgnore
      * @return mixed
      */
     public function getTitle(): string
@@ -28,6 +29,7 @@ class ResourceNotFoundException extends \Exception
     }
 
     /**
+     * @codeCoverageIgnore
      * @param mixed $title
      */
     public function setTitle(string $title)

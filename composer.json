@@ -17,9 +17,9 @@
   ],
   "require": {
     "php": ">=7.1",
+    "ext-json": "*",
     "symfony/http-foundation": "^4.1",
-    "symfony/validator": "^4.1",
-    "ext-json": "*"
+    "symfony/validator": "^4.1"
   },
   "require-dev": {
     "phpunit/phpunit": "^7.3",

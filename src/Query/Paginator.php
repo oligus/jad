@@ -88,6 +88,7 @@ class Paginator
     }
 
     /**
+     * @codeCoverageIgnore
      * @param bool $active
      */
     public function setActive(bool $active)
@@ -173,6 +174,7 @@ class Paginator
     }
 
     /**
+     * @codeCoverageIgnore
      * @return int
      */
     public function getCount(): int
@@ -208,6 +210,7 @@ class Paginator
     }
 
     /**
+     * @codeCoverageIgnore
      * @return int
      */
     public function getLastPage(): int

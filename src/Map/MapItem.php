@@ -56,6 +56,7 @@ class MapItem
     }
 
     /**
+     * @codeCoverageIgnore
      * @param string $type
      * @return MapItem
      */
@@ -66,6 +67,7 @@ class MapItem
     }
 
     /**
+     * @codeCoverageIgnore
      * @param string $entityClass
      * @return MapItem
      */
@@ -76,6 +78,7 @@ class MapItem
     }
 
     /**
+     * @codeCoverageIgnore
      * @return string
      */
     public function getType(): string
@@ -107,6 +110,7 @@ class MapItem
     }
 
     /**
+     * @codeCoverageIgnore
      * @return ClassMetadata
      */
     public function getClassMeta(): ClassMetadata
@@ -115,6 +119,7 @@ class MapItem
     }
 
     /**
+     * @codeCoverageIgnore
      * @param ClassMetadata $classMeta
      * @return $this
      */
@@ -125,6 +130,7 @@ class MapItem
     }
 
     /**
+     * @codeCoverageIgnore
      * @return bool
      */
     public function isPaginate(): bool
@@ -133,6 +139,7 @@ class MapItem
     }
 
     /**
+     * @codeCoverageIgnore
      * @param $paginate
      */
     public function setPaginate($paginate): void
@@ -165,6 +172,7 @@ class MapItem
     }
 
     /**
+     * @codeCoverageIgnore
      * @return string
      */
     public function getEntityClass(): string

@@ -9,6 +9,7 @@ namespace Jad\Serializers;
 class IncludedSerializer extends AbstractSerializer implements Serializer
 {
     /**
+     * @codeCoverageIgnore
      * @param $entity
      * @return array
      */
@@ -18,6 +19,7 @@ class IncludedSerializer extends AbstractSerializer implements Serializer
     }
 
     /**
+     * @codeCoverageIgnore
      * @param $type
      * @param $entity
      * @param $fields

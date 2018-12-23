@@ -47,6 +47,7 @@ class Collection implements \JsonSerializable
     }
 
     /**
+     * @codeCoverageIgnore
      * @return array
      */
     public function getIncluded(): array
@@ -70,6 +71,7 @@ class Collection implements \JsonSerializable
     }
 
     /**
+     * @codeCoverageIgnore
      * @param bool $included
      */
     private function setIncluded(bool $included): void
@@ -78,6 +80,7 @@ class Collection implements \JsonSerializable
     }
 
     /**
+     * @codeCoverageIgnore
      * @return Paginator|null
      */
     public function getPaginator(): ?Paginator
@@ -86,6 +89,7 @@ class Collection implements \JsonSerializable
     }
 
     /**
+     * @codeCoverageIgnore
      * @param Paginator $paginator
      */
     public function setPaginator(Paginator $paginator): void

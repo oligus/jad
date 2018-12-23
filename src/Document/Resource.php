@@ -52,6 +52,7 @@ class Resource implements \JsonSerializable
     }
 
     /**
+     * @codeCoverageIgnore
      * @return mixed
      */
     public function getEntity()
@@ -60,6 +61,7 @@ class Resource implements \JsonSerializable
     }
 
     /**
+     * @codeCoverageIgnore
      * @param $fields
      */
     public function setFields($fields): void
@@ -76,6 +78,7 @@ class Resource implements \JsonSerializable
     }
 
     /**
+     * @codeCoverageIgnore
      * @param null $includedParams
      */
     public function setIncludedParams($includedParams)
@@ -156,6 +159,7 @@ class Resource implements \JsonSerializable
     }
 
     /**
+     * @codeCoverageIgnore
      * @param $included
      */
     public function setIncluded($included): void

@@ -20,7 +20,8 @@ class ReadTest extends TestCase
     public function testGetResources()
     {
         $mapper = new AnnotationsMapper(Manager::getInstance()->getEm());
-        $parameters = new Parameters([
+        $parameters = new Parameters();
+        $parameters->setArguments([
             'filter' => [
                 'tracks' => [
                 'name' => [
