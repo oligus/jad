@@ -5,11 +5,11 @@ php:
 install:
   - composer install
   - pecl install ast
-  - echo "extension=ast.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
 
 script:
   - composer test-coverage
   - composer lint
+  - composer analyze
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
