@@ -10,6 +10,7 @@ use Jad\Common\ClassHelper;
 use Jad\Document\Collection;
 use Jad\Document\Resource;
 use Jad\Document\Links;
+use Jad\Document\Element;
 use Jad\Document\JsonDocument as Document;
 use Jad\Request\JsonApiRequest as Request;
 use Jad\Serializers\RelationshipSerializer;
@@ -59,7 +60,10 @@ class JsonApiResponse
      * @throws \Doctrine\ORM\ORMException
      * @throws \Jad\Exceptions\ParameterException
      * @throws \Jad\Exceptions\RequestException
+     * @throws \Jad\Exceptions\JadException
      * @throws \ReflectionException
+     * @throws \InvalidArgumentException
+     * @throws \Exception
      */
     public function render(): ?string
     {
@@ -103,9 +107,10 @@ class JsonApiResponse
     }
 
     /**
-     * @param \JsonSerializable $resource
+     * @param Element $resource
+     * @throws \InvalidArgumentException
      */
-    public function createDocument(\JsonSerializable $resource): void
+    public function createDocument(Element $resource): void
     {
         $document = new Document($resource);
 
@@ -127,6 +132,7 @@ class JsonApiResponse
      * @param $content
      * @param array $headers
      * @param int $status
+     * @throws \InvalidArgumentException
      */
     private function setResponse(string $content, array $headers = [], int $status = 200)
     {
@@ -153,7 +159,9 @@ class JsonApiResponse
      * @throws \Doctrine\ORM\NonUniqueResultException
      * @throws \Jad\Exceptions\ParameterException
      * @throws \Jad\Exceptions\RequestException
+     * @throws \Jad\Exceptions\JadException
      * @throws \ReflectionException
+     * @throws \Exception
      */
     public function fetchResources(): void
     {
@@ -173,14 +181,15 @@ class JsonApiResponse
     }
 
     /**
-     * @param $relationship
-     * @return Collection|Resource
+     * @param array $relationship
+     * @return Element|null
      * @throws JadException
      * @throws ResourceNotFoundException
      * @throws \ReflectionException
      */
-    public function getRelationship($relationship)
+    public function getRelationship(array $relationship): ?Element
     {
+        dump($relationship);
         $id = $this->request->getId();
         $type = $this->request->getResourceType();
 

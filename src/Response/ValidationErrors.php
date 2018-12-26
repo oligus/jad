@@ -27,6 +27,9 @@ class ValidationErrors
         $this->errorList = $errorList;
     }
 
+    /**
+     * @throws \InvalidArgumentException
+     */
     public function render(): void
     {
         $document = new \stdClass();
@@ -44,6 +47,7 @@ class ValidationErrors
         }
 
         $response = new Response();
+        $headers = [];
         $headers['Content-Type'] = 'application/vnd.api+json';
 
         foreach ($headers as $key => $value) {

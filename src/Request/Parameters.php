@@ -33,7 +33,7 @@ class Parameters
         if (!is_null($include)) {
             $includes = explode(',', $include);
 
-            $includes = array_map(function ($item) {
+            $includes = array_map(function (string $item): string {
                 return trim($item);
             }, $includes);
 
@@ -67,7 +67,7 @@ class Parameters
      */
     protected function getArgument(string $key, string $default = null)
     {
-        return isset($this->arguments[$key]) ? $this->arguments[$key] : $default;
+        return $this->arguments[$key] ?? $default;
     }
 
     /**
@@ -92,11 +92,11 @@ class Parameters
             $invalid = array_diff(array_unique($keys), $available);
 
             if (count($invalid)) {
-                $resourceTypes = array_map(function ($resourceType) {
+                $resourceTypes = array_map(function (string $resourceType): string {
                     return Text::kebabify($resourceType);
                 }, $available);
 
-                $invalidTypes = array_map(function ($resourceType) {
+                $invalidTypes = array_map(function (string $resourceType): string {
                     return Text::kebabify($resourceType);
                 }, $invalid);
 
@@ -114,9 +114,9 @@ class Parameters
     }
 
     /**
-     * @param null $perPage
+     * @param int|null $perPage
      * @return int
-     * @throws \Exception
+     * @throws ParameterException
      */
     public function getOffset(int $perPage = null): int
     {
@@ -158,7 +158,7 @@ class Parameters
     protected function getPage($key)
     {
         $page = $this->getArgument('page');
-        return isset($page[$key]) ? $page[$key] : '';
+        return $page[$key] ?? '';
     }
 
     /**
@@ -181,7 +181,7 @@ class Parameters
             $limit = min($max, $limit);
         }
 
-        return $limit;
+        return (int)$limit;
     }
 
     /**
@@ -232,10 +232,10 @@ class Parameters
             return [];
         }
 
-        return array_map(function ($fields) {
+        return array_map(function (string $fields): array {
             $fieldsArray = explode(',', $fields);
 
-            return array_map(function ($field) {
+            return array_map(function (string $field): string {
                 return trim($field);
             }, $fieldsArray);
         }, $fields);
@@ -255,8 +255,8 @@ class Parameters
      * @param int $default
      * @return int
      */
-    public function getSize($default = 25)
+    public function getSize($default = 25): int
     {
-        return $this->getPage('size') ?: $default;
+        return (int)$this->getPage('size') ?: $default;
     }
 }

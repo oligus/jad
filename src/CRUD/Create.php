@@ -17,6 +17,7 @@ class Create extends AbstractCRUD
      * @throws \Jad\Exceptions\JadException
      * @throws \Jad\Exceptions\RequestException
      * @throws \ReflectionException
+     * @throws \InvalidArgumentException
      */
     public function createResource(): ?string
     {

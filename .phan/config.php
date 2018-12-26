@@ -332,8 +332,6 @@ return [
         'vendor/',
         'src/Document/',
         'src/Query/',
-        'src/Request/',
-        'src/Response/',
         'src/Serializers/',
         'src/Support/',
     ],

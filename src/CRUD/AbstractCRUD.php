@@ -171,6 +171,7 @@ class AbstractCRUD
 
     /**
      * @param object $entity
+     * @throws \InvalidArgumentException
      */
     protected function validateEntity($entity): void
     {

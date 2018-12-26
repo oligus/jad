@@ -5,6 +5,10 @@ namespace Jad\Response;
 use Symfony\Component\HttpFoundation\Response;
 use Jad\Configure;
 
+/**
+ * Class Error
+ * @package Jad\Response
+ */
 class Error
 {
     /**
@@ -21,6 +25,9 @@ class Error
         $this->exception = $exception;
     }
 
+    /**
+     * @throws \InvalidArgumentException
+     */
     public function render(): void
     {
         $document = new \stdClass();
@@ -34,6 +41,7 @@ class Error
         $document->errors[] = $error;
 
         $response = new Response();
+        $headers = [];
         $headers['Content-Type'] = 'application/vnd.api+json';
 
         foreach ($headers as $key => $value) {
