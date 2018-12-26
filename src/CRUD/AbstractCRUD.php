@@ -90,7 +90,7 @@ class AbstractCRUD
             if ($this->request->getMethod() === 'PATCH') {
                 $attribute = ClassHelper::getPropertyValue($entity, $relatedType);
 
-                if($attribute instanceof Collections\Collection) {
+                if ($attribute instanceof Collections\Collection) {
                     ClassHelper::setPropertyValue($entity, $relatedType, new ArrayCollection());
                 }
             }
