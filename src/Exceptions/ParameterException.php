@@ -2,6 +2,10 @@
 
 namespace Jad\Exceptions;
 
+/**
+ * Class ParameterException
+ * @package Jad\Exceptions
+ */
 class ParameterException extends \Exception
 {
 

@@ -8,7 +8,7 @@ use Jad\Query\Paginator;
  * Class Collection
  * @package Jad\Document
  */
-class Collection implements \JsonSerializable
+class Collection implements \JsonSerializable, Element
 {
     /**
      * @var bool

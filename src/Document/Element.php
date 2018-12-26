@@ -9,7 +9,7 @@ namespace Jad\Document;
 interface Element
 {
     /**
-     * @return mixed
+     * @return bool
      */
-    public function serialize();
+    public function hasIncluded(): bool;
 }

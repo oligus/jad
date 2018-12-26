@@ -2,6 +2,10 @@
 
 namespace Jad\Exceptions;
 
+/**
+ * Class JadException
+ * @package Jad\Exceptions
+ */
 class JadException extends \Exception
 {
 

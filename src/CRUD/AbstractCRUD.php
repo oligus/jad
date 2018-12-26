@@ -70,7 +70,7 @@ class AbstractCRUD
 
     /**
      * @param $input
-     * @param $entity
+     * @param object $entity
      * @throws \Doctrine\ORM\ORMException
      * @throws \Jad\Exceptions\JadException
      * @throws \ReflectionException
@@ -122,7 +122,7 @@ class AbstractCRUD
     /**
      * @param MapItem $mapItem
      * @param array $attributes
-     * @param $entity
+     * @param object $entity
      * @throws \Doctrine\Common\Annotations\AnnotationException
      * @throws \Doctrine\ORM\Mapping\MappingException
      * @throws \ReflectionException
@@ -170,7 +170,7 @@ class AbstractCRUD
     }
 
     /**
-     * @param $entity
+     * @param object $entity
      */
     protected function validateEntity($entity): void
     {

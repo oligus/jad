@@ -2,6 +2,10 @@
 
 namespace Jad\Exceptions;
 
+/**
+ * Class MappingException
+ * @package Jad\Exceptions
+ */
 class MappingException extends \Exception
 {
 

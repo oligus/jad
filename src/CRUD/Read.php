@@ -43,7 +43,7 @@ class Read extends AbstractCRUD
         $query = $qb->getQuery();
 
         foreach (array_keys($mapItem->getClassMeta()->getAssociationMappings()) as $relation) {
-            $query->setFetchMode($mapItem->getEntityClass(), $relation, ClassMetadata::FETCH_EAGER);
+            $query->setFetchMode($mapItem->getEntityClass(), (string) $relation, ClassMetadata::FETCH_EAGER);
         }
 
         $entity = $query->getOneOrNullResult();
@@ -112,7 +112,7 @@ class Read extends AbstractCRUD
         $query = $qb->getQuery();
 
         foreach (array_keys($mapItem->getClassMeta()->getAssociationMappings()) as $relation) {
-            $query->setFetchMode($mapItem->getEntityClass(), $relation, ClassMetadata::FETCH_EAGER);
+            $query->setFetchMode($mapItem->getEntityClass(), (string)$relation, ClassMetadata::FETCH_EAGER);
         }
 
         $entities = $query->getResult();

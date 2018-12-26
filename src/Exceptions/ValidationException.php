@@ -2,6 +2,10 @@
 
 namespace Jad\Exceptions;
 
+/**
+ * Class ValidationException
+ * @package Jad\Exceptions
+ */
 class ValidationException extends \Exception
 {
 

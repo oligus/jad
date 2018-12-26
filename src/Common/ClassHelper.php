@@ -11,7 +11,7 @@ use Jad\Exceptions\JadException;
 class ClassHelper
 {
     /**
-     * @param $class
+     * @param object $class
      * @param string $property
      * @return mixed
      * @throws JadException
@@ -37,9 +37,9 @@ class ClassHelper
     }
 
     /**
-     * @param $class
+     * @param object $class
      * @param string $property
-     * @param $value
+     * @param mixed $value
      * @throws \ReflectionException
      */
     public static function setPropertyValue($class, string $property, $value): void
@@ -61,7 +61,7 @@ class ClassHelper
     }
 
     /**
-     * @param $class
+     * @param object $class
      * @param string $property
      * @return bool
      * @throws \ReflectionException

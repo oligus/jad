@@ -11,7 +11,7 @@ use Jad\Query\Paginator;
 class JsonDocument implements \JsonSerializable
 {
     /**
-     * @var Element $element
+     * @var Element
      */
     private $element;
 
@@ -26,10 +26,10 @@ class JsonDocument implements \JsonSerializable
     private $meta = null;
 
     /**
-     * JsonApiResponse constructor.
-     * @param \JsonSerializable $element
+     * JsonDocument constructor.
+     * @param Element $element
      */
-    public function __construct(\JsonSerializable $element)
+    public function __construct(Element $element)
     {
         $this->element = $element;
     }
@@ -42,13 +42,16 @@ class JsonDocument implements \JsonSerializable
         $this->links = $links;
     }
 
+    /**
+     * @param Meta $meta
+     */
     public function addMeta(Meta $meta): void
     {
         $this->meta = $meta;
     }
 
     /**
-     * @return mixed|\stdClass
+     * @return \stdClass
      * @throws \Exception
      */
     public function jsonSerialize(): \stdClass

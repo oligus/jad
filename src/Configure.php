@@ -45,9 +45,9 @@ class Configure
 
     /**
      * @param $key
-     * @param $value
+     * @param mixed $value
      */
-    public function setConfig(string $key, $value)
+    public function setConfig(string $key, $value): void
     {
         if (array_key_exists($key, $this->config)) {
             $this->config[$key] = $value;

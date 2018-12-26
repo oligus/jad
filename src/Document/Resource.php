@@ -13,7 +13,7 @@ use Doctrine\Common\Collections\Collection;
  * Class Resource
  * @package Klirr\JsonApi\Response
  */
-class Resource implements \JsonSerializable
+class Resource implements \JsonSerializable, Element
 {
     /**
      * @var
@@ -79,7 +79,7 @@ class Resource implements \JsonSerializable
 
     /**
      * @codeCoverageIgnore
-     * @param null $includedParams
+     * @param mixed $includedParams
      */
     public function setIncludedParams($includedParams)
     {

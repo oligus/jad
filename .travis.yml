@@ -1,9 +1,11 @@
 language: php
 php:
-  - '7.1'
+  - '7.2'
 
 install:
   - composer install
+  - pecl install ast
+  - echo "extension=ast.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
 
 script:
   - composer test-coverage

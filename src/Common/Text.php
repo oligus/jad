@@ -25,12 +25,12 @@ class Text
     }
 
     /**
-     * @param $str
-     * @return mixed
+     * @param string $str
+     * @return string
      */
     public static function deKebabify(string $str): string
     {
-        return preg_replace_callback('!\-[a-z]!', function ($result) {
+        return preg_replace_callback('!\-[a-z]!', function (array $result): string {
             $char = ltrim($result[0], '-');
             return strtoupper($char);
         }, $str);

@@ -2,6 +2,10 @@
 
 namespace Jad\Exceptions;
 
+/**
+ * Class SerializerException
+ * @package Jad\Exceptions
+ */
 class SerializerException extends \Exception
 {
 
