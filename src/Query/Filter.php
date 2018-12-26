@@ -187,7 +187,7 @@ class Filter
      */
     public function getFilterType(array $filter)
     {
-        if (!is_array($filter) || empty($filter)) {
+        if (empty($filter)) {
             return false;
         }
 
@@ -239,7 +239,7 @@ class Filter
      * @param $condition
      * @param $value
      * @param string $where
-     * @param null $alias
+     * @param string|null $alias
      * @throws JadException
      */
     private function addFilter(
