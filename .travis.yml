@@ -2,10 +2,6 @@ language: php
 php:
   - '7.2'
 
-env:
-- PHAN_ALLOW_XDEBUG=1
-- PHAN_DISABLE_XDEBUG_WARN=1
-
 install:
   - composer install
   - pecl install ast
