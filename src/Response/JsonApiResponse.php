@@ -121,7 +121,6 @@ class JsonApiResponse
         } else {
             $this->setResponse(json_encode($document));
         }
-
     }
 
     /**

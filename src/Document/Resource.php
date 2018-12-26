@@ -114,7 +114,6 @@ class Resource implements \JsonSerializable
                 $resource->attributes = $this->serializer->getAttributes($entity, $fields);
             }
         } else {
-
             $resource->attributes = $this->serializer->getAttributes($entity, $fields);
 
             $relationships = $this->serializer->getRelationships($entity);
@@ -199,5 +198,4 @@ class Resource implements \JsonSerializable
 
         return array('type' => $type, 'collection' => $collection);
     }
-
 }

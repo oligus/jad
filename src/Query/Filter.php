@@ -122,7 +122,6 @@ class Filter
                     $this->addConditionalFilter($path);
                 }
             }
-
         }
 
         if ($this->getFilterType($this->filter) === 'single') {
@@ -274,8 +273,11 @@ class Filter
         }
 
         if (in_array($condition, ['between'])) {
-            $this->qb->$whereCondition($this->qb->expr()->$condition($alias . '.' . $field, ':' . $fieldName1,
-                ':' . $fieldName2));
+            $this->qb->$whereCondition($this->qb->expr()->$condition(
+                $alias . '.' . $field,
+                ':' . $fieldName1,
+                ':' . $fieldName2
+            ));
             $this->qb->setParameter($fieldName1, $value[0]);
             $this->qb->setParameter($fieldName2, $value[1]);
         } else {
@@ -284,7 +286,6 @@ class Filter
                 $this->qb->setParameter($fieldName1, $value);
             }
         }
-
     }
 
     /**

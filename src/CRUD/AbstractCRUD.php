@@ -87,7 +87,7 @@ class AbstractCRUD
             /**
              * Clear collection on PATCH
              */
-            if($this->request->getMethod() === 'PATCH') {
+            if ($this->request->getMethod() === 'PATCH') {
                 $attribute = ClassHelper::getPropertyValue($entity, $relatedType);
 
                 if($attribute instanceof Collections\Collection) {
@@ -102,7 +102,6 @@ class AbstractCRUD
                 $reference = $this->mapper->getEm()->getReference($relationalClass, $relationship->id);
 
                 if ($relatedProperty instanceof DoctrineCollection) {
-
                     // First try entity add method, else add straight to collection
                     $method1 = 'add' . ucfirst($relationship->type);
                     $method2 = 'add' . ucfirst($relatedType);
@@ -157,7 +156,7 @@ class AbstractCRUD
 
             $type = $mapItem->getClassMeta()->getFieldMapping($attribute)['type'];
 
-            switch($type) {
+            switch ($type) {
                 case 'datetime':
                     $value = new \DateTime($value);
                     break;

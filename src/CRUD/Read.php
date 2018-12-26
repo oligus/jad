@@ -54,8 +54,10 @@ class Read extends AbstractCRUD
             );
         }
 
-        $resource = new Resource($entity,
-            new EntitySerializer($this->mapper, $this->request->getResourceType(), $this->request));
+        $resource = new Resource(
+            $entity,
+            new EntitySerializer($this->mapper, $this->request->getResourceType(), $this->request)
+        );
         $resource->setFields($this->request->getParameters()->getFields());
         $resource->setIncludedParams($this->request->getParameters()->getInclude($mapItem->getClassMeta()->getAssociationNames()));
 
@@ -118,8 +120,10 @@ class Read extends AbstractCRUD
         $collection->setPaginator($paginator);
 
         foreach ($entities as $entity) {
-            $resource = new Resource($entity,
-                new EntitySerializer($this->mapper, $this->request->getResourceType(), $this->request));
+            $resource = new Resource(
+                $entity,
+                new EntitySerializer($this->mapper, $this->request->getResourceType(), $this->request)
+            );
             $resource->setFields($this->request->getParameters()->getFields());
             $resource->setIncludedParams($this->request->getParameters()->getInclude($mapItem->getClassMeta()->getAssociationNames()));
             $collection->add($resource);

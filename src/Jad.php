@@ -67,7 +67,7 @@ class Jad
             $response = new JsonApiResponse($this->jsonApiRequest, $this->mapper);
             $response->render();
         } catch (ResourceNotFoundException $exception) {
-            if(Configure::getInstance()->getConfig('strict')) {
+            if (Configure::getInstance()->getConfig('strict')) {
                 $success = false;
                 $error = new Error($exception);
                 $error->render();

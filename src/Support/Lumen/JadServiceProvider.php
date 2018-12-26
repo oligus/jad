@@ -23,7 +23,8 @@ class JadServiceProvider extends ServiceProvider
     public function register()
     {
         $this->mergeConfigFrom(
-            $this->getConfigPath(), 'jad'
+            $this->getConfigPath(),
+            'jad'
         );
 
         $this->app->configure('jad');

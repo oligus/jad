@@ -217,5 +217,4 @@ class Paginator
     {
         return (int)$this->lastPage;
     }
-
 }

@@ -30,10 +30,10 @@ class Parameters
 
         $include = $this->getArgument('include');
 
-        if(!is_null($include)) {
+        if (!is_null($include)) {
             $includes = explode(',', $include);
 
-            $includes = array_map(function($item) {
+            $includes = array_map(function ($item) {
                 return trim($item);
             }, $includes);
 
@@ -49,7 +49,7 @@ class Parameters
      */
     public function getIncludes(): array
     {
-       return $this->includes;
+        return $this->includes;
     }
 
     /**
@@ -258,7 +258,5 @@ class Parameters
     public function getSize($default = 25)
     {
         return $this->getPage('size') ?: $default;
-
     }
-
 }

@@ -107,7 +107,6 @@ abstract class AbstractSerializer implements Serializer
         $mergedFields = array_unique(array_merge($metaFields, $classFields));
 
         foreach ($mergedFields as $field) {
-
             // Do not display association
             if ($this->getMapItem()->getClassMeta()->hasAssociation($field)) {
                 continue;

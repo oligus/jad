@@ -32,10 +32,10 @@ class EntitySerializer extends AbstractSerializer
 
         $associations = $this->getMapItem()->getClassMeta()->getAssociationMappings();
 
-        foreach($associations as $association) {
+        foreach ($associations as $association) {
             $assocName = Text::kebabify($association['fieldName']);
 
-            if($this->request->hasId()) {
+            if ($this->request->hasId()) {
                 $relationships[$assocName] = [
                     'links' => [
                         'self' => $this->request->getCurrentUrl() . '/relationship/' . $assocName,
@@ -45,7 +45,7 @@ class EntitySerializer extends AbstractSerializer
             } else {
                 $id = method_exists($entity, 'get' .  ucfirst($this->getMapItem()->getIdField()))
                     ? $entity->getId()
-                    : ClassHelper::getPropertyValue($entity,  $this->getMapItem()->getIdField());
+                    : ClassHelper::getPropertyValue($entity, $this->getMapItem()->getIdField());
 
                 $relationships[$assocName] = array(
                     'links' => [
@@ -55,16 +55,15 @@ class EntitySerializer extends AbstractSerializer
                 );
             }
 
-            if(array_key_exists($assocName, $this->includeMeta)) {
+            if (array_key_exists($assocName, $this->includeMeta)) {
                 $relationships[$assocName]['data'] = array();
-                foreach($this->includeMeta[$assocName] as $id) {
+                foreach ($this->includeMeta[$assocName] as $id) {
                     $relationships[$assocName]['data'][] = array(
                         'type' => $assocName,
                         'id' => (string) $id
                     );
                 }
             }
-
         }
 
         return $relationships;
@@ -81,7 +80,7 @@ class EntitySerializer extends AbstractSerializer
      */
     public function getIncluded(string $type, $entity, array $fields): ?array
     {
-        if(!$this->mapper->hasMapItem($type)) {
+        if (!$this->mapper->hasMapItem($type)) {
             return null;
         }
 
@@ -91,7 +90,7 @@ class EntitySerializer extends AbstractSerializer
 
         $result = ClassHelper::getPropertyValue($entity, Text::deKebabify($type));
 
-        if($result instanceof PersistentCollection) {
+        if ($result instanceof PersistentCollection) {
             return $this->getIncludedResources($type, $result, $fields);
         } else {
             return $this->getIncludedResources($type, [$result], $fields);
@@ -112,8 +111,7 @@ class EntitySerializer extends AbstractSerializer
         $this->includeMeta[$type] = [];
 
         foreach ($entityCollection as $associatedEntity) {
-
-            if(empty($associatedEntity)) {
+            if (empty($associatedEntity)) {
                 continue;
             }
 

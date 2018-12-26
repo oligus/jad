@@ -65,5 +65,4 @@ interface Serializer
      * @return mixed
      */
     public function getMapItem();
-
 }

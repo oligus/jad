@@ -36,7 +36,7 @@ class Configure
      */
     public static function getInstance(): Configure
     {
-        if(!self::$instance instanceof Configure) {
+        if (!self::$instance instanceof Configure) {
             self::$instance = new self();
         }
 
@@ -49,7 +49,7 @@ class Configure
      */
     public function setConfig(string $key, $value)
     {
-        if(array_key_exists($key, $this->config)) {
+        if (array_key_exists($key, $this->config)) {
             $this->config[$key] = $value;
         }
     }
@@ -60,7 +60,7 @@ class Configure
      */
     public function getConfig(string $key)
     {
-        if(array_key_exists($key, $this->config)) {
+        if (array_key_exists($key, $this->config)) {
             return $this->config[$key];
         }
 

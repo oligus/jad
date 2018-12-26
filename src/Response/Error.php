@@ -48,7 +48,6 @@ class Error
         if (!Configure::getInstance()->getConfig('test_mode')) {
             exit(0);
         }
-
     }
 
     /**
