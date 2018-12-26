@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping\Annotation;
 
 /**
  * @Annotation
+ * @phan-file-suppress PhanPluginDescriptionlessCommentOnClass
  * @Target({"PROPERTY"})
  */
 final class Attribute implements Annotation

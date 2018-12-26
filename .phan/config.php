@@ -331,7 +331,6 @@ return [
     "exclude_analysis_directory_list" => [
         'vendor/',
         'src/Document/',
-        'src/Map/',
         'src/Query/',
         'src/Request/',
         'src/Response/',

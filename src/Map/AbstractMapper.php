@@ -6,6 +6,10 @@ use Jad\Exceptions\MappingException;
 use Jad\Exceptions\ResourceNotFoundException;
 use Doctrine\ORM\EntityManagerInterface;
 
+/**
+ * Class AbstractMapper
+ * @package Jad\Map
+ */
 abstract class AbstractMapper implements Mapper
 {
     /**
@@ -46,8 +50,8 @@ abstract class AbstractMapper implements Mapper
     }
 
     /**
-     * @param $type
-     * @param $values
+     * @param string $type
+     * @param mixed $values
      * @param bool $paginate
      */
     public function add(string $type, $values, bool $paginate = false): void
@@ -79,7 +83,7 @@ abstract class AbstractMapper implements Mapper
     }
 
     /**
-     * @param $type
+     * @param string $type
      * @return bool
      */
     public function hasMapItem(string $type): bool
@@ -94,11 +98,11 @@ abstract class AbstractMapper implements Mapper
     }
 
     /**
-     * @param $type
-     * @return MapItem
+     * @param string $type
+     * @return MapItem|null
      * @throws ResourceNotFoundException
      */
-    public function getMapItem($type): MapItem
+    public function getMapItem(string $type): ?MapItem
     {
         foreach ($this->map as $mapItem) {
             if ($mapItem->getType() === $type) {
@@ -110,11 +114,11 @@ abstract class AbstractMapper implements Mapper
     }
 
     /**
-     * @param $className
-     * @return mixed
+     * @param string $className
+     * @return MapItem|null
      * @throws MappingException
      */
-    public function getMapItemByClass(string $className): MapItem
+    public function getMapItemByClass(string $className): ?MapItem
     {
         foreach ($this->map as $mapItem) {
             if ($mapItem->getEntityClass() === $className) {

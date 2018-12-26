@@ -4,6 +4,10 @@ namespace Jad\Map;
 
 use Doctrine\ORM\EntityManagerInterface;
 
+/**
+ * Interface Mapper
+ * @package Jad\Map
+ */
 interface Mapper
 {
     /**
@@ -12,20 +16,20 @@ interface Mapper
     public function getEm(): EntityManagerInterface;
 
     /**
-     * @param $type
-     * @return MapItem
+     * @param string $type
+     * @return MapItem|null
      */
-    public function getMapItem($type): MapItem;
+    public function getMapItem(string $type): ?MapItem;
 
     /**
-     * @param $type
+     * @param string $type
      * @return bool
      */
     public function hasMapItem(string $type): bool;
 
     /**
-     * @param $className
-     * @return MapItem
+     * @param string $className
+     * @return MapItem|null
      */
-    public function getMapItemByClass(string $className): MapItem;
+    public function getMapItemByClass(string $className): ?MapItem;
 }

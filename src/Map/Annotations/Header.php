@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping\Annotation;
 
 /**
  * @Annotation
+ * @phan-file-suppress PhanPluginDescriptionlessCommentOnClass
  * @Target("CLASS")
  */
 final class Header implements Annotation

@@ -4,7 +4,6 @@ namespace Jad\Map;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Common\Annotations\AnnotationReader;
-use Doctrine\Common\Annotations\AnnotationRegistry;
 use Jad\Common\Text;
 
 /**
@@ -22,12 +21,10 @@ class AnnotationsMapper extends AbstractMapper
     {
         parent::__construct($em);
 
-        AnnotationRegistry::registerLoader('class_exists');
-
         $reader = new AnnotationReader();
         $metaData = $em->getMetadataFactory()->getAllMetadata();
 
-        /** @var \Doctrine\ORM\Mapping\ClassMetadata $meta */
+        /** @var \Doctrine\ORM\Mapping\ClassMetadataInfo $meta */
         foreach ($metaData as $meta) {
             $head = $reader->getClassAnnotation($meta->getReflectionClass(), Annotations\Header::class);
 
@@ -44,7 +41,8 @@ class AnnotationsMapper extends AbstractMapper
                     }
                 }
 
-                //Set auto aliases for relationship mappings that do not
+                // Set auto aliases for relationship mappings that do not
+                // @phan-suppress-next-line PhanUndeclaredMethod
                 foreach ($meta->getAssociationMappings() as $associatedType => $associatedData) {
                     $targetType = $associatedData['targetEntity'];
                     $targetType = preg_replace('/.*\\\(.+?)/', '$1', $targetType);

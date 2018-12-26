@@ -7,6 +7,10 @@ use Jad\Exceptions\JadException;
 use Jad\Map\Annotations\Header;
 use Doctrine\Common\Annotations\AnnotationReader;
 
+/**
+ * Class MapItem
+ * @package Jad\Map
+ */
 class MapItem
 {
     /**
@@ -32,7 +36,7 @@ class MapItem
     /**
      * MapItem constructor.
      * @param $type
-     * @param $params
+     * @param mixed $params
      * @param bool $paginate
      */
     public function __construct(string $type, $params, bool $paginate = false)
@@ -140,9 +144,9 @@ class MapItem
 
     /**
      * @codeCoverageIgnore
-     * @param $paginate
+     * @param bool $paginate
      */
-    public function setPaginate($paginate): void
+    public function setPaginate(bool $paginate): void
     {
         $this->paginate = $paginate;
     }
