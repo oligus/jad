@@ -189,7 +189,6 @@ class JsonApiResponse
      */
     public function getRelationship(array $relationship): ?Element
     {
-        dump($relationship);
         $id = $this->request->getId();
         $type = $this->request->getResourceType();
 
