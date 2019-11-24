@@ -30,7 +30,6 @@ class Read extends AbstractCRUD
     {
         /** @var \Jad\Map\MapItem $mapItem */
         $mapItem = $this->mapper->getMapItem($this->request->getResourceType());
-        //$entity = $this->mapper->getEm()->getRepository($mapItem->getEntityClass())->find($id);
 
         $qb = new QueryBuilder($this->mapper->getEm());
 
@@ -133,14 +132,14 @@ class Read extends AbstractCRUD
     }
 
     /**
-     * @param $type
+     * @param $resourceType
      * @return array|null
      * @throws \Jad\Exceptions\ParameterException
      */
-    public function getOrderBy(string $type): ?array
+    public function getOrderBy(string $resourceType): ?array
     {
         $orderBy = null;
-        $mapItem = $this->mapper->getMapItem($type);
+        $mapItem = $this->mapper->getMapItem($resourceType);
         $available = $mapItem->getClassMeta()->getFieldNames();
 
         $result = $this->request->getParameters()->getSort($available);

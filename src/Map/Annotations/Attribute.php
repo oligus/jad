@@ -20,4 +20,20 @@ final class Attribute implements Annotation
      * @var boolean
      */
     public $readOnly;
+
+    /**
+     * @return bool
+     */
+    public function isReadOnly(): bool
+    {
+        return $this->readOnly ?? false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isVisible(): bool
+    {
+        return $this->visible ?? true;
+    }
 }

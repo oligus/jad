@@ -87,8 +87,10 @@ class Resource implements \JsonSerializable, Element
     }
 
     /**
-     * @return mixed|\stdClass
+     * @return \stdClass
+     * @throws \Doctrine\Common\Annotations\AnnotationException
      * @throws \Jad\Exceptions\JadException
+     * @throws \ReflectionException
      */
     public function jsonSerialize(): \stdClass
     {
@@ -98,10 +100,10 @@ class Resource implements \JsonSerializable, Element
         $entity = $this->entity;
         $type = $this->serializer->getType($entity);
 
-        $fields = null;
+        $fields = [];
 
         if (is_array($this->fields)) {
-            $fields = array_key_exists($type, $this->fields) ? $this->fields[$type] : null;
+            $fields = array_key_exists($type, $this->fields) ? $this->fields[$type] : [];
         }
 
         $resource->id = $this->serializer->getId($entity);

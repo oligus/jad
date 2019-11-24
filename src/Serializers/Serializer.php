@@ -34,10 +34,10 @@ interface Serializer
 
     /**
      * @param $entity
-     * @param array|null $fields
-     * @return mixed
+     * @param array $selectedFields
+     * @return array
      */
-    public function getAttributes($entity, ?array $fields): array;
+    public function getAttributes($entity, array $selectedFields = []): array;
 
     /**
      * @param $entity

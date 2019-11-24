@@ -43,6 +43,7 @@ class Invoices
 
     /**
      * @ORM\Column(name="BillingState", type="string", length=40)
+     * @JAD\Attribute(readOnly=true)
      */
     protected $billingState;
 

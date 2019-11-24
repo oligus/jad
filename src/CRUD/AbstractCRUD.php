@@ -4,6 +4,7 @@ namespace Jad\CRUD;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections;
+use Jad\Map\Annotations\Attribute;
 use Jad\Map\Mapper;
 use Jad\Request\JsonApiRequest;
 use Jad\Common\ClassHelper;
@@ -126,6 +127,7 @@ class AbstractCRUD
      * @throws \Doctrine\Common\Annotations\AnnotationException
      * @throws \Doctrine\ORM\Mapping\MappingException
      * @throws \ReflectionException
+     * @throws \Exception
      */
     protected function addAttributes(MapItem $mapItem, array $attributes, $entity): void
     {
@@ -139,19 +141,12 @@ class AbstractCRUD
                 continue;
             }
 
-            $jadAnnotation = $reader->getPropertyAnnotation(
-                $reflection->getProperty($attribute),
-                'Jad\Map\Annotations\Attribute'
+            $jadAttribute = $reader->getPropertyAnnotation(
+                $reflection->getProperty($attribute), Attribute::class
             );
 
-            if (!is_null($jadAnnotation)) {
-                if (property_exists($jadAnnotation, 'readOnly')) {
-                    $readOnly = is_null($jadAnnotation->readOnly) ? true : (bool)$jadAnnotation->readOnly;
-
-                    if ($readOnly) {
-                        continue;
-                    }
-                }
+            if($jadAttribute instanceof Attribute && $jadAttribute->isReadOnly()) {
+                continue;
             }
 
             $type = $mapItem->getClassMeta()->getFieldMapping($attribute)['type'];
@@ -175,9 +170,6 @@ class AbstractCRUD
      */
     protected function validateEntity($entity): void
     {
-        /**
-         * Validate input
-         */
         $validator = Validation::createValidatorBuilder()->enableAnnotationMapping()->getValidator();
         $errors = $validator->validate($entity);
 

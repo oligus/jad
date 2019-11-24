@@ -4,6 +4,7 @@ namespace Jad\Tests\CRUD;
 
 use Jad\Common\ClassHelper;
 use Jad\Map\AnnotationsMapper;
+use Jad\Map\MapItem;
 use Jad\Tests\TestCase;
 use Jad\CRUD\Create;
 use Jad\Database\Manager;
@@ -79,7 +80,50 @@ class CreateTest extends TestCase
         $input->data->relationships->{'invoice-items'} = $item;
 
         return $input;
+    }
 
+    /**
+     * @throws \Doctrine\Common\Annotations\AnnotationException
+     * @throws \ReflectionException
+     * @throws \Exception
+     */
+    public function testAddAttribute()
+    {
+        $em = Manager::getInstance()->getEm();
 
+        /** @var Invoices $invoice */
+        $invoice = new Invoices();
+
+        $request = $this->getMockBuilder('Jad\Request\JsonApiRequest')
+            ->setMethods(['getInputJson', 'getMethod'])
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $mapper = new AnnotationsMapper($em);
+
+        $attributes = [
+            "invoice-date" => "2018-01-01",
+            "billing-address" => "River street 14",
+            "billing-city" => "Westham",
+            "billing-state" => 'ReadOnly',
+            "billing-postal-code" => "WE345R",
+            "total" => 2.64,
+            "billingCountry" => 'United Kingdom'
+        ];
+
+        $meta = $em->getClassMetadata(Invoices::class);
+        $mapItem = new MapItem('invoice', ['entityClass' => Invoices::class, 'classMeta' => $meta]);
+
+        $create = new Create($request, $mapper);
+        $method = $this->getMethod('Jad\CRUD\Create', 'addAttributes');
+        $method->invokeArgs($create, [$mapItem, $attributes,  $invoice]);
+
+        $this->assertEquals(new \DateTime('2018-01-01'), ClassHelper::getPropertyValue($invoice, 'invoiceDate'));
+        $this->assertEquals('River street 14', ClassHelper::getPropertyValue($invoice, 'billingAddress'));
+        $this->assertEquals('Westham', ClassHelper::getPropertyValue($invoice, 'billingCity'));
+        $this->assertNull(ClassHelper::getPropertyValue($invoice, 'billingState'));
+        $this->assertEquals('WE345R', ClassHelper::getPropertyValue($invoice, 'billingPostalCode'));
+        $this->assertEquals(2.64, ClassHelper::getPropertyValue($invoice, 'total'));
+        $this->assertEquals('United Kingdom', ClassHelper::getPropertyValue($invoice, 'billingCountry'));
     }
 }
