@@ -7,6 +7,7 @@ use Jad\Common\Text;
 use Jad\Exceptions\RequestException;
 use Symfony\Component\HttpFoundation\Request;
 use stdClass;
+
 /**
  * Class JsonApiRequest
  * @package Jad\Request
