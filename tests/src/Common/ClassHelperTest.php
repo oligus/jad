@@ -3,16 +3,19 @@
 namespace Jad\Tests;
 
 use Jad\Common\ClassHelper;
+use Jad\Exceptions\JadException;
+use Jad\Tests\Query\ResourceNotFoundExceptionTest;
 
 class ClassHelperTest extends TestCase
 {
     /**
      * @throws \Jad\Exceptions\JadException
-     * @expectedException \Jad\Exceptions\JadException
-     * @expectedExceptionMessage Property [property3] not found in class [Jad\Tests\TestClass]
      */
     public function testGetPropertyValue()
     {
+        $this->expectException(JadException::class);
+        $this->expectExceptionMessage('roperty [property3] not found in class [Jad\Tests\TestClass]');
+
         $class = new TestClass();
         ClassHelper::setPropertyValue($class, 'property1', 'test');
 

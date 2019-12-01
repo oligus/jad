@@ -2,18 +2,18 @@
 
 namespace Jad\Tests\Document;
 
+use Jad\Exceptions\MappingException;
 use Jad\Tests\TestCase;
 use Jad\Document\Resource;
 use Doctrine\Common\Collections\ArrayCollection;
 
 class ResourceTest extends TestCase
 {
-    /**
-     * @expectedException           Jad\Exceptions\MappingException
-     * @expectedExceptionMessage    Included type [tracks] not available, check if resource type is mapped correctly.
-     */
     public function testGetIncluded()
     {
+        $this->expectException(MappingException::class);
+        $this->expectExceptionMessage('Included type [tracks] not available, check if resource type is mapped correctly.');
+
         $entity = $this->getMockBuilder('Jad\Database\Entities\Playlists')
             ->disableOriginalConstructor()
             ->setMethods(['test'])

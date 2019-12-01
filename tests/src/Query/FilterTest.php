@@ -2,6 +2,7 @@
 
 namespace Jad\Tests\Query;
 
+use Jad\Exceptions\JadException;
 use Jad\Tests\TestCase;
 use Jad\Query\Filter;
 use Jad\Common\ClassHelper;
@@ -65,6 +66,9 @@ class FilterTest extends TestCase
         $this->assertEquals('defaultType', ClassHelper::getPropertyValue($filter, 'path'));
     }
 
+    /**
+     * @throws \ReflectionException
+     */
     public function testGetArrayDepth()
     {
         $filter = new Filter([]);
@@ -84,6 +88,9 @@ class FilterTest extends TestCase
         ]]));
     }
 
+    /**
+     * @throws \ReflectionException
+     */
     public function testIsRelational()
     {
         $filter = new Filter([]);
@@ -170,6 +177,9 @@ class FilterTest extends TestCase
         $this->assertEquals('a2invoiceItems', $filter->getLastAlias());
     }
 
+    /**
+     * @throws JadException
+     */
     public function testSingleFilter()
     {
         $dql = $this->getDQLFromFilter(['total' => ['lt' => '5']]);
@@ -179,12 +189,18 @@ class FilterTest extends TestCase
         $this->assertRegExp('/SELECT a0customers FROM TestEntityClass a0customers WHERE a0customers.total < :total_[a-z0-9]{13}$/', $dql);
     }
 
+    /**
+     * @throws JadException
+     */
     public function testSingleRelationalFilter()
     {
         $dql = $this->getDQLFromFilter(['customers.invoices' => ['total' => ['lt' => '5']]]);
         $this->assertRegExp('/SELECT a0customers,a1invoices FROM TestEntityClass a0customers INNER JOIN a0customers.invoices a1invoices WHERE a1invoices.total < :total_[a-z0-9]{13}$/', $dql);
     }
 
+    /**
+     * @throws JadException
+     */
     public function testConditionalFilter()
     {
         $filter = [
@@ -230,12 +246,13 @@ class FilterTest extends TestCase
     }
 
     /**
-     * @expectedException \Jad\Exceptions\JadException
-     * @expectedExceptionMessage Filter condition [unknown] not available.
      * @throws \ReflectionException
      */
     public function testAddFilter()
     {
+        $this->expectException(JadException::class);
+        $this->expectExceptionMessage('Filter condition [unknown] not available.');
+
         $filter = new Filter([]);
         $filter->setQb(new QueryBuilder(Manager::getInstance()->getEm()));
         $method = $this->getMethod('Jad\Query\Filter', 'addFilter');
@@ -303,12 +320,13 @@ class FilterTest extends TestCase
     }
 
     /**
-     * @expectedException \Jad\Exceptions\JadException
-     * @expectedExceptionMessage Conditional filter value is not an array, check if [and] - [or] is present.
      * @throws \ReflectionException
      */
     public function testAddConditionalFilterException()
     {
+        $this->expectException(JadException::class);
+        $this->expectExceptionMessage('Conditional filter value is not an array, check if [and] - [or] is present.');
+
         $filter = new Filter(['invoices' => ['and' => ['price']]]);
         $filter->setQb(new QueryBuilder(Manager::getInstance()->getEm()));
         $method = $this->getMethod('Jad\Query\Filter', 'addConditionalFilter');

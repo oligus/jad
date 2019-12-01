@@ -30,7 +30,10 @@ class Text
      */
     public static function deKebabify(string $str): string
     {
-        return preg_replace_callback('!\-[a-z]!', function (array $result): string {
+        /**
+         * @param array<string> $result
+         */
+        return preg_replace_callback('!-[a-z]!', function (array $result): string {
             $char = ltrim($result[0], '-');
             return strtoupper($char);
         }, $str);

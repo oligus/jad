@@ -130,7 +130,7 @@ class JsonApiResponse
 
     /**
      * @param $content
-     * @param array $headers
+     * @param array<string> $headers
      * @param int $status
      * @throws \InvalidArgumentException
      */
@@ -144,7 +144,7 @@ class JsonApiResponse
         }
 
         foreach ($headers as $key => $value) {
-            $response->headers->set($key, $value);
+            $response->headers->set((string)$key, $value);
         }
 
         $response->setContent($content);
@@ -181,7 +181,7 @@ class JsonApiResponse
     }
 
     /**
-     * @param array $relationship
+     * @param array<string> $relationship
      * @return Element|null
      * @throws JadException
      * @throws ResourceNotFoundException

@@ -6,7 +6,7 @@ use Jad\Configure;
 use Jad\Common\Text;
 use Jad\Exceptions\RequestException;
 use Symfony\Component\HttpFoundation\Request;
-
+use stdClass;
 /**
  * Class JsonApiRequest
  * @package Jad\Request
@@ -70,7 +70,7 @@ class JsonApiRequest
     }
 
     /**
-     * @return array
+     * @return array<string>
      */
     public function getItems(): array
     {
@@ -102,7 +102,7 @@ class JsonApiRequest
     }
 
     /**
-     * @return array
+     * @return array{type:string,view:string}|array{}
      * @throws RequestException
      */
     public function getRelationship(): array
@@ -124,6 +124,7 @@ class JsonApiRequest
             $relationships['view'] = 'list';
             $relationships['type'] = Text::deKebabify($items[3]);
         }
+
         return $relationships;
     }
 
@@ -166,7 +167,7 @@ class JsonApiRequest
      * @return \stdClass
      * @throws RequestException
      */
-    public function getInputJson(): \stdClass
+    public function getInputJson(): stdClass
     {
         $input = file_get_contents("php://input");
 
@@ -187,7 +188,7 @@ class JsonApiRequest
             throw new RequestException('JSON ERROR: ' . $msg . '.');
         }
 
-        if (empty($result) || !$result instanceof \stdClass) {
+        if (empty($result) || !$result instanceof stdClass) {
             throw new RequestException('Error json decoding input, check your formatting.');
         }
 

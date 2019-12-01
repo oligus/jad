@@ -11,7 +11,7 @@ class TestCase extends PHPUnitTestCase
     /**
      * @throws \Doctrine\Common\Persistence\Mapping\MappingException
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         Configure::getInstance()->setConfig('test_mode', true);

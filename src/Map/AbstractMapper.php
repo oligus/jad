@@ -18,7 +18,7 @@ abstract class AbstractMapper implements Mapper
     protected $em;
 
     /**
-     * @var array
+     * @var array<MapItem>
      */
     protected $map = [];
 
@@ -42,7 +42,7 @@ abstract class AbstractMapper implements Mapper
 
     /**
      * @codeCoverageIgnore
-     * @return array
+     * @return array<MapItem>
      */
     public function getMap(): array
     {

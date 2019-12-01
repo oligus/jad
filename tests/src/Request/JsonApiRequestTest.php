@@ -2,6 +2,7 @@
 
 namespace Jad\Tests;
 
+use Jad\Exceptions\RequestException;
 use Jad\Request\JsonApiRequest;
 use Jad\Request\Parameters;
 use Symfony\Component\HttpFoundation\Request;
@@ -94,12 +95,13 @@ class JsonApiRequestTest extends TestCase
     }
 
     /**
-     * @expectedException \Jad\Exceptions\RequestException
-     * @expectedExceptionMessage Relationship resource type missing
      * @throws \Jad\Exceptions\RequestException
      */
     public function testGetTypeException()
     {
+        $this->expectException(RequestException::class);
+        $this->expectExceptionMessage('Relationship resource type missing');
+
         $_SERVER['REQUEST_URI']  = '/api/jad/articles/1/relationships';
         $request = $this->createRequest();
         $request->setPathPrefix('api/jad');

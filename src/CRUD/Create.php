@@ -3,6 +3,14 @@
 namespace Jad\CRUD;
 
 use Jad\Common\ClassHelper;
+use Doctrine\Common\Annotations\AnnotationException;
+use Doctrine\ORM\ORMException;
+use Doctrine\ORM\Mapping\MappingException;
+use Jad\Exceptions\JadException;
+use Jad\Exceptions\RequestException;
+use ReflectionException;
+use InvalidArgumentException;
+use Exception;
 
 /**
  * Class Create
@@ -11,14 +19,15 @@ use Jad\Common\ClassHelper;
 class Create extends AbstractCRUD
 {
     /**
-     * @return null|string
-     * @throws \Doctrine\Common\Annotations\AnnotationException
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Jad\Exceptions\JadException
-     * @throws \Jad\Exceptions\RequestException
-     * @throws \ReflectionException
-     * @throws \InvalidArgumentException
-     * @throws \Exception
+     * @return string|null
+     * @throws AnnotationException
+     * @throws JadException
+     * @throws MappingException
+     * @throws ORMException
+     * @throws ReflectionException
+     * @throws RequestException
+     * @throws InvalidArgumentException
+     * @throws Exception
      */
     public function createResource(): ?string
     {

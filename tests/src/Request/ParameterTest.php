@@ -2,6 +2,7 @@
 
 namespace Jad\Tests\Request;
 
+use Jad\Exceptions\ParameterException;
 use Jad\Tests\TestCase;
 use Jad\Request\Parameters;
 
@@ -12,12 +13,13 @@ use Jad\Request\Parameters;
 class ParameterTest extends TestCase
 {
     /**
-     * @expectedException \Jad\Exceptions\ParameterException
-     * @expectedExceptionMessage Resource to include not found [test1], available resources [author, test2]
      * @throws \Jad\Exceptions\ParameterException
      */
     public function testGetIncludes()
     {
+        $this->expectException(ParameterException::class);
+        $this->expectExceptionMessage('Resource to include not found [test1], available resources [author, test2]');
+
         $parameters = new Parameters();
         $parameters->setArguments([
             'include' => 'author, author'
@@ -43,12 +45,13 @@ class ParameterTest extends TestCase
     }
 
     /**
-     * @expectedException \Jad\Exceptions\ParameterException
-     * @expectedExceptionMessage page[offset] must be >=0
      * @throws \Exception
      */
     public function testGetOffset()
     {
+        $this->expectException(ParameterException::class);
+        $this->expectExceptionMessage('page[offset] must be >=0');
+
         $parameters = new Parameters();
         $parameters->setArguments([
             'page' => [
@@ -138,12 +141,13 @@ class ParameterTest extends TestCase
     }
 
     /**
-     * @expectedException \Jad\Exceptions\ParameterException
-     * @expectedExceptionMessage Invalid sort fields [test1,test2]
      * @throws \Jad\Exceptions\ParameterException
      */
     public function testGetSort()
     {
+        $this->expectException(ParameterException::class);
+        $this->expectExceptionMessage('Invalid sort fields [test1,test2]');
+
         $parameters = new Parameters();
         $parameters->setArguments([
             'sort' => 'test1, -test2'

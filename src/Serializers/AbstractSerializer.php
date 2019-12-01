@@ -11,6 +11,8 @@ use Jad\Map\MapItem;
 use Jad\Exceptions\SerializerException;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\ORM\Mapping\Column;
+use ReflectionClass;
+use DateTime;
 
 /**
  * Class AbstractSerializer
@@ -108,7 +110,6 @@ abstract class AbstractSerializer implements Serializer
         $attributes = [];
 
         foreach ($this->getFields() as $field) {
-
             if ($this->hasAssociation($field)) {
                 continue;
             }
@@ -117,7 +118,7 @@ abstract class AbstractSerializer implements Serializer
                 continue;
             }
 
-            if(!$this->isSelectedField($field, $selectedFields)) {
+            if (!$this->isSelectedField($field, $selectedFields)) {
                 continue;
             }
 
@@ -128,7 +129,7 @@ abstract class AbstractSerializer implements Serializer
             $fieldValue = ClassHelper::getPropertyValue($entity, $field);
             $value = $fieldValue;
 
-            if ($fieldValue instanceof \DateTime) {
+            if ($fieldValue instanceof DateTime) {
                 $value = $this->getDateTime($fieldValue, $this->getColumnType($field));
             }
 
@@ -143,7 +144,7 @@ abstract class AbstractSerializer implements Serializer
      * @param string $dateType
      * @return string
      */
-    protected function getDateTime(\DateTime $dateTime, $dateType = 'datetime'): string
+    protected function getDateTime(DateTime $dateTime, $dateType = 'datetime'): string
     {
         switch ($dateType) {
             case 'date':
@@ -179,7 +180,7 @@ abstract class AbstractSerializer implements Serializer
             return Text::deKebabify($field);
         }, $selectedFields);
 
-        if(empty($selectedFields)) {
+        if (empty($selectedFields)) {
             return true;
         }
 
@@ -202,14 +203,14 @@ abstract class AbstractSerializer implements Serializer
     }
 
     /**
-     * @return \ReflectionClass
+     * @return ReflectionClass
      * @throws \ReflectionException
      * @throws \Exception
      */
-    private function getReflection(): \ReflectionClass
+    private function getReflection(): ReflectionClass
     {
-        if(!$this->reflection instanceof \ReflectionClass) {
-            $this->reflection = new \ReflectionClass($this->getMapItem()->getEntityClass());
+        if (!$this->reflection instanceof ReflectionClass) {
+            $this->reflection = new ReflectionClass($this->getMapItem()->getEntityClass());
         }
 
         return $this->reflection;
@@ -221,7 +222,7 @@ abstract class AbstractSerializer implements Serializer
      */
     private function getAnnotationReader(): AnnotationReader
     {
-        if(!$this->annotationReader instanceof AnnotationReader) {
+        if (!$this->annotationReader instanceof AnnotationReader) {
             $this->annotationReader = new AnnotationReader();
         }
 
@@ -237,7 +238,8 @@ abstract class AbstractSerializer implements Serializer
     private function getColumnType(string $field)
     {
         $annotation = $this->getAnnotationReader()->getPropertyAnnotation(
-            $this->getReflection()->getProperty($field), Column::class
+            $this->getReflection()->getProperty($field),
+            Column::class
         );
 
         return $annotation->type;
@@ -278,7 +280,7 @@ abstract class AbstractSerializer implements Serializer
             'Jad\Map\Annotations\Attribute'
         );
 
-        if($attribute instanceof Attribute && !$attribute->isVisible()) {
+        if ($attribute instanceof Attribute && !$attribute->isVisible()) {
             return false;
         }
 

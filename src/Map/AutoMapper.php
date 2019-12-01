@@ -14,7 +14,7 @@ class AutoMapper extends AbstractMapper
     /**
      * AutoMapper constructor.
      * @param EntityManagerInterface $em
-     * @param array $excluded
+     * @param array<string> $excluded
      */
     public function __construct(EntityManagerInterface $em, array $excluded = [])
     {

@@ -133,7 +133,7 @@ class Read extends AbstractCRUD
 
     /**
      * @param $resourceType
-     * @return array|null
+     * @return array<string>|null
      * @throws \Jad\Exceptions\ParameterException
      */
     public function getOrderBy(string $resourceType): ?array

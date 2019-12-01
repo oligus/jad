@@ -2,6 +2,7 @@
 
 namespace Jad\Tests\Map;
 
+use Jad\Exceptions\ResourceNotFoundException;
 use Jad\Tests\TestCase;
 use Jad\Database\Manager;
 use Jad\Map\AnnotationsMapper;
@@ -20,11 +21,13 @@ class AnnotationsMapperTest extends TestCase
     }
 
     /**
-     * @expectedException     \Jad\Exceptions\ResourceNotFoundException
-     * @expectedExceptionCode 404
+     * @throws \Doctrine\Common\Annotations\AnnotationException
+     * @throws \Jad\Exceptions\ResourceNotFoundException
      */
     public function testGetMapItemException()
     {
+        $this->expectException(ResourceNotFoundException::class);
+        $this->expectExceptionCode(404);
         $mapper = new AnnotationsMapper(Manager::getInstance()->getEm());
         $mapper->getMapItem('moo');
     }

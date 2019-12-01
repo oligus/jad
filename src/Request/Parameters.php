@@ -12,17 +12,17 @@ use Jad\Exceptions\ParameterException;
 class Parameters
 {
     /**
-     * @var array
+     * @var array<string<array>>
      */
     private $arguments;
 
     /**
-     * @var array
+     * @var array<int,string>
      */
     private $includes = [];
 
     /**
-     * @param array $arguments
+     * @param array<string<array>> $arguments
      */
     public function setArguments(array $arguments): void
     {
@@ -45,7 +45,7 @@ class Parameters
     }
 
     /**
-     * @return array
+     * @return array<int,string>
      */
     public function getIncludes(): array
     {
@@ -71,8 +71,8 @@ class Parameters
     }
 
     /**
-     * @param array $available
-     * @return array
+     * @param array<string> $available
+     * @return array<int,array<string,string>>|array{}
      * @throws ParameterException
      */
     public function getInclude(array $available = []): array
@@ -185,8 +185,8 @@ class Parameters
     }
 
     /**
-     * @param array $available
-     * @return array
+     * @param array<string> $available
+     * @return array<string>
      * @throws ParameterException
      */
     public function getSort(array $available = []): array
@@ -222,7 +222,7 @@ class Parameters
     /**
      * Get the fields requested for inclusion.
      *
-     * @return array
+     * @return array<int,string>[]
      */
     public function getFields(): array
     {
@@ -232,6 +232,7 @@ class Parameters
             return [];
         }
 
+        /** @return array<int,string> */
         return array_map(function (string $fields): array {
             $fieldsArray = explode(',', $fields);
 
@@ -242,12 +243,11 @@ class Parameters
     }
 
     /**
-     * @return array
+     * @return array<array>
      */
     public function getFilter(): array
     {
         $filter = $this->getArgument('filter');
-
         return is_array($filter) ? $filter : [];
     }
 

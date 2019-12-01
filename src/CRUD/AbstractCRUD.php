@@ -2,18 +2,29 @@
 
 namespace Jad\CRUD;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections;
 use Jad\Map\Annotations\Attribute;
 use Jad\Map\Mapper;
 use Jad\Request\JsonApiRequest;
 use Jad\Common\ClassHelper;
 use Jad\Common\Text;
 use Jad\Map\MapItem;
+use Jad\Response\ValidationErrors;
+use Jad\Exceptions\RequestException;
+use Jad\Exceptions\JadException;
+use Symfony\Component\Validator\Validation;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections;
 use Doctrine\Common\Collections\Collection as DoctrineCollection;
 use Doctrine\Common\Annotations\AnnotationReader;
-use Jad\Response\ValidationErrors;
-use Symfony\Component\Validator\Validation;
+use Doctrine\Common\Annotations\AnnotationException;
+use Doctrine\ORM\Mapping\MappingException;
+use Doctrine\ORM\ORMException;
+use ReflectionException;
+use InvalidArgumentException;
+use ReflectionClass;
+use Exception;
+use DateTime;
+use stdClass;
 
 /**
  * Class AbstractCRUD
@@ -43,8 +54,8 @@ class AbstractCRUD
     }
 
     /**
-     * @return array
-     * @throws \Jad\Exceptions\RequestException
+     * @return array<string>[]
+     * @throws RequestException
      */
     public function getAttributes(): array
     {
@@ -54,7 +65,7 @@ class AbstractCRUD
 
     /**
      * @return MapItem|null
-     * @throws \Jad\Exceptions\RequestException
+     * @throws RequestException
      */
     public function getMapItem(): ?MapItem
     {
@@ -72,11 +83,11 @@ class AbstractCRUD
     /**
      * @param $input
      * @param object $entity
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Jad\Exceptions\JadException
-     * @throws \ReflectionException
+     * @throws ORMException
+     * @throws JadException
+     * @throws ReflectionException
      */
-    protected function addRelationships(\stdClass $input, $entity): void
+    protected function addRelationships(stdClass $input, $entity): void
     {
         $relationships = isset($input->data->relationships) ? (array)$input->data->relationships : [];
 
@@ -122,30 +133,31 @@ class AbstractCRUD
 
     /**
      * @param MapItem $mapItem
-     * @param array $attributes
+     * @param array<string>[] $attributes
      * @param object $entity
-     * @throws \Doctrine\Common\Annotations\AnnotationException
-     * @throws \Doctrine\ORM\Mapping\MappingException
-     * @throws \ReflectionException
-     * @throws \Exception
+     * @throws AnnotationException
+     * @throws MappingException
+     * @throws ReflectionException
+     * @throws Exception
      */
     protected function addAttributes(MapItem $mapItem, array $attributes, $entity): void
     {
         $reader = new AnnotationReader();
-        $reflection = new \ReflectionClass($mapItem->getEntityClass());
+        $reflection = new ReflectionClass($mapItem->getEntityClass());
 
         foreach ($attributes as $attribute => $value) {
-            $attribute = Text::deKebabify($attribute);
+            $attribute = Text::deKebabify((string)$attribute);
 
             if (!$mapItem->getClassMeta()->hasField($attribute)) {
                 continue;
             }
 
             $jadAttribute = $reader->getPropertyAnnotation(
-                $reflection->getProperty($attribute), Attribute::class
+                $reflection->getProperty($attribute),
+                Attribute::class
             );
 
-            if($jadAttribute instanceof Attribute && $jadAttribute->isReadOnly()) {
+            if ($jadAttribute instanceof Attribute && $jadAttribute->isReadOnly()) {
                 continue;
             }
 
@@ -153,7 +165,7 @@ class AbstractCRUD
 
             switch ($type) {
                 case 'datetime':
-                    $value = new \DateTime($value);
+                    $value = new DateTime((string)$value);
                     break;
 
                 default:
@@ -166,7 +178,7 @@ class AbstractCRUD
 
     /**
      * @param object $entity
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     protected function validateEntity($entity): void
     {

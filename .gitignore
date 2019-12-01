@@ -4,3 +4,4 @@ composer.phar
 /demo/client/node_modules
 /tests/coverage/*
 coverage.xml
+.phpunit.result.cache
