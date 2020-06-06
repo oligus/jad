@@ -6,6 +6,8 @@ use Doctrine\ORM\Mapping\ClassMetadata;
 use Jad\Exceptions\JadException;
 use Jad\Map\Annotations\Header;
 use Doctrine\Common\Annotations\AnnotationReader;
+use ReflectionClass;
+use ReflectionException;
 
 /**
  * Class MapItem
@@ -153,13 +155,12 @@ class MapItem
 
     /**
      * @return bool
-     * @throws \Doctrine\Common\Annotations\AnnotationException
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public function isReadOnly(): bool
     {
         $reader = new AnnotationReader();
-        $reflection = new \ReflectionClass($this->getEntityClass());
+        $reflection = new ReflectionClass($this->getEntityClass());
 
         $header = $reader->getClassAnnotation($reflection, Header::class);
 

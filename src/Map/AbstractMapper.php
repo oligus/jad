@@ -98,11 +98,9 @@ abstract class AbstractMapper implements Mapper
     }
 
     /**
-     * @param string $type
-     * @return MapItem|null
      * @throws ResourceNotFoundException
      */
-    public function getMapItem(string $type): ?MapItem
+    public function getMapItem(string $type): MapItem
     {
         foreach ($this->map as $mapItem) {
             if ($mapItem->getType() === $type) {

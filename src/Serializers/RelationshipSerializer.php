@@ -2,8 +2,10 @@
 
 namespace Jad\Serializers;
 
+use Doctrine\ORM\Mapping\MappingException;
 use Jad\Common\Text;
 use Jad\Map\MapItem;
+use Exception;
 
 /**
  * Class EntitySerializer
@@ -46,7 +48,7 @@ class RelationshipSerializer extends AbstractSerializer implements Serializer
     /**
      * @param $entity
      * @return array|mixed
-     * @throws \Exception
+     * @throws Exception
      */
     public function getRelationships($entity): array
     {
@@ -69,19 +71,17 @@ class RelationshipSerializer extends AbstractSerializer implements Serializer
     }
 
     /**
-     * @return MapItem
-     * @throws \Doctrine\ORM\Mapping\MappingException
-     * @throws \Exception
+     * @throws MappingException
+     * @throws Exception
      */
     public function getMapItem(): MapItem
     {
-        /** @var \Jad\Map\MapItem $mapItem */
         $mapItem = $this->mapper->getMapItem($this->type);
         $association = $mapItem->getClassMeta()->getAssociationMapping($this->relationship['type']);
         $relatedMapItem = $this->mapper->getMapItemByClass($association['targetEntity']);
 
         if (!$relatedMapItem instanceof MapItem) {
-            throw new \Exception('Could not find map item for type: ' . $this->relationship['type']);
+            throw new Exception('Could not find map item for type: ' . $this->relationship['type']);
         }
 
         return $relatedMapItem;

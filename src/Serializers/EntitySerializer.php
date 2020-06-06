@@ -2,11 +2,14 @@
 
 namespace Jad\Serializers;
 
+use Exception;
 use Jad\Document\Resource;
 use Jad\Common\Text;
 use Jad\Common\ClassHelper;
+use Jad\Exceptions\JadException;
 use Jad\Exceptions\SerializerException;
 use Doctrine\ORM\PersistentCollection;
+use ReflectionException;
 
 /**
  * Class EntitySerializer
@@ -22,9 +25,9 @@ class EntitySerializer extends AbstractSerializer
     /**
      * @param $entity
      * @return array
-     * @throws \Jad\Exceptions\JadException
-     * @throws \ReflectionException
-     * @throws \Exception
+     * @throws JadException
+     * @throws ReflectionException
+     * @throws Exception
      */
     public function getRelationships($entity): array
     {
@@ -75,8 +78,8 @@ class EntitySerializer extends AbstractSerializer
      * @param $fields
      * @return array|mixed|null
      * @throws SerializerException
-     * @throws \Exception
-     * @throws \Jad\Exceptions\JadException
+     * @throws Exception
+     * @throws JadException
      */
     public function getIncluded(string $type, $entity, array $fields): ?array
     {
@@ -92,9 +95,9 @@ class EntitySerializer extends AbstractSerializer
 
         if ($result instanceof PersistentCollection) {
             return $this->getIncludedResources($type, $result, $fields);
-        } else {
-            return $this->getIncludedResources($type, [$result], $fields);
         }
+
+        return $this->getIncludedResources($type, [$result], $fields);
     }
 
     /**
@@ -102,8 +105,8 @@ class EntitySerializer extends AbstractSerializer
      * @param $entityCollection
      * @param array $fields
      * @return array
-     * @throws \Jad\Exceptions\JadException
-     * @throws \ReflectionException
+     * @throws JadException
+     * @throws ReflectionException
      */
     public function getIncludedResources(string $type, $entityCollection, array $fields = []): array
     {

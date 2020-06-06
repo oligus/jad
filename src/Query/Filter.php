@@ -48,14 +48,14 @@ class Filter
 
             if (count($filter) === 1) {
                 $this->path = current(array_keys($filter));
-            } else {
-                foreach ($filter as $path => $data) {
-                    if ($this->isRelational($path)) {
-                        $this->relatedPaths[] = $path;
-                    } else {
-                        $this->path = $path;
-                    }
-                }
+                $this->filter = $filter;
+                return;
+            }
+
+            foreach (array_keys($filter) as $path) {
+                $this->isRelational($path)
+                    ? $this->relatedPaths[] = $path
+                    : $this->path = $path;
             }
 
             $this->filter = $filter;
@@ -151,7 +151,9 @@ class Filter
         foreach ($this->createAliases($path) as $alias => $relation) {
             if ($count === 0) {
                 $key = $alias;
-            } else {
+            }
+
+            if ($count !== 0) {
                 $key .= '.' . $relation;
                 $joins[$key] = $alias;
                 $key = $alias;

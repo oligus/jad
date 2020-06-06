@@ -2,11 +2,14 @@
 
 namespace Jad\Document;
 
+use JsonSerializable;
+use stdClass;
+
 /**
  * Class Links
  * @package Jad\Document
  */
-class Links implements \JsonSerializable
+class Links implements JsonSerializable
 {
     /**
      * @var string
@@ -73,11 +76,11 @@ class Links implements \JsonSerializable
     }
 
     /**
-     * @return \stdClass
+     * @return stdClass
      */
-    public function jsonSerialize(): \stdClass
+    public function jsonSerialize(): stdClass
     {
-        $links = new \stdClass();
+        $links = new stdClass();
 
         if (!is_null($this->self)) {
             $links->self = $this->self;

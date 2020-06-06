@@ -2,13 +2,16 @@
 
 namespace Jad\Document;
 
+use Exception;
 use Jad\Query\Paginator;
+use JsonSerializable;
+use stdClass;
 
 /**
  * Class JsonDocument
  * @package Jad\Document
  */
-class JsonDocument implements \JsonSerializable
+class JsonDocument implements JsonSerializable
 {
     /**
      * @var Element
@@ -51,12 +54,12 @@ class JsonDocument implements \JsonSerializable
     }
 
     /**
-     * @return \stdClass
-     * @throws \Exception
+     * @return stdClass
+     * @throws Exception
      */
-    public function jsonSerialize(): \stdClass
+    public function jsonSerialize(): stdClass
     {
-        $document = new \stdClass();
+        $document = new stdClass();
 
         if ($this->element instanceof Collection) {
             $document->data = $this->element;

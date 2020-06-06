@@ -120,8 +120,11 @@ class Parameters
      */
     public function getOffset(int $perPage = null): int
     {
-        if ($perPage && ($offset = $this->getOffsetFromNumber($perPage))) {
-            return $offset;
+        if (!is_null($perPage)) {
+            $offset = $this->getOffsetFromNumber($perPage);
+            if ($offset > 0) {
+                return $offset;
+            }
         }
 
         $offset = (int)$this->getPage('offset');
@@ -193,7 +196,9 @@ class Parameters
     {
         $sort = [];
 
-        if ($input = $this->getArgument('sort')) {
+        $input = $this->getArgument('sort');
+
+        if (!is_null($input)) {
             $fields = explode(',', $input);
 
             foreach ($fields as $field) {
