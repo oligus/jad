@@ -59,12 +59,12 @@ class RelationshipSerializer extends AbstractSerializer implements Serializer
         foreach ($associations as $association) {
             $assocName = $association['fieldName'];
 
-            $relationships[$assocName] = array(
-                'links' => array(
+            $relationships[$assocName] = [
+                'links' => [
                     'self' => $this->request->getCurrentUrl() . '/relationship/' . $assocName,
                     'related' => $this->request->getCurrentUrl() . '/' . $assocName
-                )
-            );
+                ]
+            ];
         }
 
         return $relationships;

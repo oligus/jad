@@ -13,13 +13,11 @@ use ReflectionException;
 class ClassHelper
 {
     /**
-     * @param object $class
-     * @param string $property
      * @return mixed
      * @throws JadException
      * @throws ReflectionException
      */
-    public static function getPropertyValue($class, string $property)
+    public static function getPropertyValue(object $class, string $property)
     {
         $method = 'get' . ucfirst($property);
 
@@ -39,12 +37,10 @@ class ClassHelper
     }
 
     /**
-     * @param object $class
-     * @param string $property
      * @param mixed $value
      * @throws ReflectionException
      */
-    public static function setPropertyValue($class, string $property, $value): void
+    public static function setPropertyValue(object $class, string $property, $value): void
     {
         $method = 'set' . ucfirst($property);
 
@@ -63,12 +59,9 @@ class ClassHelper
     }
 
     /**
-     * @param object $class
-     * @param string $property
-     * @return bool
      * @throws ReflectionException
      */
-    public static function hasPropertyValue($class, string $property): bool
+    public static function hasPropertyValue(object $class, string $property): bool
     {
         $method = 'set' . ucfirst($property);
 

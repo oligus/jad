@@ -36,10 +36,7 @@ class MapItem
     private $paginate = false;
 
     /**
-     * MapItem constructor.
-     * @param $type
      * @param mixed $params
-     * @param bool $paginate
      */
     public function __construct(string $type, $params, bool $paginate = false)
     {
@@ -63,8 +60,6 @@ class MapItem
 
     /**
      * @codeCoverageIgnore
-     * @param string $type
-     * @return MapItem
      */
     private function setType(string $type): MapItem
     {
@@ -74,8 +69,6 @@ class MapItem
 
     /**
      * @codeCoverageIgnore
-     * @param string $entityClass
-     * @return MapItem
      */
     private function setEntityClass(string $entityClass): MapItem
     {
@@ -85,7 +78,6 @@ class MapItem
 
     /**
      * @codeCoverageIgnore
-     * @return string
      */
     public function getType(): string
     {
@@ -93,7 +85,6 @@ class MapItem
     }
 
     /**
-     * @return string
      * @throws JadException
      */
     public function getIdField(): string
@@ -117,7 +108,6 @@ class MapItem
 
     /**
      * @codeCoverageIgnore
-     * @return ClassMetadata
      */
     public function getClassMeta(): ClassMetadata
     {
@@ -126,8 +116,6 @@ class MapItem
 
     /**
      * @codeCoverageIgnore
-     * @param ClassMetadata $classMeta
-     * @return $this
      */
     public function setClassMeta(ClassMetadata $classMeta): MapItem
     {
@@ -137,7 +125,6 @@ class MapItem
 
     /**
      * @codeCoverageIgnore
-     * @return bool
      */
     public function isPaginate(): bool
     {
@@ -146,7 +133,6 @@ class MapItem
 
     /**
      * @codeCoverageIgnore
-     * @param bool $paginate
      */
     public function setPaginate(bool $paginate): void
     {
@@ -154,7 +140,6 @@ class MapItem
     }
 
     /**
-     * @return bool
      * @throws ReflectionException
      */
     public function isReadOnly(): bool
@@ -178,7 +163,6 @@ class MapItem
 
     /**
      * @codeCoverageIgnore
-     * @return string
      */
     public function getEntityClass(): string
     {

@@ -2,7 +2,6 @@
 
 namespace Jad\Response;
 
-use Doctrine\Common\Annotations\AnnotationException;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\PersistentCollection;
@@ -48,11 +47,6 @@ class JsonApiResponse
      */
     private $mapper;
 
-    /**
-     * JsonApiResponse constructor.
-     * @param Request $request
-     * @param Mapper $mapper
-     */
     public function __construct(Request $request, Mapper $mapper)
     {
         $this->request = $request;
@@ -60,10 +54,8 @@ class JsonApiResponse
     }
 
     /**
-     * @return null|string
      * @throws JadException
      * @throws ResourceNotFoundException
-     * @throws AnnotationException
      * @throws NonUniqueResultException
      * @throws ORMException
      * @throws ParameterException
@@ -92,7 +84,7 @@ class JsonApiResponse
 
             case 'POST':
                 $id = (new Create($this->request, $this->mapper))->createResource();
-                $resource = (new Read($this->request, $this->mapper))->getResourceById($id);
+                $resource = (new Read($this->request, $this->mapper))->getResourceById((string)$id);
                 $this->createDocument($resource);
                 break;
 
@@ -115,7 +107,6 @@ class JsonApiResponse
     }
 
     /**
-     * @param Element $resource
      * @throws InvalidArgumentException
      */
     public function createDocument(Element $resource): void
@@ -138,12 +129,10 @@ class JsonApiResponse
     }
 
     /**
-     * @param $content
      * @param array<string> $headers
-     * @param int $status
      * @throws InvalidArgumentException
      */
-    private function setResponse(string $content, array $headers = [], int $status = 200)
+    private function setResponse(string $content, array $headers = [], int $status = 200): void
     {
         $response = new Response();
         $headers['Content-Type'] = 'application/vnd.api+json';
@@ -190,12 +179,11 @@ class JsonApiResponse
 
     /**
      * @param array<string> $relationship
-     * @return Element|null
      * @throws JadException
      * @throws ResourceNotFoundException
      * @throws ReflectionException
      */
-    public function getRelationship(array $relationship): ?Element
+    public function getRelationship(array $relationship): Element
     {
         $id = $this->request->getId();
         $type = $this->request->getResourceType();

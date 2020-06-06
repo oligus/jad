@@ -65,10 +65,9 @@ class AbstractCRUD
     }
 
     /**
-     * @return MapItem|null
      * @throws RequestException
      */
-    public function getMapItem(): ?MapItem
+    public function getMapItem(): MapItem
     {
         $input = $this->request->getInputJson();
 

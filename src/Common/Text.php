@@ -8,10 +8,6 @@ namespace Jad\Common;
  */
 class Text
 {
-    /**
-     * @param $str
-     * @return string
-     */
     public static function kebabify(string $str): string
     {
         preg_match_all('!([A-Z][A-Z0-9]*(?=$|[A-Z][a-z0-9])|[A-Za-z][a-z0-9]+)!', $str, $matches);
@@ -24,10 +20,6 @@ class Text
         return implode('-', $ret);
     }
 
-    /**
-     * @param string $str
-     * @return string
-     */
     public static function deKebabify(string $str): string
     {
         /**

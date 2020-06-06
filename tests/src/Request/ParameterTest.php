@@ -13,7 +13,7 @@ use Jad\Request\Parameters;
 class ParameterTest extends TestCase
 {
     /**
-     * @throws \Jad\Exceptions\ParameterException
+     * @throws ParameterException
      */
     public function testGetIncludes()
     {
@@ -141,7 +141,7 @@ class ParameterTest extends TestCase
     }
 
     /**
-     * @throws \Jad\Exceptions\ParameterException
+     * @throws ParameterException
      */
     public function testGetSort()
     {

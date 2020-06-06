@@ -52,17 +52,12 @@ class Parameters
         return $this->includes;
     }
 
-    /**
-     * @return bool
-     */
     public function hasIncludes(): bool
     {
         return !empty($this->includes);
     }
 
     /**
-     * @param string $key
-     * @param string|null $default
      * @return mixed|string
      */
     protected function getArgument(string $key, string $default = null)
@@ -114,8 +109,6 @@ class Parameters
     }
 
     /**
-     * @param int|null $perPage
-     * @return int
      * @throws ParameterException
      */
     public function getOffset(int $perPage = null): int
@@ -136,10 +129,6 @@ class Parameters
         return $offset;
     }
 
-    /**
-     * @param $perPage
-     * @return int
-     */
     protected function getOffsetFromNumber(int $perPage): int
     {
         $page = (int)$this->getPage('number');
@@ -152,27 +141,18 @@ class Parameters
     }
 
     /**
-     * Get the page.
-     *
-     * @param string $key
-     *
-     * @return string
+     * @return mixed
      */
-    protected function getPage($key)
+    protected function getPage(string $key)
     {
         $page = $this->getArgument('page');
         return $page[$key] ?? '';
     }
 
-    /**
-     * @param int|null $max
-     * @param int $default
-     * @return int
-     */
     public function getLimit(int $max = null, int $default = 25): int
     {
-        $limit = $this->getPage('limit') ?: null;
-        $size = $this->getPage('size') ?: $default;
+        $limit = (int) $this->getPage('limit') ?: null;
+        $size = (int) $this->getPage('size') ?: $default;
 
         $limit = max($limit, $size);
 
@@ -258,10 +238,6 @@ class Parameters
         return is_array($filter) ? $filter : [];
     }
 
-    /**
-     * @param int $default
-     * @return int
-     */
     public function getSize($default = 25): int
     {
         return (int)$this->getPage('size') ?: $default;

@@ -19,10 +19,6 @@ class Error
      */
     private $exception;
 
-    /**
-     * Error constructor.
-     * @param Exception $exception
-     */
     public function __construct(Exception $exception)
     {
         $this->exception = $exception;
@@ -61,10 +57,6 @@ class Error
         }
     }
 
-    /**
-     * @param Exception $e
-     * @return string
-     */
     private function getTitle(Exception $e): string
     {
         $class = preg_replace('/^.*\\\(.+?)(Exception)?$/', '\1', get_class($e));

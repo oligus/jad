@@ -18,7 +18,6 @@ use ReflectionException;
 class Create extends AbstractCRUD
 {
     /**
-     * @return string|null
      * @throws JadException
      * @throws MappingException
      * @throws ORMException

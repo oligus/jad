@@ -181,6 +181,6 @@ class Resource implements JsonSerializable, Element
             $collection = $newCollection;
         }
 
-        return array('type' => $type, 'collection' => $collection);
+        return ['type' => $type, 'collection' => $collection];
     }
 }
