@@ -2,13 +2,13 @@
 
 namespace Jad\Serializers;
 
+use Doctrine\ORM\PersistentCollection;
 use Exception;
-use Jad\Document\Resource;
-use Jad\Common\Text;
 use Jad\Common\ClassHelper;
+use Jad\Common\Text;
+use Jad\Document\Resource;
 use Jad\Exceptions\JadException;
 use Jad\Exceptions\SerializerException;
-use Doctrine\ORM\PersistentCollection;
 use ReflectionException;
 
 /**
@@ -38,33 +38,17 @@ class EntitySerializer extends AbstractSerializer
         foreach ($associations as $association) {
             $assocName = Text::kebabify($association['fieldName']);
 
-            if ($this->request->hasId()) {
-                $relationships[$assocName] = [
-                    'links' => [
-                        'self' => $this->request->getCurrentUrl() . '/relationship/' . $assocName,
-                        'related' => $this->request->getCurrentUrl() . '/' . $assocName
-                    ]
-                ];
-            } else {
-                $id = method_exists($entity, 'get' .  ucfirst($this->getMapItem()->getIdField()))
-                    ? $entity->getId()
-                    : ClassHelper::getPropertyValue($entity, $this->getMapItem()->getIdField());
-
-                $relationships[$assocName] = array(
-                    'links' => [
-                        'self' => $this->request->getCurrentUrl() . '/' . $id . '/relationship/' . $assocName,
-                        'related' => $this->request->getCurrentUrl() . '/' . $id . '/' . $assocName
-                    ]
-                );
-            }
+            $relationships[$assocName] = $this->request->hasId()
+                ? $this->getLinks($assocName)
+                : $this->getLinks($assocName, $this->getEntityId($entity));
 
             if (array_key_exists($assocName, $this->includeMeta)) {
-                $relationships[$assocName]['data'] = array();
+                $relationships[$assocName]['data'] = [];
                 foreach ($this->includeMeta[$assocName] as $id) {
-                    $relationships[$assocName]['data'][] = array(
+                    $relationships[$assocName]['data'][] = [
                         'type' => $assocName,
-                        'id' => (string) $id
-                    );
+                        'id' => (string)$id
+                    ];
                 }
             }
         }
@@ -125,5 +109,39 @@ class EntitySerializer extends AbstractSerializer
         }
 
         return $resources;
+    }
+
+    protected function getLinks(string $assocName, ?string $id = null): array
+    {
+        if (is_null($id)) {
+            return [
+                'links' => [
+                    'self' => $this->request->getCurrentUrl() . '/relationship/' . $assocName,
+                    'related' => $this->request->getCurrentUrl() . '/' . $assocName
+                ]
+            ];
+        }
+
+        return [
+            'links' => [
+                'self' => $this->request->getCurrentUrl() . '/' . $id . '/relationship/' . $assocName,
+                'related' => $this->request->getCurrentUrl() . '/' . $id . '/' . $assocName
+            ]
+        ];
+    }
+
+    /**
+     * @param $entity
+     * @return mixed
+     * @throws JadException
+     * @throws ReflectionException
+     */
+    protected function getEntityId($entity): string
+    {
+        $id = method_exists($entity, 'get' . ucfirst($this->getMapItem()->getIdField()))
+            ? $entity->getId()
+            : ClassHelper::getPropertyValue($entity, $this->getMapItem()->getIdField());
+
+        return (string) $id;
     }
 }

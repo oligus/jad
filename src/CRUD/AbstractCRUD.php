@@ -28,6 +28,8 @@ use Symfony\Component\Validator\Validation;
 /**
  * Class AbstractCRUD
  * @package Jad\CRUD
+ * @todo Refactor coupling
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class AbstractCRUD
 {
@@ -93,16 +95,8 @@ class AbstractCRUD
             $related = is_array($related->data) ? $related->data : [$related->data];
             $relatedProperty = ClassHelper::getPropertyValue($entity, $relatedType);
 
-            /**
-             * Clear collection on PATCH
-             */
-            if ($this->request->getMethod() === 'PATCH') {
-                $attribute = ClassHelper::getPropertyValue($entity, $relatedType);
-
-                if ($attribute instanceof Collections\Collection) {
-                    ClassHelper::setPropertyValue($entity, $relatedType, new ArrayCollection());
-                }
-            }
+            // Clear collection on PATCH
+            $this->clearPatch($entity, $relatedType);
 
             foreach ($related as $relationship) {
                 $relationalMapItem = $this->mapper->getMapItem($relationship->type);
@@ -110,18 +104,24 @@ class AbstractCRUD
 
                 $reference = $this->mapper->getEm()->getReference($relationalClass, $relationship->id);
 
-                if ($relatedProperty instanceof DoctrineCollection) {
-                    // First try entity add method, else add straight to collection
-                    $method1 = 'add' . ucfirst($relationship->type);
-                    $method2 = 'add' . ucfirst($relatedType);
-                    $method = method_exists($entity, $method1) ? $method1 : $method2;
-
-                    method_exists($entity, $method)
-                        ?  $entity->$method($reference)
-                        : $relatedProperty->add($reference);
-                } else {
+                if (!$relatedProperty instanceof DoctrineCollection) {
                     ClassHelper::setPropertyValue($entity, $relatedType, $reference);
+                    continue;
                 }
+
+                $method = 'add' . ucfirst($relationship->type);
+                if (method_exists($entity, $method)) {
+                    $entity->$method($reference);
+                    continue;
+                }
+
+                $method = 'add' . ucfirst($relatedType);
+                if (method_exists($entity, $method)) {
+                    $entity->$method($reference);
+                    continue;
+                }
+
+                $relatedProperty->add($reference);
             }
         }
     }
@@ -183,6 +183,23 @@ class AbstractCRUD
             $error = new ValidationErrors($errors);
             $error->render();
             exit(1);
+        }
+    }
+
+    /**
+     * @param object $entity
+     * @param string $relatedType
+     * @throws JadException
+     * @throws ReflectionException
+     */
+    protected function clearPatch(object $entity, string $relatedType): void
+    {
+        if ($this->request->getMethod() === 'PATCH') {
+            $attribute = ClassHelper::getPropertyValue($entity, $relatedType);
+
+            if ($attribute instanceof Collections\Collection) {
+                ClassHelper::setPropertyValue($entity, $relatedType, new ArrayCollection());
+            }
         }
     }
 }

@@ -206,10 +206,12 @@ class Parameters
                 if (substr($field, 0, 1) === '-') {
                     $field = substr($field, 1);
                     $order = 'desc';
-                } else {
-                    $order = 'asc';
+                    $field = Text::deKebabify($field);
+                    $sort[$field] = $order;
+                    continue;
                 }
 
+                $order = 'asc';
                 $field = Text::deKebabify($field);
                 $sort[$field] = $order;
             }

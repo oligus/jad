@@ -20,6 +20,8 @@ use ReflectionException;
 /**
  * Class AbstractSerializer
  * @package Jad\Serializers
+ * @todo Refactor coupling
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 abstract class AbstractSerializer implements Serializer
 {

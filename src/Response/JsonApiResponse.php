@@ -33,6 +33,8 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * Class JsonApiResponse
  * @package Jad\Response
+ * @todo Refactor coupling
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class JsonApiResponse
 {

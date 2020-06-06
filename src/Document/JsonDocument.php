@@ -61,13 +61,6 @@ class JsonDocument implements JsonSerializable
     {
         $document = new stdClass();
 
-        if ($this->element instanceof Collection) {
-            $document->data = $this->element;
-            $this->element->loadIncludes();
-        } else {
-            $document->data = $this->element;
-        }
-
         if ($this->element->hasIncluded()) {
             $document->included = $this->element->getIncluded();
         }
@@ -103,6 +96,14 @@ class JsonDocument implements JsonSerializable
         if ($document->meta->isEmpty()) {
             unset($document->meta);
         }
+
+        if ($this->element instanceof Collection) {
+            $document->data = $this->element;
+            $this->element->loadIncludes();
+            return $document;
+        }
+
+        $document->data = $this->element;
 
         return $document;
     }
