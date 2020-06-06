@@ -2,33 +2,34 @@
 
 namespace Jad\CRUD;
 
-use Jad\Map\Annotations\Attribute;
-use Jad\Map\Mapper;
-use Jad\Request\JsonApiRequest;
-use Jad\Common\ClassHelper;
-use Jad\Common\Text;
-use Jad\Map\MapItem;
-use Jad\Response\ValidationErrors;
-use Jad\Exceptions\RequestException;
-use Jad\Exceptions\JadException;
-use Symfony\Component\Validator\Validation;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections;
-use Doctrine\Common\Collections\Collection as DoctrineCollection;
+use DateTime;
 use Doctrine\Common\Annotations\AnnotationReader;
-use Doctrine\Common\Annotations\AnnotationException;
+use Doctrine\Common\Collections;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection as DoctrineCollection;
 use Doctrine\ORM\Mapping\MappingException;
 use Doctrine\ORM\ORMException;
-use ReflectionException;
-use InvalidArgumentException;
-use ReflectionClass;
 use Exception;
-use DateTime;
+use InvalidArgumentException;
+use Jad\Common\ClassHelper;
+use Jad\Common\Text;
+use Jad\Exceptions\JadException;
+use Jad\Exceptions\RequestException;
+use Jad\Map\Annotations\Attribute;
+use Jad\Map\MapItem;
+use Jad\Map\Mapper;
+use Jad\Request\JsonApiRequest;
+use Jad\Response\ValidationErrors;
+use ReflectionClass;
+use ReflectionException;
 use stdClass;
+use Symfony\Component\Validator\Validation;
 
 /**
  * Class AbstractCRUD
  * @package Jad\CRUD
+ * @todo Refactor coupling
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class AbstractCRUD
 {
@@ -64,18 +65,15 @@ class AbstractCRUD
     }
 
     /**
-     * @return MapItem|null
      * @throws RequestException
      */
-    public function getMapItem(): ?MapItem
+    public function getMapItem(): MapItem
     {
         $input = $this->request->getInputJson();
 
-        if (!array_key_exists('type', $input->data)) {
-            $type = $this->request->getResourceType();
-        } else {
-            $type = $input->data->type;
-        }
+        $type = property_exists($input->data, 'type')
+            ? $input->data->type
+            : $this->request->getResourceType();
 
         return $this->mapper->getMapItem($type);
     }
@@ -96,16 +94,8 @@ class AbstractCRUD
             $related = is_array($related->data) ? $related->data : [$related->data];
             $relatedProperty = ClassHelper::getPropertyValue($entity, $relatedType);
 
-            /**
-             * Clear collection on PATCH
-             */
-            if ($this->request->getMethod() === 'PATCH') {
-                $attribute = ClassHelper::getPropertyValue($entity, $relatedType);
-
-                if ($attribute instanceof Collections\Collection) {
-                    ClassHelper::setPropertyValue($entity, $relatedType, new ArrayCollection());
-                }
-            }
+            // Clear collection on PATCH
+            $this->clearPatch($entity, $relatedType);
 
             foreach ($related as $relationship) {
                 $relationalMapItem = $this->mapper->getMapItem($relationship->type);
@@ -113,20 +103,24 @@ class AbstractCRUD
 
                 $reference = $this->mapper->getEm()->getReference($relationalClass, $relationship->id);
 
-                if ($relatedProperty instanceof DoctrineCollection) {
-                    // First try entity add method, else add straight to collection
-                    $method1 = 'add' . ucfirst($relationship->type);
-                    $method2 = 'add' . ucfirst($relatedType);
-                    $method = method_exists($entity, $method1) ? $method1 : $method2;
-
-                    if (method_exists($entity, $method)) {
-                        $entity->$method($reference);
-                    } else {
-                        $relatedProperty->add($reference);
-                    }
-                } else {
+                if (!$relatedProperty instanceof DoctrineCollection) {
                     ClassHelper::setPropertyValue($entity, $relatedType, $reference);
+                    continue;
                 }
+
+                $method = 'add' . ucfirst($relationship->type);
+                if (method_exists($entity, $method)) {
+                    $entity->$method($reference);
+                    continue;
+                }
+
+                $method = 'add' . ucfirst($relatedType);
+                if (method_exists($entity, $method)) {
+                    $entity->$method($reference);
+                    continue;
+                }
+
+                $relatedProperty->add($reference);
             }
         }
     }
@@ -135,7 +129,6 @@ class AbstractCRUD
      * @param MapItem $mapItem
      * @param array<string>[] $attributes
      * @param object $entity
-     * @throws AnnotationException
      * @throws MappingException
      * @throws ReflectionException
      * @throws Exception
@@ -189,6 +182,23 @@ class AbstractCRUD
             $error = new ValidationErrors($errors);
             $error->render();
             exit(1);
+        }
+    }
+
+    /**
+     * @param object $entity
+     * @param string $relatedType
+     * @throws JadException
+     * @throws ReflectionException
+     */
+    protected function clearPatch(object $entity, string $relatedType): void
+    {
+        if ($this->request->getMethod() === 'PATCH') {
+            $attribute = ClassHelper::getPropertyValue($entity, $relatedType);
+
+            if ($attribute instanceof Collections\Collection) {
+                ClassHelper::setPropertyValue($entity, $relatedType, new ArrayCollection());
+            }
         }
     }
 }

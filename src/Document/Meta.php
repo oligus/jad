@@ -2,11 +2,14 @@
 
 namespace Jad\Document;
 
+use JsonSerializable;
+use stdClass;
+
 /**
  * Class Meta
  * @package Jad\Document
  */
-class Meta implements \JsonSerializable
+class Meta implements JsonSerializable
 {
     /**
      * @var int
@@ -73,11 +76,11 @@ class Meta implements \JsonSerializable
     }
 
     /**
-     * @return \stdClass
+     * @return stdClass
      */
-    public function jsonSerialize(): \stdClass
+    public function jsonSerialize(): stdClass
     {
-        $meta = new \stdClass();
+        $meta = new stdClass();
 
         if ($this->count !== null) {
             $meta->count = $this->count;

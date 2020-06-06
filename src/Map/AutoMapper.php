@@ -8,6 +8,7 @@ use Doctrine\ORM\EntityManagerInterface;
  * Class AutoMapper
  * @package Jad\Map
  * @deprecated Use annotation mapper
+ * @SuppressWarnings(PHPMD.UndefinedVariable)
  */
 class AutoMapper extends AbstractMapper
 {

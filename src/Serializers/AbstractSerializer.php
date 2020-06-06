@@ -2,21 +2,26 @@
 
 namespace Jad\Serializers;
 
-use Jad\Map\Annotations\Attribute;
-use Jad\Map\Mapper;
-use Jad\Request\JsonApiRequest;
-use Jad\Common\Text;
-use Jad\Common\ClassHelper;
-use Jad\Map\MapItem;
-use Jad\Exceptions\SerializerException;
+use DateTime;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\ORM\Mapping\Column;
+use Exception;
+use Jad\Common\ClassHelper;
+use Jad\Common\Text;
+use Jad\Exceptions\JadException;
+use Jad\Exceptions\SerializerException;
+use Jad\Map\Annotations\Attribute;
+use Jad\Map\MapItem;
+use Jad\Map\Mapper;
+use Jad\Request\JsonApiRequest;
 use ReflectionClass;
-use DateTime;
+use ReflectionException;
 
 /**
  * Class AbstractSerializer
  * @package Jad\Serializers
+ * @todo Refactor coupling
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 abstract class AbstractSerializer implements Serializer
 {
@@ -40,7 +45,7 @@ abstract class AbstractSerializer implements Serializer
     protected $request;
 
     /**
-     * @var \ReflectionClass
+     * @var ReflectionClass
      */
     private $reflection;
 
@@ -65,8 +70,8 @@ abstract class AbstractSerializer implements Serializer
     /**
      * @param $entity
      * @return string
-     * @throws \Exception
-     * @throws \Jad\Exceptions\JadException
+     * @throws Exception
+     * @throws JadException
      */
     public function getId($entity): string
     {
@@ -75,7 +80,7 @@ abstract class AbstractSerializer implements Serializer
 
     /**
      * @return MapItem
-     * @throws \Exception
+     * @throws Exception
      */
     public function getMapItem(): MapItem
     {
@@ -89,7 +94,7 @@ abstract class AbstractSerializer implements Serializer
     /**
      * @param $entity
      * @return mixed|string
-     * @throws \Exception
+     * @throws Exception
      */
     public function getType($entity): string
     {
@@ -100,10 +105,9 @@ abstract class AbstractSerializer implements Serializer
      * @param $entity
      * @param array $selectedFields
      * @return array
-     * @throws \Doctrine\Common\Annotations\AnnotationException
-     * @throws \Jad\Exceptions\JadException
-     * @throws \ReflectionException
-     * @throws \Exception
+     * @throws JadException
+     * @throws ReflectionException
+     * @throws Exception
      */
     public function getAttributes($entity, array $selectedFields = []): array
     {
@@ -140,7 +144,7 @@ abstract class AbstractSerializer implements Serializer
     }
 
     /**
-     * @param \DateTime $dateTime
+     * @param DateTime $dateTime
      * @param string $dateType
      * @return string
      */
@@ -189,23 +193,22 @@ abstract class AbstractSerializer implements Serializer
 
     /**
      * @return array
-     * @throws \ReflectionException
-     * @throws \Exception
+     * @throws ReflectionException
+     * @throws Exception
      */
     private function getFields(): array
     {
         $metaFields = $this->getMapItem()->getClassMeta()->getFieldNames();
         $reflection = $this->getReflection();
         $classFields = array_keys($reflection->getDefaultProperties());
-        $mergedFields = array_unique(array_merge($metaFields, $classFields));
 
-        return $mergedFields;
+        return array_unique(array_merge($metaFields, $classFields));
     }
 
     /**
      * @return ReflectionClass
-     * @throws \ReflectionException
-     * @throws \Exception
+     * @throws ReflectionException
+     * @throws Exception
      */
     private function getReflection(): ReflectionClass
     {
@@ -218,7 +221,6 @@ abstract class AbstractSerializer implements Serializer
 
     /**
      * @return AnnotationReader
-     * @throws \Doctrine\Common\Annotations\AnnotationException
      */
     private function getAnnotationReader(): AnnotationReader
     {
@@ -232,8 +234,7 @@ abstract class AbstractSerializer implements Serializer
     /**
      * @param string $field
      * @return mixed
-     * @throws \Doctrine\Common\Annotations\AnnotationException
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     private function getColumnType(string $field)
     {
@@ -248,7 +249,7 @@ abstract class AbstractSerializer implements Serializer
     /**
      * @param $field
      * @return bool
-     * @throws \Exception
+     * @throws Exception
      */
     private function hasAssociation($field): bool
     {
@@ -258,8 +259,8 @@ abstract class AbstractSerializer implements Serializer
     /**
      * @param string $field
      * @return bool
-     * @throws \Jad\Exceptions\JadException
-     * @throws \Exception
+     * @throws JadException
+     * @throws Exception
      */
     private function isIdField(string $field): bool
     {
@@ -269,8 +270,7 @@ abstract class AbstractSerializer implements Serializer
     /**
      * @param string $field
      * @return bool
-     * @throws \Doctrine\Common\Annotations\AnnotationException
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     private function isVisible(string $field): bool
     {

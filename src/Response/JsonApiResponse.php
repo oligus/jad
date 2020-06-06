@@ -2,31 +2,38 @@
 
 namespace Jad\Response;
 
-use Jad\Configure;
-use Jad\Document\Meta;
-use Jad\Exceptions\ResourceNotFoundException;
-use Jad\Map\Mapper;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\ORMException;
+use Doctrine\ORM\PersistentCollection;
+use Exception;
+use InvalidArgumentException;
 use Jad\Common\ClassHelper;
-use Jad\Document\Collection;
-use Jad\Document\Resource;
-use Jad\Document\Links;
-use Jad\Document\Element;
-use Jad\Document\JsonDocument as Document;
-use Jad\Request\JsonApiRequest as Request;
-use Jad\Serializers\RelationshipSerializer;
-use Jad\Exceptions\JadException;
-
+use Jad\Configure;
 use Jad\CRUD\Create;
+use Jad\CRUD\Delete;
 use Jad\CRUD\Read;
 use Jad\CRUD\Update;
-use Jad\CRUD\Delete;
-
+use Jad\Document\Collection;
+use Jad\Document\Element;
+use Jad\Document\JsonDocument as Document;
+use Jad\Document\Links;
+use Jad\Document\Meta;
+use Jad\Document\Resource;
+use Jad\Exceptions\JadException;
+use Jad\Exceptions\ParameterException;
+use Jad\Exceptions\RequestException;
+use Jad\Exceptions\ResourceNotFoundException;
+use Jad\Map\Mapper;
+use Jad\Request\JsonApiRequest as Request;
+use Jad\Serializers\RelationshipSerializer;
+use ReflectionException;
 use Symfony\Component\HttpFoundation\Response;
-use Doctrine\ORM\PersistentCollection;
 
 /**
  * Class JsonApiResponse
  * @package Jad\Response
+ * @todo Refactor coupling
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class JsonApiResponse
 {
@@ -40,11 +47,6 @@ class JsonApiResponse
      */
     private $mapper;
 
-    /**
-     * JsonApiResponse constructor.
-     * @param Request $request
-     * @param Mapper $mapper
-     */
     public function __construct(Request $request, Mapper $mapper)
     {
         $this->request = $request;
@@ -52,18 +54,16 @@ class JsonApiResponse
     }
 
     /**
-     * @return null|string
      * @throws JadException
      * @throws ResourceNotFoundException
-     * @throws \Doctrine\Common\Annotations\AnnotationException
-     * @throws \Doctrine\ORM\NonUniqueResultException
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Jad\Exceptions\ParameterException
-     * @throws \Jad\Exceptions\RequestException
-     * @throws \Jad\Exceptions\JadException
-     * @throws \ReflectionException
-     * @throws \InvalidArgumentException
-     * @throws \Exception
+     * @throws NonUniqueResultException
+     * @throws ORMException
+     * @throws ParameterException
+     * @throws RequestException
+     * @throws JadException
+     * @throws ReflectionException
+     * @throws InvalidArgumentException
+     * @throws Exception
      */
     public function render(): ?string
     {
@@ -78,13 +78,13 @@ class JsonApiResponse
         switch ($method) {
             case 'PATCH':
                 (new Update($this->request, $this->mapper))->updateResource();
-                $resource = (new Read($this->request, $this->mapper))->getResourceById((string) $this->request->getId());
+                $resource = (new Read($this->request, $this->mapper))->getResourceById((string)$this->request->getId());
                 $this->createDocument($resource);
                 break;
 
             case 'POST':
                 $id = (new Create($this->request, $this->mapper))->createResource();
-                $resource = (new Read($this->request, $this->mapper))->getResourceById($id);
+                $resource = (new Read($this->request, $this->mapper))->getResourceById((string)$id);
                 $this->createDocument($resource);
                 break;
 
@@ -107,8 +107,7 @@ class JsonApiResponse
     }
 
     /**
-     * @param Element $resource
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     public function createDocument(Element $resource): void
     {
@@ -123,18 +122,17 @@ class JsonApiResponse
 
         if (Configure::getInstance()->getConfig('debug')) {
             $this->setResponse(json_encode($document, JSON_PRETTY_PRINT));
-        } else {
-            $this->setResponse(json_encode($document));
+            return;
         }
+
+        $this->setResponse(json_encode($document));
     }
 
     /**
-     * @param $content
      * @param array<string> $headers
-     * @param int $status
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
-    private function setResponse(string $content, array $headers = [], int $status = 200)
+    private function setResponse(string $content, array $headers = [], int $status = 200): void
     {
         $response = new Response();
         $headers['Content-Type'] = 'application/vnd.api+json';
@@ -156,43 +154,40 @@ class JsonApiResponse
     /**
      * @throws JadException
      * @throws ResourceNotFoundException
-     * @throws \Doctrine\ORM\NonUniqueResultException
-     * @throws \Jad\Exceptions\ParameterException
-     * @throws \Jad\Exceptions\RequestException
-     * @throws \Jad\Exceptions\JadException
-     * @throws \ReflectionException
-     * @throws \Exception
+     * @throws NonUniqueResultException
+     * @throws ParameterException
+     * @throws RequestException
+     * @throws JadException
+     * @throws ReflectionException
+     * @throws Exception
      */
     public function fetchResources(): void
     {
         $relationship = $this->request->getRelationship();
 
-        if (empty($relationship)) {
-            if ($this->request->hasId()) {
-                $resource = (new Read($this->request, $this->mapper))->getResourceById((string) $this->request->getId());
-                $this->createDocument($resource);
-            } else {
-                $resources = (new Read($this->request, $this->mapper))->getResources();
-                $this->createDocument($resources);
-            }
-        } else {
+        if (!empty($relationship)) {
             $this->createDocument($this->getRelationship($relationship));
+            return;
         }
+
+        $resource = $this->request->hasId()
+            ? (new Read($this->request, $this->mapper))->getResourceById((string)$this->request->getId())
+            : (new Read($this->request, $this->mapper))->getResources();
+
+        $this->createDocument($resource);
     }
 
     /**
      * @param array<string> $relationship
-     * @return Element|null
      * @throws JadException
      * @throws ResourceNotFoundException
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
-    public function getRelationship(array $relationship): ?Element
+    public function getRelationship(array $relationship): Element
     {
         $id = $this->request->getId();
         $type = $this->request->getResourceType();
 
-        /** @var \Jad\Map\MapItem $mapItem */
         $mapItem = $this->mapper->getMapItem($type);
         $entity = $this->mapper->getEm()->getRepository($mapItem->getEntityClass())->find($id);
 

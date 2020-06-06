@@ -8,9 +8,6 @@ namespace Jad\CRUD;
  */
 class Delete extends AbstractCRUD
 {
-    /**
-     *
-     */
     public function deleteResource(): void
     {
         $mapItem = $this->mapper->getMapItem($this->request->getResourceType());

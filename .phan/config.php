@@ -383,18 +383,27 @@ return [
         'UnknownElementTypePlugin',
         'DuplicateExpressionPlugin',
         'NoAssertPlugin',
-        'HasPHPDocPlugin',
+        'UseReturnValuePlugin',
+        'UnknownElementTypePlugin',
+        'DuplicateExpressionPlugin',
+        'WhitespacePlugin',
+        'InlineHTMLPlugin',
 
+        ////////////////////////////////////////////////////////////////////////
+        // Plugins for Phan's self-analysis
+        ////////////////////////////////////////////////////////////////////////
 
-        // 'SleepCheckerPlugin' is useful for projects which heavily use the __sleep() method. Phan doesn't use __sleep().
-        // InvokePHPNativeSyntaxCheckPlugin invokes 'php --no-php-ini --syntax-check ${abs_path_to_analyzed_file}.php' and reports any error messages.
-        // Using this can cause phan's overall analysis time to more than double.
-        // 'InvokePHPNativeSyntaxCheckPlugin',
+        // Warns about the usage of assert() for Phan's self-analysis. See https://github.com/phan/phan/issues/288
+        'NoAssertPlugin',
+        'PHPDocToRealTypesPlugin',  // suggests replacing (at)return void with `: void` in the declaration, etc.
+        'PHPDocRedundantPlugin',
+        'PreferNamespaceUsePlugin',
+        'EmptyStatementListPlugin',
 
-        // 'PHPUnitNotDeadCodePlugin',  // Marks PHPUnit test case subclasses and test cases as referenced code. This is only useful for runs when dead code detection is enabled.
+        // Report empty (not overridden or overriding) methods and functions
+        'EmptyMethodAndFunctionPlugin',
 
-        // NOTE: This plugin only produces correct results when
-        //       Phan is run on a single core (-j1).
-        // 'UnusedSuppressionPlugin',
+        // Warn about assigning the value the variable already had to that variable.
+        'RedundantAssignmentPlugin',
     ],
 ];

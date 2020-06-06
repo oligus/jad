@@ -22,10 +22,6 @@ abstract class AbstractMapper implements Mapper
      */
     protected $map = [];
 
-    /**
-     * AbstractMapper constructor.
-     * @param EntityManagerInterface $em
-     */
     public function __construct(EntityManagerInterface $em)
     {
         $this->em = $em;
@@ -33,7 +29,6 @@ abstract class AbstractMapper implements Mapper
 
     /**
      * @codeCoverageIgnore
-     * @return EntityManagerInterface
      */
     public function getEm(): EntityManagerInterface
     {
@@ -41,18 +36,7 @@ abstract class AbstractMapper implements Mapper
     }
 
     /**
-     * @codeCoverageIgnore
-     * @return array<MapItem>
-     */
-    public function getMap(): array
-    {
-        return $this->map;
-    }
-
-    /**
-     * @param string $type
      * @param mixed $values
-     * @param bool $paginate
      */
     public function add(string $type, $values, bool $paginate = false): void
     {
@@ -66,10 +50,6 @@ abstract class AbstractMapper implements Mapper
         }
     }
 
-    /**
-     * @param \Jad\Map\MapItem $item
-     * @return bool
-     */
     public function itemExists(MapItem $item): bool
     {
         /** @var MapItem $mapItem */
@@ -82,10 +62,6 @@ abstract class AbstractMapper implements Mapper
         return false;
     }
 
-    /**
-     * @param string $type
-     * @return bool
-     */
     public function hasMapItem(string $type): bool
     {
         foreach ($this->map as $mapItem) {
@@ -98,11 +74,9 @@ abstract class AbstractMapper implements Mapper
     }
 
     /**
-     * @param string $type
-     * @return MapItem|null
      * @throws ResourceNotFoundException
      */
-    public function getMapItem(string $type): ?MapItem
+    public function getMapItem(string $type): MapItem
     {
         foreach ($this->map as $mapItem) {
             if ($mapItem->getType() === $type) {
@@ -114,8 +88,6 @@ abstract class AbstractMapper implements Mapper
     }
 
     /**
-     * @param string $className
-     * @return MapItem|null
      * @throws MappingException
      */
     public function getMapItemByClass(string $className): ?MapItem

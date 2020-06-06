@@ -2,6 +2,9 @@
 
 namespace Jad\Response;
 
+use Exception;
+use InvalidArgumentException;
+use stdClass;
 use Symfony\Component\HttpFoundation\Response;
 use Jad\Configure;
 
@@ -12,28 +15,24 @@ use Jad\Configure;
 class Error
 {
     /**
-     * @var \Exception $exception
+     * @var Exception $exception
      */
     private $exception;
 
-    /**
-     * Error constructor.
-     * @param \Exception $exception
-     */
-    public function __construct(\Exception $exception)
+    public function __construct(Exception $exception)
     {
         $this->exception = $exception;
     }
 
     /**
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     public function render(): void
     {
-        $document = new \stdClass();
+        $document = new stdClass();
         $document->errors = [];
 
-        $error = new \stdClass();
+        $error = new stdClass();
         $error->status = (string)$this->exception->getCode();
         $error->title = $this->getTitle($this->exception) . ' error';
         $error->detail = $this->exception->getMessage();
@@ -58,11 +57,7 @@ class Error
         }
     }
 
-    /**
-     * @param \Exception $e
-     * @return string
-     */
-    private function getTitle(\Exception $e): string
+    private function getTitle(Exception $e): string
     {
         $class = preg_replace('/^.*\\\(.+?)(Exception)?$/', '\1', get_class($e));
         $words = preg_split('/(?=[A-Z])/', $class);

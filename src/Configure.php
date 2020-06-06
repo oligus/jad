@@ -31,9 +31,6 @@ class Configure
         'max_page_size'     => 25,
     ];
 
-    /**
-     * @return Configure
-     */
     public static function getInstance(): Configure
     {
         if (!self::$instance instanceof Configure) {
@@ -44,7 +41,6 @@ class Configure
     }
 
     /**
-     * @param $key
      * @param mixed $value
      */
     public function setConfig(string $key, $value): void
@@ -55,7 +51,6 @@ class Configure
     }
 
     /**
-     * @param string $key
      * @return mixed|null
      */
     public function getConfig(string $key)

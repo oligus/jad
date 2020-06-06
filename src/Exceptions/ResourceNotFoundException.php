@@ -2,11 +2,13 @@
 
 namespace Jad\Exceptions;
 
+use Exception;
+
 /**
  * Class ResourceNotFoundException
  * @package Jad\Exceptions
  */
-class ResourceNotFoundException extends \Exception
+class ResourceNotFoundException extends Exception
 {
     /**
      * @var int
@@ -25,7 +27,6 @@ class ResourceNotFoundException extends \Exception
 
     /**
      * @codeCoverageIgnore
-     * @return string
      */
     public function getTitle(): string
     {
@@ -34,7 +35,6 @@ class ResourceNotFoundException extends \Exception
 
     /**
      * @codeCoverageIgnore
-     * @param string $title
      */
     public function setTitle(string $title): void
     {

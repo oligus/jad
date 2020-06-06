@@ -2,8 +2,12 @@
 
 namespace Jad\CRUD;
 
-use Jad\Document\Resource;
+use Doctrine\ORM\NonUniqueResultException;
+use Exception;
+use Jad\Document\Resource as JadResource;
 use Jad\Document\Collection;
+use Jad\Exceptions\JadException;
+use Jad\Exceptions\ParameterException;
 use Jad\Serializers\EntitySerializer;
 use Jad\Exceptions\ResourceNotFoundException;
 use Jad\Query\Paginator;
@@ -18,17 +22,14 @@ use Doctrine\ORM\Mapping\ClassMetadata;
 class Read extends AbstractCRUD
 {
     /**
-     * @param $id
-     * @return \Jad\Document\Resource
      * @throws ResourceNotFoundException
-     * @throws \Doctrine\ORM\NonUniqueResultException
-     * @throws \Jad\Exceptions\JadException
-     * @throws \Jad\Exceptions\ParameterException
+     * @throws NonUniqueResultException
+     * @throws JadException
+     * @throws ParameterException
      *
      */
-    public function getResourceById(string $id)
+    public function getResourceById(string $id): JadResource
     {
-        /** @var \Jad\Map\MapItem $mapItem */
         $mapItem = $this->mapper->getMapItem($this->request->getResourceType());
 
         $qb = new QueryBuilder($this->mapper->getEm());
@@ -53,7 +54,7 @@ class Read extends AbstractCRUD
             );
         }
 
-        $resource = new Resource(
+        $resource = new JadResource(
             $entity,
             new EntitySerializer($this->mapper, $this->request->getResourceType(), $this->request)
         );
@@ -64,11 +65,10 @@ class Read extends AbstractCRUD
     }
 
     /**
-     * @return Collection
-     * @throws \Doctrine\ORM\NonUniqueResultException
-     * @throws \Jad\Exceptions\JadException
-     * @throws \Jad\Exceptions\ParameterException
-     * @throws \Exception
+     * @throws NonUniqueResultException
+     * @throws JadException
+     * @throws ParameterException
+     * @throws Exception
      */
     public function getResources(): Collection
     {
@@ -119,7 +119,7 @@ class Read extends AbstractCRUD
         $collection->setPaginator($paginator);
 
         foreach ($entities as $entity) {
-            $resource = new Resource(
+            $resource = new JadResource(
                 $entity,
                 new EntitySerializer($this->mapper, $this->request->getResourceType(), $this->request)
             );
@@ -132,9 +132,8 @@ class Read extends AbstractCRUD
     }
 
     /**
-     * @param $resourceType
      * @return array<string>|null
-     * @throws \Jad\Exceptions\ParameterException
+     * @throws ParameterException
      */
     public function getOrderBy(string $resourceType): ?array
     {

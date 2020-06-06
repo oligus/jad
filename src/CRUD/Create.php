@@ -2,15 +2,14 @@
 
 namespace Jad\CRUD;
 
-use Jad\Common\ClassHelper;
-use Doctrine\Common\Annotations\AnnotationException;
-use Doctrine\ORM\ORMException;
 use Doctrine\ORM\Mapping\MappingException;
+use Doctrine\ORM\ORMException;
+use Exception;
+use InvalidArgumentException;
+use Jad\Common\ClassHelper;
 use Jad\Exceptions\JadException;
 use Jad\Exceptions\RequestException;
 use ReflectionException;
-use InvalidArgumentException;
-use Exception;
 
 /**
  * Class Create
@@ -19,8 +18,6 @@ use Exception;
 class Create extends AbstractCRUD
 {
     /**
-     * @return string|null
-     * @throws AnnotationException
      * @throws JadException
      * @throws MappingException
      * @throws ORMException
@@ -46,9 +43,6 @@ class Create extends AbstractCRUD
         $this->mapper->getEm()->persist($entity);
         $this->mapper->getEm()->flush();
 
-        /** @var \Jad\Map\MapItem $mapItem */
-        $id = (string)ClassHelper::getPropertyValue($entity, $mapItem->getIdField());
-
-        return $id;
+        return (string)ClassHelper::getPropertyValue($entity, $mapItem->getIdField());
     }
 }

@@ -2,7 +2,9 @@
 
 namespace Jad\Response;
 
+use InvalidArgumentException;
 use Jad\Common\Text;
+use stdClass;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\ConstraintViolationInterface;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
@@ -28,16 +30,16 @@ class ValidationErrors
     }
 
     /**
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     public function render(): void
     {
-        $document = new \stdClass();
+        $document = new stdClass();
         $document->errors = [];
 
         /** @var ConstraintViolationInterface $validationError */
         foreach ($this->errorList as $validationError) {
-            $error = new \stdClass();
+            $error = new stdClass();
             $attribute = Text::kebabify($validationError->getPropertyPath());
 
             $error->status = "500";

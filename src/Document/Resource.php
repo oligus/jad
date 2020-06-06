@@ -2,18 +2,23 @@
 
 namespace Jad\Document;
 
+use Doctrine\Common\Collections\Collection;
+use Exception;
+use Jad\Common\ClassHelper;
+use Jad\Common\Text;
+use Jad\Exceptions\JadException;
 use Jad\Exceptions\MappingException;
 use Jad\Serializers\RelationshipSerializer;
 use Jad\Serializers\Serializer;
-use Jad\Common\Text;
-use Jad\Common\ClassHelper;
-use Doctrine\Common\Collections\Collection;
+use JsonSerializable;
+use ReflectionException;
+use stdClass;
 
 /**
  * Class Resource
  * @package Klirr\JsonApi\Response
  */
-class Resource implements \JsonSerializable, Element
+class Resource implements JsonSerializable, Element
 {
     /**
      * @var
@@ -33,11 +38,6 @@ class Resource implements \JsonSerializable, Element
     /**
      * @var null
      */
-    private $included = null;
-
-    /**
-     * @var null
-     */
     private $includedParams = null;
 
     /**
@@ -49,15 +49,6 @@ class Resource implements \JsonSerializable, Element
     {
         $this->entity = $entity;
         $this->serializer = $serializer;
-    }
-
-    /**
-     * @codeCoverageIgnore
-     * @return mixed
-     */
-    public function getEntity()
-    {
-        return $this->entity;
     }
 
     /**
@@ -87,15 +78,13 @@ class Resource implements \JsonSerializable, Element
     }
 
     /**
-     * @return \stdClass
-     * @throws \Doctrine\Common\Annotations\AnnotationException
-     * @throws \Jad\Exceptions\JadException
-     * @throws \ReflectionException
+     * @return stdClass
+     * @throws JadException
+     * @throws ReflectionException
      */
-    public function jsonSerialize(): \stdClass
+    public function jsonSerialize(): stdClass
     {
-        $resource = new \stdClass();
-        $included = null;
+        $resource = new stdClass();
 
         $entity = $this->entity;
         $type = $this->serializer->getType($entity);
@@ -115,22 +104,25 @@ class Resource implements \JsonSerializable, Element
             if ($relationship['view'] !== 'list') {
                 $resource->attributes = $this->serializer->getAttributes($entity, $fields);
             }
-        } else {
-            $resource->attributes = $this->serializer->getAttributes($entity, $fields);
 
-            $relationships = $this->serializer->getRelationships($entity);
-
-            if (!empty($relationships)) {
-                $resource->relationships = $relationships;
-            }
+            return $resource;
         }
+
+        $resource->attributes = $this->serializer->getAttributes($entity, $fields);
+
+        $relationships = $this->serializer->getRelationships($entity);
+
+        if (!empty($relationships)) {
+            $resource->relationships = $relationships;
+        }
+
 
         return $resource;
     }
 
     /**
      * @return array
-     * @throws \Exception
+     * @throws Exception
      */
     public function getIncluded(): array
     {
@@ -146,26 +138,18 @@ class Resource implements \JsonSerializable, Element
                     }
 
                     $included = array_merge($included, $include);
-                } else {
-                    $path = explode('.', $relation);
-                    array_unshift($path, $includedType);
-                    $result = $this->crawlRelations($this->entity, $path);
-                    $include = $this->serializer->getIncludedResources($result['type'], $result['collection']);
-                    $included = array_merge($included, $include);
+                    continue;
                 }
+
+                $path = explode('.', $relation);
+                array_unshift($path, $includedType);
+                $result = $this->crawlRelations($this->entity, $path);
+                $include = $this->serializer->getIncludedResources($result['type'], $result['collection']);
+                $included = array_merge($included, $include);
             }
         }
 
         return $included;
-    }
-
-    /**
-     * @codeCoverageIgnore
-     * @param $included
-     */
-    public function setIncluded($included): void
-    {
-        $this->included = $included;
     }
 
     /**
@@ -174,8 +158,8 @@ class Resource implements \JsonSerializable, Element
      * @param $entity
      * @param $relations
      * @return array
-     * @throws \Jad\Exceptions\JadException
-     * @throws \ReflectionException
+     * @throws JadException
+     * @throws ReflectionException
      */
     public function crawlRelations($entity, array $relations): array
     {
@@ -188,16 +172,15 @@ class Resource implements \JsonSerializable, Element
 
             foreach ($collection as $entity) {
                 $result = ClassHelper::getPropertyValue($entity, $property);
-                if ($result instanceof Collection) {
-                    $newCollection = array_merge($newCollection, $result->toArray());
-                } else {
-                    $newCollection = array_merge($newCollection, [$result]);
-                }
+
+                $newCollection = $result instanceof Collection
+                    ? array_merge($newCollection, $result->toArray())
+                    : array_merge($newCollection, [$result]);
             }
 
             $collection = $newCollection;
         }
 
-        return array('type' => $type, 'collection' => $collection);
+        return ['type' => $type, 'collection' => $collection];
     }
 }

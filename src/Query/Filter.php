@@ -12,6 +12,9 @@ use Doctrine\ORM\QueryBuilder;
  */
 class Filter
 {
+    public const TYPE_SINGLE = 'single';
+    public const TYPE_CONDITIONAL = 'conditional';
+
     /**
      * @var QueryBuilder
      */
@@ -48,14 +51,14 @@ class Filter
 
             if (count($filter) === 1) {
                 $this->path = current(array_keys($filter));
-            } else {
-                foreach ($filter as $path => $data) {
-                    if ($this->isRelational($path)) {
-                        $this->relatedPaths[] = $path;
-                    } else {
-                        $this->path = $path;
-                    }
-                }
+                $this->filter = $filter;
+                return;
+            }
+
+            foreach (array_keys($filter) as $path) {
+                $this->isRelational($path)
+                    ? $this->relatedPaths[] = $path
+                    : $this->path = $path;
             }
 
             $this->filter = $filter;
@@ -98,13 +101,11 @@ class Filter
      */
     public function process(): QueryBuilder
     {
-        if (!is_array($this->filter) || empty($this->filter)) {
+        if (!$this->hasFilter()) {
             return $this->qb;
         }
 
-        if ($this->isRelational($this->path)) {
-            $this->addJoin($this->path);
-        }
+        $this->addRelational();
 
         if (!empty($this->relatedPaths)) {
             foreach ($this->relatedPaths as $path) {
@@ -114,7 +115,7 @@ class Filter
             }
         }
 
-        if ($this->getFilterType($this->filter) === 'conditional') {
+        if ($this->isConditional()) {
             $this->addConditionalFilter($this->path);
 
             if (!empty($this->relatedPaths)) {
@@ -124,7 +125,7 @@ class Filter
             }
         }
 
-        if ($this->getFilterType($this->filter) === 'single') {
+        if ($this->isSingle()) {
             $this->addSingleFilter();
         }
 
@@ -151,7 +152,9 @@ class Filter
         foreach ($this->createAliases($path) as $alias => $relation) {
             if ($count === 0) {
                 $key = $alias;
-            } else {
+            }
+
+            if ($count !== 0) {
                 $key .= '.' . $relation;
                 $joins[$key] = $alias;
                 $key = $alias;
@@ -191,10 +194,10 @@ class Filter
         }
 
         if (array_key_exists('and', $filter[$this->path]) || array_key_exists('or', $filter[$this->path])) {
-            return 'conditional';
+            return self::TYPE_CONDITIONAL;
         }
 
-        return 'single';
+        return self::TYPE_SINGLE;
     }
 
     /**
@@ -280,11 +283,12 @@ class Filter
             ));
             $this->qb->setParameter($fieldName1, $value[0]);
             $this->qb->setParameter($fieldName2, $value[1]);
-        } else {
-            $this->qb->$whereCondition($this->qb->expr()->$condition($alias . '.' . $field, ':' . $fieldName1));
-            if (!in_array($condition, ['isNull', 'isNotNull'])) {
-                $this->qb->setParameter($fieldName1, $value);
-            }
+            return;
+        }
+
+        $this->qb->$whereCondition($this->qb->expr()->$condition($alias . '.' . $field, ':' . $fieldName1));
+        if (!in_array($condition, ['isNull', 'isNotNull'])) {
+            $this->qb->setParameter($fieldName1, $value);
         }
     }
 
@@ -345,5 +349,27 @@ class Filter
     {
         $path = is_string($this->path) ? $this->path : '';
         return implode(',', array_keys($this->createAliases($path)));
+    }
+
+    public function hasFilter()
+    {
+        return is_array($this->filter) && !empty($this->filter);
+    }
+
+    public function isSingle()
+    {
+        return $this->getFilterType($this->filter) === self::TYPE_SINGLE;
+    }
+
+    public function isConditional()
+    {
+        return $this->getFilterType($this->filter) === self::TYPE_CONDITIONAL;
+    }
+
+    public function addRelational(): void
+    {
+        if ($this->isRelational($this->path)) {
+            $this->addJoin($this->path);
+        }
     }
 }

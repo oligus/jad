@@ -6,6 +6,8 @@ use Doctrine\ORM\Mapping\ClassMetadata;
 use Jad\Exceptions\JadException;
 use Jad\Map\Annotations\Header;
 use Doctrine\Common\Annotations\AnnotationReader;
+use ReflectionClass;
+use ReflectionException;
 
 /**
  * Class MapItem
@@ -34,10 +36,7 @@ class MapItem
     private $paginate = false;
 
     /**
-     * MapItem constructor.
-     * @param $type
      * @param mixed $params
-     * @param bool $paginate
      */
     public function __construct(string $type, $params, bool $paginate = false)
     {
@@ -61,8 +60,6 @@ class MapItem
 
     /**
      * @codeCoverageIgnore
-     * @param string $type
-     * @return MapItem
      */
     private function setType(string $type): MapItem
     {
@@ -72,8 +69,6 @@ class MapItem
 
     /**
      * @codeCoverageIgnore
-     * @param string $entityClass
-     * @return MapItem
      */
     private function setEntityClass(string $entityClass): MapItem
     {
@@ -83,7 +78,6 @@ class MapItem
 
     /**
      * @codeCoverageIgnore
-     * @return string
      */
     public function getType(): string
     {
@@ -91,7 +85,6 @@ class MapItem
     }
 
     /**
-     * @return string
      * @throws JadException
      */
     public function getIdField(): string
@@ -115,7 +108,6 @@ class MapItem
 
     /**
      * @codeCoverageIgnore
-     * @return ClassMetadata
      */
     public function getClassMeta(): ClassMetadata
     {
@@ -124,8 +116,6 @@ class MapItem
 
     /**
      * @codeCoverageIgnore
-     * @param ClassMetadata $classMeta
-     * @return $this
      */
     public function setClassMeta(ClassMetadata $classMeta): MapItem
     {
@@ -135,7 +125,6 @@ class MapItem
 
     /**
      * @codeCoverageIgnore
-     * @return bool
      */
     public function isPaginate(): bool
     {
@@ -144,7 +133,6 @@ class MapItem
 
     /**
      * @codeCoverageIgnore
-     * @param bool $paginate
      */
     public function setPaginate(bool $paginate): void
     {
@@ -152,14 +140,12 @@ class MapItem
     }
 
     /**
-     * @return bool
-     * @throws \Doctrine\Common\Annotations\AnnotationException
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public function isReadOnly(): bool
     {
         $reader = new AnnotationReader();
-        $reflection = new \ReflectionClass($this->getEntityClass());
+        $reflection = new ReflectionClass($this->getEntityClass());
 
         $header = $reader->getClassAnnotation($reflection, Header::class);
 
@@ -177,7 +163,6 @@ class MapItem
 
     /**
      * @codeCoverageIgnore
-     * @return string
      */
     public function getEntityClass(): string
     {

@@ -3,6 +3,8 @@
 namespace Jad\Common;
 
 use Jad\Exceptions\JadException;
+use ReflectionClass;
+use ReflectionException;
 
 /**
  * Class ClassHelper
@@ -11,13 +13,11 @@ use Jad\Exceptions\JadException;
 class ClassHelper
 {
     /**
-     * @param object $class
-     * @param string $property
      * @return mixed
      * @throws JadException
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
-    public static function getPropertyValue($class, string $property)
+    public static function getPropertyValue(object $class, string $property)
     {
         $method = 'get' . ucfirst($property);
 
@@ -25,7 +25,7 @@ class ClassHelper
             return $class->$method();
         }
 
-        $reflection = new \ReflectionClass($class);
+        $reflection = new ReflectionClass($class);
 
         if ($reflection->hasProperty($property)) {
             $reflectionProperty = $reflection->getProperty($property);
@@ -37,12 +37,10 @@ class ClassHelper
     }
 
     /**
-     * @param object $class
-     * @param string $property
      * @param mixed $value
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
-    public static function setPropertyValue($class, string $property, $value): void
+    public static function setPropertyValue(object $class, string $property, $value): void
     {
         $method = 'set' . ucfirst($property);
 
@@ -51,7 +49,7 @@ class ClassHelper
             return;
         }
 
-        $reflection = new \ReflectionClass($class);
+        $reflection = new ReflectionClass($class);
 
         if ($reflection->hasProperty($property)) {
             $reflectionProperty = $reflection->getProperty($property);
@@ -61,12 +59,9 @@ class ClassHelper
     }
 
     /**
-     * @param object $class
-     * @param string $property
-     * @return bool
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
-    public static function hasPropertyValue($class, string $property): bool
+    public static function hasPropertyValue(object $class, string $property): bool
     {
         $method = 'set' . ucfirst($property);
 
@@ -74,7 +69,7 @@ class ClassHelper
             return true;
         }
 
-        $reflection = new \ReflectionClass($class);
+        $reflection = new ReflectionClass($class);
 
         return $reflection->hasProperty($property);
     }

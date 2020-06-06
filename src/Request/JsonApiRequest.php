@@ -36,7 +36,6 @@ class JsonApiRequest
 
     /**
      * @codeCoverageIgnore
-     * @return Parameters
      */
     public function getParameters(): Parameters
     {
@@ -45,7 +44,6 @@ class JsonApiRequest
 
     /**
      * @codeCoverageIgnore
-     * @return string
      */
     public function getPathPrefix(): string
     {
@@ -54,16 +52,12 @@ class JsonApiRequest
 
     /**
      * @codeCoverageIgnore
-     * @param string $pathPrefix
      */
     public function setPathPrefix(string $pathPrefix): void
     {
         $this->pathPrefix = $pathPrefix;
     }
 
-    /**
-     * @return string
-     */
     public function getResourceType(): string
     {
         $items = $this->getItems();
@@ -82,9 +76,6 @@ class JsonApiRequest
         return explode('/', $path);
     }
 
-    /**
-     * @return bool
-     */
     public function hasId(): bool
     {
         return !is_null($this->getId());
@@ -129,17 +120,11 @@ class JsonApiRequest
         return $relationships;
     }
 
-    /**
-     * @return bool
-     */
     public function isCollection(): bool
     {
         return is_null($this->getId());
     }
 
-    /**
-     * @return string
-     */
     public function getCurrentUrl(): string
     {
         return $this->getRequest()->getSchemeAndHttpHost() . $this->getRequest()->getPathInfo();
@@ -147,16 +132,12 @@ class JsonApiRequest
 
     /**
      * @codeCoverageIgnore
-     * @return Request
      */
     public function getRequest(): Request
     {
         return $this->request;
     }
 
-    /**
-     * @return string
-     */
     public function getBaseUrl(): string
     {
         return $this->getRequest()->getSchemeAndHttpHost() . $this->getRequest()->getBaseUrl();
@@ -165,7 +146,6 @@ class JsonApiRequest
     /**
      * Get streamed input for POST and PATCH operations
      *
-     * @return \stdClass
      * @throws RequestException
      */
     public function getInputJson(): stdClass
@@ -196,9 +176,6 @@ class JsonApiRequest
         return $result;
     }
 
-    /**
-     * @return string
-     */
     public function getMethod(): string
     {
         return $this->request->getMethod();

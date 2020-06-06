@@ -37,7 +37,7 @@ class JadMiddleWare
     {
         $pathPrefix = config()['jad']['pathPrefix'];
 
-        $pathMatch = (bool)preg_match('!' . ltrim($pathPrefix, '/') . '!', $request->path(), $matches);
+        $pathMatch = (bool)preg_match('!' . ltrim($pathPrefix, '/') . '!', $request->path());
 
         if (!$pathMatch) {
             return $next($request);
