@@ -1,4 +1,19 @@
 {
+    "included": [
+        {
+            "id": "77",
+            "type": "tracks",
+            "attributes": {
+                "name": "Enter Sandman",
+                "composer": "Apocalyptica",
+                "milliseconds": 221701,
+                "price": "0.99"
+            }
+        }
+    ],
+    "links": {
+        "self": "http:\/\/:\/playlists"
+    },
     "data": {
         "id": "6",
         "type": "playlists",
@@ -19,20 +34,5 @@
                 ]
             }
         }
-    },
-    "included": [
-        {
-            "id": "77",
-            "type": "tracks",
-            "attributes": {
-                "name": "Enter Sandman",
-                "composer": "Apocalyptica",
-                "milliseconds": 221701,
-                "price": "0.99"
-            }
-        }
-    ],
-    "links": {
-        "self": "http:\/\/:\/playlists"
     }
 }

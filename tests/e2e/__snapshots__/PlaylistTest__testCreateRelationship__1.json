@@ -1,41 +1,4 @@
 {
-    "data": {
-        "id": "6",
-        "type": "playlists",
-        "attributes": {
-            "name": "New Playlist"
-        },
-        "relationships": {
-            "tracks": {
-                "links": {
-                    "self": "http:\/\/:\/playlists\/6\/relationship\/tracks",
-                    "related": "http:\/\/:\/playlists\/6\/tracks"
-                },
-                "data": [
-                    {
-                        "type": "tracks",
-                        "id": "15"
-                    },
-                    {
-                        "type": "tracks",
-                        "id": "43"
-                    },
-                    {
-                        "type": "tracks",
-                        "id": "77"
-                    },
-                    {
-                        "type": "tracks",
-                        "id": "117"
-                    },
-                    {
-                        "type": "tracks",
-                        "id": "351"
-                    }
-                ]
-            }
-        }
-    },
     "included": [
         {
             "id": "15",
@@ -90,5 +53,42 @@
     ],
     "links": {
         "self": "http:\/\/:\/playlists"
+    },
+    "data": {
+        "id": "6",
+        "type": "playlists",
+        "attributes": {
+            "name": "New Playlist"
+        },
+        "relationships": {
+            "tracks": {
+                "links": {
+                    "self": "http:\/\/:\/playlists\/6\/relationship\/tracks",
+                    "related": "http:\/\/:\/playlists\/6\/tracks"
+                },
+                "data": [
+                    {
+                        "type": "tracks",
+                        "id": "15"
+                    },
+                    {
+                        "type": "tracks",
+                        "id": "43"
+                    },
+                    {
+                        "type": "tracks",
+                        "id": "77"
+                    },
+                    {
+                        "type": "tracks",
+                        "id": "117"
+                    },
+                    {
+                        "type": "tracks",
+                        "id": "351"
+                    }
+                ]
+            }
+        }
     }
 }

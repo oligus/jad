@@ -1,4 +1,14 @@
 {
+    "links": {
+        "self": "http:\/\/:\/tracks?page[size]=25&page[number]=1",
+        "first": "http:\/\/:\/tracks?page[size]=25&page[number]=1",
+        "last": "http:\/\/:\/tracks?page[size]=25&page[number]=2",
+        "next": "http:\/\/:\/tracks?page[size]=25&page[number]=2"
+    },
+    "meta": {
+        "count": 26,
+        "pages": 2
+    },
     "data": [
         {
             "id": "15",
@@ -825,15 +835,5 @@
                 }
             }
         }
-    ],
-    "links": {
-        "self": "http:\/\/:\/tracks?page[size]=25&page[number]=1",
-        "first": "http:\/\/:\/tracks?page[size]=25&page[number]=1",
-        "last": "http:\/\/:\/tracks?page[size]=25&page[number]=2",
-        "next": "http:\/\/:\/tracks?page[size]=25&page[number]=2"
-    },
-    "meta": {
-        "count": 26,
-        "pages": 2
-    }
+    ]
 }

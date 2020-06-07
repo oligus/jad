@@ -1,4 +1,15 @@
 {
+    "links": {
+        "self": "http:\/\/:\/genres?page[size]=5&page[number]=2",
+        "first": "http:\/\/:\/genres?page[size]=5&page[number]=1",
+        "last": "http:\/\/:\/genres?page[size]=5&page[number]=5",
+        "next": "http:\/\/:\/genres?page[size]=5&page[number]=3",
+        "previous": "http:\/\/:\/genres?page[size]=5&page[number]=1"
+    },
+    "meta": {
+        "count": 25,
+        "pages": 5
+    },
     "data": [
         {
             "id": "6",
@@ -35,16 +46,5 @@
                 "name": "Soundtrack"
             }
         }
-    ],
-    "links": {
-        "self": "http:\/\/:\/genres?page[size]=5&page[number]=2",
-        "first": "http:\/\/:\/genres?page[size]=5&page[number]=1",
-        "last": "http:\/\/:\/genres?page[size]=5&page[number]=5",
-        "next": "http:\/\/:\/genres?page[size]=5&page[number]=3",
-        "previous": "http:\/\/:\/genres?page[size]=5&page[number]=1"
-    },
-    "meta": {
-        "count": 25,
-        "pages": 5
-    }
+    ]
 }

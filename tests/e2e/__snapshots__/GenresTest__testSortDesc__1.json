@@ -1,4 +1,14 @@
 {
+    "links": {
+        "self": "http:\/\/:\/genres?page[size]=10&page[number]=1",
+        "first": "http:\/\/:\/genres?page[size]=10&page[number]=1",
+        "last": "http:\/\/:\/genres?page[size]=10&page[number]=3",
+        "next": "http:\/\/:\/genres?page[size]=10&page[number]=2"
+    },
+    "meta": {
+        "count": 25,
+        "pages": 3
+    },
     "data": [
         {
             "id": "16",
@@ -70,15 +80,5 @@
                 "name": "Pop"
             }
         }
-    ],
-    "links": {
-        "self": "http:\/\/:\/genres?page[size]=10&page[number]=1",
-        "first": "http:\/\/:\/genres?page[size]=10&page[number]=1",
-        "last": "http:\/\/:\/genres?page[size]=10&page[number]=3",
-        "next": "http:\/\/:\/genres?page[size]=10&page[number]=2"
-    },
-    "meta": {
-        "count": 25,
-        "pages": 3
-    }
+    ]
 }

@@ -1,4 +1,7 @@
 {
+    "links": {
+        "self": "http:\/\/:\/tracks\/15\/relationships\/playlists"
+    },
     "data": [
         {
             "id": "1",
@@ -8,8 +11,5 @@
             "id": "2",
             "type": "playlists"
         }
-    ],
-    "links": {
-        "self": "http:\/\/:\/tracks\/15\/relationships\/playlists"
-    }
+    ]
 }

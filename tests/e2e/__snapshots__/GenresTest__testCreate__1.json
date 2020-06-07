@@ -1,12 +1,12 @@
 {
+    "links": {
+        "self": "http:\/\/:\/genres"
+    },
     "data": {
         "id": "27",
         "type": "genres",
         "attributes": {
             "name": "Created Genre"
         }
-    },
-    "links": {
-        "self": "http:\/\/:\/genres"
     }
 }

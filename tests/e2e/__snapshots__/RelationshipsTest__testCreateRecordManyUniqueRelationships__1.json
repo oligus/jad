@@ -1,4 +1,7 @@
 {
+    "links": {
+        "self": "http:\/\/:\/invoices"
+    },
     "data": {
         "id": "413",
         "type": "invoices",
@@ -24,8 +27,5 @@
                 }
             }
         }
-    },
-    "links": {
-        "self": "http:\/\/:\/invoices"
     }
 }

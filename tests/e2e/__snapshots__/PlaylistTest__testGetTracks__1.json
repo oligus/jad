@@ -1,4 +1,7 @@
 {
+    "links": {
+        "self": "http:\/\/:\/tracks\/15"
+    },
     "data": {
         "id": "15",
         "type": "tracks",
@@ -34,8 +37,5 @@
                 }
             }
         }
-    },
-    "links": {
-        "self": "http:\/\/:\/tracks\/15"
     }
 }

@@ -1,33 +1,4 @@
 {
-    "data": {
-        "id": "6",
-        "type": "playlists",
-        "attributes": {
-            "name": "New Playlist"
-        },
-        "relationships": {
-            "tracks": {
-                "links": {
-                    "self": "http:\/\/:\/playlists\/6\/relationship\/tracks",
-                    "related": "http:\/\/:\/playlists\/6\/tracks"
-                },
-                "data": [
-                    {
-                        "type": "tracks",
-                        "id": "77"
-                    },
-                    {
-                        "type": "tracks",
-                        "id": "422"
-                    },
-                    {
-                        "type": "tracks",
-                        "id": "2014"
-                    }
-                ]
-            }
-        }
-    },
     "included": [
         {
             "id": "77",
@@ -62,5 +33,34 @@
     ],
     "links": {
         "self": "http:\/\/:\/playlists"
+    },
+    "data": {
+        "id": "6",
+        "type": "playlists",
+        "attributes": {
+            "name": "New Playlist"
+        },
+        "relationships": {
+            "tracks": {
+                "links": {
+                    "self": "http:\/\/:\/playlists\/6\/relationship\/tracks",
+                    "related": "http:\/\/:\/playlists\/6\/tracks"
+                },
+                "data": [
+                    {
+                        "type": "tracks",
+                        "id": "77"
+                    },
+                    {
+                        "type": "tracks",
+                        "id": "422"
+                    },
+                    {
+                        "type": "tracks",
+                        "id": "2014"
+                    }
+                ]
+            }
+        }
     }
 }
