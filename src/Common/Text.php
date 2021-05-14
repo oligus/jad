@@ -25,7 +25,7 @@ class Text
         /**
          * @param array<string> $result
          */
-        return preg_replace_callback('!-[a-z]!', function (array $result): string {
+        return preg_replace_callback('!-[a-z]!', static function (array $result): string {
             $char = ltrim($result[0], '-');
             return strtoupper($char);
         }, $str);

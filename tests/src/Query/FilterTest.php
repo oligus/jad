@@ -183,10 +183,10 @@ class FilterTest extends TestCase
     public function testSingleFilter()
     {
         $dql = $this->getDQLFromFilter(['total' => ['lt' => '5']]);
-        $this->assertRegExp('/SELECT a0testType FROM TestEntityClass a0testType WHERE a0testType.total < :total_[a-z0-9]{13}$/', $dql);
+        $this->assertMatchesRegularExpression('/SELECT a0testType FROM TestEntityClass a0testType WHERE a0testType.total < :total_[a-z0-9]{13}$/', $dql);
 
         $dql = $this->getDQLFromFilter(['customers' => ['total' => ['lt' => '5']]]);
-        $this->assertRegExp('/SELECT a0customers FROM TestEntityClass a0customers WHERE a0customers.total < :total_[a-z0-9]{13}$/', $dql);
+        $this->assertMatchesRegularExpression('/SELECT a0customers FROM TestEntityClass a0customers WHERE a0customers.total < :total_[a-z0-9]{13}$/', $dql);
     }
 
     /**
@@ -195,7 +195,7 @@ class FilterTest extends TestCase
     public function testSingleRelationalFilter()
     {
         $dql = $this->getDQLFromFilter(['customers.invoices' => ['total' => ['lt' => '5']]]);
-        $this->assertRegExp('/SELECT a0customers,a1invoices FROM TestEntityClass a0customers INNER JOIN a0customers.invoices a1invoices WHERE a1invoices.total < :total_[a-z0-9]{13}$/', $dql);
+        $this->assertMatchesRegularExpression('/SELECT a0customers,a1invoices FROM TestEntityClass a0customers INNER JOIN a0customers.invoices a1invoices WHERE a1invoices.total < :total_[a-z0-9]{13}$/', $dql);
     }
 
     /**
@@ -220,7 +220,7 @@ class FilterTest extends TestCase
         ];
 
         $dql = $this->getDQLFromFilter($filter);
-        $this->assertRegExp('#^SELECT a0customers FROM TestEntityClass a0customers WHERE \(a0customers.price < :price_[a-z0-9]{13} AND a0customers.price > :price_[a-z0-9]{13}\) OR a0customers.genre = :genre_[a-z0-9]{13}$#', $dql);
+        $this->assertMatchesRegularExpression('#^SELECT a0customers FROM TestEntityClass a0customers WHERE \(a0customers.price < :price_[a-z0-9]{13} AND a0customers.price > :price_[a-z0-9]{13}\) OR a0customers.genre = :genre_[a-z0-9]{13}$#', $dql);
     }
 
     public function testConditionalRelationalFilter()
@@ -242,7 +242,7 @@ class FilterTest extends TestCase
         ];
 
         $dql = $this->getDQLFromFilter($filter);
-        $this->assertRegExp('#^SELECT a0customers,a1invoices FROM TestEntityClass a0customers INNER JOIN a0customers.invoices a1invoices WHERE \(a1invoices.price < :price_[a-z0-9]{13} AND a1invoices.price > :price_[a-z0-9]{13}\) OR a1invoices.genre = :genre_[a-z0-9]{13}$#', $dql);
+        $this->assertMatchesRegularExpression('#^SELECT a0customers,a1invoices FROM TestEntityClass a0customers INNER JOIN a0customers.invoices a1invoices WHERE \(a1invoices.price < :price_[a-z0-9]{13} AND a1invoices.price > :price_[a-z0-9]{13}\) OR a1invoices.genre = :genre_[a-z0-9]{13}$#', $dql);
     }
 
     /**
@@ -258,28 +258,28 @@ class FilterTest extends TestCase
         $method = $this->getMethod('Jad\Query\Filter', 'addFilter');
         $method->invokeArgs($filter, ['total', 'eq', 5]);
         $dql = $filter->getQb()->getDQL();
-        $this->assertRegExp('#^SELECT WHERE a0.total = :total_[a-z0-9]{13}$#', $dql);
+        $this->assertMatchesRegularExpression('#^SELECT WHERE a0.total = :total_[a-z0-9]{13}$#', $dql);
 
         $filter = new Filter([]);
         $filter->setQb(new QueryBuilder(Manager::getInstance()->getEm()));
         $method = $this->getMethod('Jad\Query\Filter', 'addFilter');
         $method->invokeArgs($filter, ['total', 'like', 'test']);
         $dql = $filter->getQb()->getDQL();
-        $this->assertRegExp('#^SELECT WHERE a0.total LIKE :total_[a-z0-9]{13}$#', $dql);
+        $this->assertMatchesRegularExpression('#^SELECT WHERE a0.total LIKE :total_[a-z0-9]{13}$#', $dql);
 
         $filter = new Filter([]);
         $filter->setQb(new QueryBuilder(Manager::getInstance()->getEm()));
         $method = $this->getMethod('Jad\Query\Filter', 'addFilter');
         $method->invokeArgs($filter, ['total', 'in', 'test1, test2']);
         $dql = $filter->getQb()->getDQL();
-        $this->assertRegExp('#^SELECT WHERE a0.total IN\(:total_[a-z0-9]{13}\)$#', $dql);
+        $this->assertMatchesRegularExpression('#^SELECT WHERE a0.total IN\(:total_[a-z0-9]{13}\)$#', $dql);
 
         $filter = new Filter([]);
         $filter->setQb(new QueryBuilder(Manager::getInstance()->getEm()));
         $method = $this->getMethod('Jad\Query\Filter', 'addFilter');
         $method->invokeArgs($filter, ['total', 'between', '1, 10']);
         $dql = $filter->getQb()->getDQL();
-        $this->assertRegExp('#^SELECT WHERE a0.total BETWEEN :total_[a-z0-9]{13} AND :total_[a-z0-9]{13}$#', $dql);
+        $this->assertMatchesRegularExpression('#^SELECT WHERE a0.total BETWEEN :total_[a-z0-9]{13} AND :total_[a-z0-9]{13}$#', $dql);
 
         $filter = new Filter([]);
         $method->invokeArgs($filter, ['total', 'unknown', 'test']);
@@ -316,7 +316,7 @@ class FilterTest extends TestCase
         $method->invokeArgs($filter, ['invoices']);
 
         $dql = $filter->getQb()->getDQL();
-        $this->assertRegExp('#^SELECT WHERE \(a0.price < :price_[a-z0-9]{13} AND a0.price > :price_[a-z0-9]{13}\) OR a0.genre = :genre_[a-z0-9]{13}$#', $dql);
+        $this->assertMatchesRegularExpression('#^SELECT WHERE \(a0.price < :price_[a-z0-9]{13} AND a0.price > :price_[a-z0-9]{13}\) OR a0.genre = :genre_[a-z0-9]{13}$#', $dql);
     }
 
     /**
@@ -360,7 +360,7 @@ class FilterTest extends TestCase
         $filter->process();
 
         $dql = $filter->getQb()->getDQL();
-        $this->assertRegExp('#^SELECT a0customer FROM EntityClass a0customer INNER JOIN a0customer.invoices a1invoices WHERE a0customer.email = :email_[a-z0-9]{13}$#', $dql);
+        $this->assertMatchesRegularExpression('#^SELECT a0customer FROM EntityClass a0customer INNER JOIN a0customer.invoices a1invoices WHERE a0customer.email = :email_[a-z0-9]{13}$#', $dql);
     }
 
     /**
@@ -385,7 +385,7 @@ class FilterTest extends TestCase
         $filter->process();
 
         $dql = $filter->getQb()->getDQL();
-        $this->assertRegExp('#^SELECT a0customer,a1invoices FROM EntityClass a0customer INNER JOIN a0customer.invoices a1invoices WHERE \(a1invoices.price < :price_[a-z0-9]{13} AND a1invoices.price > :price_[a-z0-9]{13}\) OR a1invoices.genre = :genre_[a-z0-9]{13}$#', $dql);
+        $this->assertMatchesRegularExpression('#^SELECT a0customer,a1invoices FROM EntityClass a0customer INNER JOIN a0customer.invoices a1invoices WHERE \(a1invoices.price < :price_[a-z0-9]{13} AND a1invoices.price > :price_[a-z0-9]{13}\) OR a1invoices.genre = :genre_[a-z0-9]{13}$#', $dql);
     }
 
     /**

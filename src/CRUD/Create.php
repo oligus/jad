@@ -36,7 +36,7 @@ class Create extends AbstractCRUD
             return null;
         }
 
-        $this->addAttributes($mapItem, $this->getAttributes(), $entity);
+        self::addAttributes($mapItem, $this->getAttributes(), $entity);
         $this->validateEntity($entity);
         $this->addRelationships($this->request->getInputJson(), $entity);
 

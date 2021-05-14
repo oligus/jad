@@ -30,24 +30,14 @@ use Symfony\Component\Validator\Validation;
  * @package Jad\CRUD
  * @todo Refactor coupling
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExitExpression)
  */
 class AbstractCRUD
 {
-    /**
-     * @var JsonApiRequest
-     */
-    protected $request;
+    protected JsonApiRequest $request;
 
-    /**
-     * @var Mapper
-     */
-    protected $mapper;
+    protected Mapper $mapper;
 
-    /**
-     * AbstractCRUD constructor.
-     * @param JsonApiRequest $request
-     * @param Mapper $mapper
-     */
     public function __construct(JsonApiRequest $request, Mapper $mapper)
     {
         $this->request = $request;
@@ -79,13 +69,11 @@ class AbstractCRUD
     }
 
     /**
-     * @param $input
-     * @param object $entity
      * @throws ORMException
      * @throws JadException
      * @throws ReflectionException
      */
-    protected function addRelationships(stdClass $input, $entity): void
+    protected function addRelationships(stdClass $input, object $entity): void
     {
         $relationships = isset($input->data->relationships) ? (array)$input->data->relationships : [];
 
@@ -126,14 +114,12 @@ class AbstractCRUD
     }
 
     /**
-     * @param MapItem $mapItem
-     * @param array<string>[] $attributes
-     * @param object $entity
+     * @param array<mixed> $attributes
      * @throws MappingException
      * @throws ReflectionException
      * @throws Exception
      */
-    protected function addAttributes(MapItem $mapItem, array $attributes, $entity): void
+    protected static function addAttributes(MapItem $mapItem, array $attributes, object $entity): void
     {
         $reader = new AnnotationReader();
         $reflection = new ReflectionClass($mapItem->getEntityClass());
@@ -170,10 +156,9 @@ class AbstractCRUD
     }
 
     /**
-     * @param object $entity
      * @throws InvalidArgumentException
      */
-    protected function validateEntity($entity): void
+    protected static function validateEntity(object $entity): void
     {
         $validator = Validation::createValidatorBuilder()->enableAnnotationMapping()->getValidator();
         $errors = $validator->validate($entity);

@@ -13,20 +13,11 @@ use stdClass;
  */
 class JsonDocument implements JsonSerializable
 {
-    /**
-     * @var Element
-     */
-    private $element;
+    private Element $element;
 
-    /**
-     * @var Links $link
-     */
-    private $links = null;
+    private ?Links $links = null;
 
-    /**
-     * @var Meta $meta
-     */
-    private $meta = null;
+    private ?Meta $meta = null;
 
     /**
      * JsonDocument constructor.
@@ -109,8 +100,7 @@ class JsonDocument implements JsonSerializable
     }
 
     /**
-     * @param $element
-     * @return bool
+     * @param mixed $element
      */
     private function hasPagination($element): bool
     {

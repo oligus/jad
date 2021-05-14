@@ -4,14 +4,7 @@
 
 ## Mapping
 
-JAD needs to know what resource belongs to what entity so a mapping is required before you can use JAD. There are three
-different types of mapping options available:
-
-* AnnotationMapper
-* ArrayMapper (deprecated)
-* AutoMapper (deprecated)
-
-Note that ArrayMapper and AutoMapper are deprecated and will be removed in future versions of JAD.
+JAD needs to know what resource belongs to what entity so a mapping is required before you can use JAD. 
 
 ### AnnotationMapper
 
@@ -69,23 +62,3 @@ Then you probably need to specifically register the classes with either `registe
 ##### OR
 
 `AnnotationRegistry::registerAutoloadNamespace("Jad\Map\Annotations", "/../vendor/oligus/src/Map/Annotations");`
-
-### ArrayMapper (deprecated)
-
-With the array mapper, you simply add every type using `mapper->add` method with type name and the corresponding entity
-class. All added entities will be exposed to json api.
-
-```
-$mapper = new Jad\Map\ArrayMapper($em);
-$mappper->add('articles', 'MyProject/Entities/Articles');
-```
-
-### AutoMapper (deprecated)
-
-Auto mapper tries to map everything for you automagically, it will simply take all entity classes it can find and create
-json api type names from the class names. Optionally, you can add an array with excluded types in the constructor, these
-types will then not be exposed to json api.
-
-```
-$mapper = new Jad\Map\AutoMapper($em, ['excluded']);
-```

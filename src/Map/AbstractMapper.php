@@ -9,6 +9,7 @@ use Doctrine\ORM\EntityManagerInterface;
 /**
  * Class AbstractMapper
  * @package Jad\Map
+ * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
  */
 abstract class AbstractMapper implements Mapper
 {

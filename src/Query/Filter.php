@@ -9,6 +9,7 @@ use Doctrine\ORM\QueryBuilder;
 /**
  * Class Filter
  * @package Jad\Query
+ * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
  */
 class Filter
 {
@@ -351,17 +352,17 @@ class Filter
         return implode(',', array_keys($this->createAliases($path)));
     }
 
-    public function hasFilter()
+    public function hasFilter(): bool
     {
         return is_array($this->filter) && !empty($this->filter);
     }
 
-    public function isSingle()
+    public function isSingle(): bool
     {
         return $this->getFilterType($this->filter) === self::TYPE_SINGLE;
     }
 
-    public function isConditional()
+    public function isConditional(): bool
     {
         return $this->getFilterType($this->filter) === self::TYPE_CONDITIONAL;
     }

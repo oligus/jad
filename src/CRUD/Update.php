@@ -2,6 +2,11 @@
 
 namespace Jad\CRUD;
 
+use Doctrine\ORM\ORMException;
+use Exception;
+use Jad\Exceptions\JadException;
+use Jad\Exceptions\RequestException;
+
 /**
  * Class Update
  * @package Jad\CRUD
@@ -9,10 +14,10 @@ namespace Jad\CRUD;
 class Update extends AbstractCRUD
 {
     /**
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Exception
-     * @throws \Jad\Exceptions\JadException
-     * @throws \Jad\Exceptions\RequestException
+     * @throws ORMException
+     * @throws Exception
+     * @throws JadException
+     * @throws RequestException
      */
     public function updateResource(): void
     {
@@ -21,7 +26,7 @@ class Update extends AbstractCRUD
         $entity = $this->mapper->getEm()->getRepository($mapItem->getEntityClass())->find($this->request->getId());
 
         if (!$entity instanceof $entityClass) {
-            throw new \Exception('Entity not found');
+            throw new Exception('Entity not found');
         }
 
         if ($mapItem->isReadOnly()) {

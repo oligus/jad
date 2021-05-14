@@ -4,7 +4,9 @@ namespace Jad\Map;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Common\Annotations\AnnotationReader;
+use Doctrine\ORM\Mapping\ClassMetadataInfo;
 use Jad\Common\Text;
+use Jad\Map\Annotations\Header;
 
 /**
  * Class AnnotationsMapper
@@ -15,7 +17,6 @@ class AnnotationsMapper extends AbstractMapper
     /**
      * AnnotationsMapper constructor.
      * @param EntityManagerInterface $em
-     * @throws \Doctrine\Common\Annotations\AnnotationException
      */
     public function __construct(EntityManagerInterface $em)
     {
@@ -24,11 +25,11 @@ class AnnotationsMapper extends AbstractMapper
         $reader = new AnnotationReader();
         $metaData = $em->getMetadataFactory()->getAllMetadata();
 
-        /** @var \Doctrine\ORM\Mapping\ClassMetadataInfo $meta */
+        /** @var ClassMetadataInfo $meta */
         foreach ($metaData as $meta) {
             $head = $reader->getClassAnnotation($meta->getReflectionClass(), Annotations\Header::class);
 
-            if (empty($head) || empty($head->type)) {
+            if (!$head instanceof Header || empty($head->type)) {
                 continue;
             }
 

@@ -1,21 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<phpunit bootstrap="tests/bootstrap.php" colors="true">
-    <testsuites>
-        <testsuite name="JAD test suite">
-            <directory>tests</directory>
-        </testsuite>
-        <testsuite name="JAD e2e suit">
-            <directory>tests</directory>
-        </testsuite>
-    </testsuites>
-
-    <filter>
-        <whitelist processUncoveredFilesFromWhitelist="true">
-            <directory suffix=".php">src</directory>
-            <exclude>
-                <directory suffix=".php">src/Support/</directory>
-            </exclude>
-        </whitelist>
-    </filter>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" bootstrap="tests/bootstrap.php" colors="true" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd">
+  <coverage processUncoveredFiles="true">
+    <include>
+      <directory suffix=".php">src</directory>
+    </include>
+    <exclude>
+      <directory suffix=".php">src/Support/</directory>
+    </exclude>
+  </coverage>
+  <testsuites>
+    <testsuite name="JAD test suite">
+      <directory>tests</directory>
+    </testsuite>
+    <testsuite name="JAD e2e suit">
+      <directory>tests</directory>
+    </testsuite>
+  </testsuites>
 </phpunit>

@@ -20,32 +20,17 @@ use stdClass;
  */
 class Resource implements JsonSerializable, Element
 {
-    /**
-     * @var
-     */
-    private $entity;
-
-    /**
-     * @var Serializer $serializer
-     */
-    private $serializer;
-
-    /**
-     * @var null
-     */
-    private $fields = null;
-
-    /**
-     * @var null
-     */
-    private $includedParams = null;
+    private object $entity;
+    private Serializer $serializer;
+    private array $fields = [];
+    private array $includedParams = [];
 
     /**
      * Resource constructor.
      * @param $entity
      * @param Serializer $serializer
      */
-    public function __construct($entity, Serializer $serializer)
+    public function __construct(object $entity, Serializer $serializer)
     {
         $this->entity = $entity;
         $this->serializer = $serializer;
@@ -53,16 +38,13 @@ class Resource implements JsonSerializable, Element
 
     /**
      * @codeCoverageIgnore
-     * @param $fields
+     * @param array<mixed> $fields
      */
-    public function setFields($fields): void
+    public function setFields(array $fields): void
     {
         $this->fields = $fields;
     }
 
-    /**
-     * @return bool
-     */
     public function hasIncluded(): bool
     {
         return !empty($this->includedParams);
@@ -70,17 +52,17 @@ class Resource implements JsonSerializable, Element
 
     /**
      * @codeCoverageIgnore
-     * @param mixed $includedParams
+     * @param array<mixed> $includedParams
      */
-    public function setIncludedParams($includedParams)
+    public function setIncludedParams(array $includedParams): void
     {
         $this->includedParams = $includedParams;
     }
 
     /**
-     * @return stdClass
      * @throws JadException
      * @throws ReflectionException
+     * @throws Exception
      */
     public function jsonSerialize(): stdClass
     {
@@ -116,22 +98,21 @@ class Resource implements JsonSerializable, Element
             $resource->relationships = $relationships;
         }
 
-
         return $resource;
     }
 
     /**
-     * @return array
+     * @return array<mixed>
      * @throws Exception
      */
     public function getIncluded(): array
     {
         $included = [];
 
-        foreach ($this->includedParams as $includes) {
+        foreach ($this->includedParams ?? [] as $includes) {
             foreach ($includes as $includedType => $relation) {
                 if (empty($relation)) {
-                    $include = $this->serializer->getIncluded($includedType, $this->entity, $this->fields);
+                    $include = $this->serializer->getIncluded($includedType, $this->entity, $this->fields ?? []);
 
                     if (!is_array($include)) {
                         throw new MappingException('Included type [' . $includedType . '] not available, check if resource type is mapped correctly.');
@@ -156,12 +137,11 @@ class Resource implements JsonSerializable, Element
      * Crawl entities
      *
      * @param $entity
-     * @param $relations
-     * @return array
+     * @param array<mixed> $relations
+     * @return array<mixed>
      * @throws JadException
-     * @throws ReflectionException
      */
-    public function crawlRelations($entity, array $relations): array
+    public function crawlRelations(object $entity, array $relations): array
     {
         $collection = [$entity];
         $type = end($relations);

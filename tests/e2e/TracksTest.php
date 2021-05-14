@@ -75,7 +75,7 @@ class TracksTest extends TestCase
         $jad->jsonApiResult();
         $output = ob_get_clean();
 
-        $this->assertRegExp('/tracks.+?name.:.New\sTrack/', $output);
+        $this->assertMatchesRegularExpression('/tracks.+?name.:.New\sTrack/', $output);
     }
 
     /**

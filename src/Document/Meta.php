@@ -11,55 +11,41 @@ use stdClass;
  */
 class Meta implements JsonSerializable
 {
-    /**
-     * @var int
-     */
-    private $count;
-
-    /**
-     * @var int
-     */
-    private $pages;
+    private ?int $count = null;
+    private ?int $pages = null;
 
     /**
      * @codeCoverageIgnore
-     * @return int
      */
-    public function getCount(): int
+    public function getCount(): ?int
     {
         return $this->count;
     }
 
     /**
      * @codeCoverageIgnore
-     * @param int $count
      */
-    public function setCount(int $count)
+    public function setCount(int $count): void
     {
         $this->count = $count;
     }
 
     /**
      * @codeCoverageIgnore
-     * @return int
      */
-    public function getPages(): int
+    public function getPages(): ?int
     {
         return $this->pages;
     }
 
     /**
      * @codeCoverageIgnore
-     * @param int $pages
      */
-    public function setPages(int $pages)
+    public function setPages(int $pages): void
     {
         $this->pages = $pages;
     }
 
-    /**
-     * @return bool
-     */
     public function isEmpty(): bool
     {
         $isEmpty = true;
@@ -75,9 +61,6 @@ class Meta implements JsonSerializable
         return $isEmpty;
     }
 
-    /**
-     * @return stdClass
-     */
     public function jsonSerialize(): stdClass
     {
         $meta = new stdClass();

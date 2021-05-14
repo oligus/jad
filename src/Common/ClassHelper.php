@@ -15,7 +15,6 @@ class ClassHelper
     /**
      * @return mixed
      * @throws JadException
-     * @throws ReflectionException
      */
     public static function getPropertyValue(object $class, string $property)
     {

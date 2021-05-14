@@ -14,10 +14,7 @@ use Jad\Configure;
  */
 class Error
 {
-    /**
-     * @var Exception $exception
-     */
-    private $exception;
+    private Exception $exception;
 
     public function __construct(Exception $exception)
     {
@@ -26,6 +23,7 @@ class Error
 
     /**
      * @throws InvalidArgumentException
+     * @SuppressWarnings(PHPMD.ExitExpression)
      */
     public function render(): void
     {

@@ -29,7 +29,7 @@ return [
     // If this is set to null,
     // then Phan assumes the PHP version which is closest to the minor version
     // of the php executable used to execute phan.
-    "target_php_version" => 7.2,
+    "target_php_version" => 8.0,
 
     // Default: true. If this is set to true,
     // and target_php_version is newer than the version used to run Phan,
@@ -263,6 +263,16 @@ return [
         'PhanPluginDescriptionlessCommentOnPublicProperty',
         'PhanPluginDescriptionlessCommentOnPrivateProperty',
         'PhanPluginDescriptionlessCommentOnProtectedProperty',
+        'PhanPluginNoCommentOnPublicMethod',
+        'PhanPluginNoCommentOnProtectedMethod',
+        'PhanPluginNoCommentOnPrivateMethod',
+        'PhanPluginNoCommentOnPublicProperty',
+        'PhanPluginNoCommentOnProtectedProperty',
+        'PhanPluginNoCommentOnPrivateProperty',
+        'PhanPluginPossiblyStaticClosure',
+        'PhanPluginPossiblyStaticPublicMethod',
+        'PhanPluginPossiblyStaticProtectedMethod',
+        'PhanPluginPossiblyStaticPrivateMethod',
     ],
 
     // If empty, no filter against issues types will be applied.
@@ -307,7 +317,7 @@ return [
     // Thus, both first-party and third-party code being used by
     // your application should be included in this list.
     'directory_list' => [
-        'src/',
+        'src',
         'vendor/doctrine',
         'vendor/symfony',
         'vendor/psr'
@@ -374,7 +384,6 @@ return [
     // or relative/absolute paths to the plugin (Relative to the project root).
     'plugins' => [
         'AlwaysReturnPlugin',
-        'DemoPlugin',
         'DollarDollarPlugin',
         'UnreachableCodePlugin',
         'DuplicateArrayKeyPlugin',
@@ -385,16 +394,12 @@ return [
         'NoAssertPlugin',
         'UseReturnValuePlugin',
         'UnknownElementTypePlugin',
-        'DuplicateExpressionPlugin',
         'WhitespacePlugin',
         'InlineHTMLPlugin',
 
         ////////////////////////////////////////////////////////////////////////
         // Plugins for Phan's self-analysis
         ////////////////////////////////////////////////////////////////////////
-
-        // Warns about the usage of assert() for Phan's self-analysis. See https://github.com/phan/phan/issues/288
-        'NoAssertPlugin',
         'PHPDocToRealTypesPlugin',  // suggests replacing (at)return void with `: void` in the declaration, etc.
         'PHPDocRedundantPlugin',
         'PreferNamespaceUsePlugin',
@@ -405,5 +410,15 @@ return [
 
         // Warn about assigning the value the variable already had to that variable.
         'RedundantAssignmentPlugin',
+
+        // Warn about using the same loop variable name as a loop variable of an outer loop.
+        'LoopVariableReusePlugin',
+
+        // Warn about `$var == SOME_INT_OR_STRING_CONST` due to unintuitive behavior such as `0 == 'a'`
+        'StrictLiteralComparisonPlugin',
+        'ShortArrayPlugin',
+        'SimplifyExpressionPlugin',
+        'PossiblyStaticMethodPlugin',
+        'HasPHPDocPlugin',
     ],
 ];

@@ -8,8 +8,10 @@ namespace Jad\Document;
  */
 interface Element
 {
-    /**
-     * @return bool
-     */
     public function hasIncluded(): bool;
+
+    /**
+     * @return array<mixed>
+     */
+    public function getIncluded(): array;
 }

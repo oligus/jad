@@ -12,6 +12,7 @@ use ReflectionException;
 /**
  * Class MapItem
  * @package Jad\Map
+ * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
  */
 class MapItem
 {
@@ -149,15 +150,16 @@ class MapItem
 
         $header = $reader->getClassAnnotation($reflection, Header::class);
 
-        if (!is_null($header)) {
+        if ($header instanceof Header) {
             if (property_exists($header, 'readOnly')) {
-                $readOnly = is_null($header->readOnly) ? false : (bool)$header->readOnly;
+                $readOnly = !is_null($header->readOnly) && $header->readOnly;
 
                 if ($readOnly) {
                     return true;
                 }
             }
         }
+
         return false;
     }
 

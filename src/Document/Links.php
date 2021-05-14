@@ -11,73 +11,52 @@ use stdClass;
  */
 class Links implements JsonSerializable
 {
-    /**
-     * @var string
-     */
-    private $self = null;
-
-    /**
-     * @var null
-     */
-    private $first = null;
-
-    /**
-     * @var null
-     */
-    private $last = null;
-
-    private $next;
-
-    private $previous;
+    private ?string $self = null;
+    private ?string $first = null;
+    private ?string $last = null;
+    private ?string $next = null;
+    private ?string $previous = null;
 
     /**
      * @codeCoverageIgnore
-     * @param $self
      */
-    public function setSelf($self): void
+    public function setSelf(?string $self): void
     {
         $this->self = $self;
     }
 
     /**
      * @codeCoverageIgnore
-     * @param null $first
      */
-    public function setFirst($first): void
+    public function setFirst(?string $first): void
     {
         $this->first = $first;
     }
 
     /**
      * @codeCoverageIgnore
-     * @param null $last
      */
-    public function setLast($last): void
+    public function setLast(?string $last): void
     {
         $this->last = $last;
     }
 
     /**
      * @codeCoverageIgnore
-     * @param mixed $next
      */
-    public function setNext($next): void
+    public function setNext(?string $next): void
     {
         $this->next = $next;
     }
 
     /**
      * @codeCoverageIgnore
-     * @param mixed $previous
      */
-    public function setPrevious($previous): void
+    public function setPrevious(?string $previous): void
     {
         $this->previous = $previous;
     }
 
-    /**
-     * @return stdClass
-     */
     public function jsonSerialize(): stdClass
     {
         $links = new stdClass();
